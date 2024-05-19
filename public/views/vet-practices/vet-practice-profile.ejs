@@ -1,0 +1,756 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper custom-bg">
+    <!-- Content Header (Page header) -->
+    <%- include ./../layout/partials/page-header-section.ejs -%>
+      <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+      <!-- Main content -->
+      <form action="/admin/vetPracticeProfile"
+        id="vetPracticesForm" method="POST" enctype="multipart/form-data">
+        <div class="form-group button-row">
+          <button type="submit" class="btn btn-success custom-save-btn custom-save-common custom-top save-user">Save</button>
+          <a href="/admin/dashboard" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+          <h1 class="custom-add-heading"><%= typeof responseData === 'object' && responseData.id ? 'Edit' : 'Create' %> Vet Practice</h1>
+          <h1 class="custom-add-heading-details" id="form-details-icon">How to fill in this form <i class="fa fa-question-circle"></i></h1>
+          <small class="custom-add-text">API ID : vet-practice</small>
+        </div>
+      <section class="content">
+
+        <!-- Default box -->
+        <div class="box custom-box">
+          <!-- <div class="box-header with-border">
+          </div> -->
+          <div class="box-body">
+            <%- include ./../layout/partials/alert-section.ejs -%>
+
+            <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'? responseData.id:''%>">
+                <div class="form-group row">
+                  <div class="col-sm-3">
+                    <label for="practiceImage" class="">Image  (Preferred resolution - 400 x 400)</label>
+                    <div class="position-relative">
+                      <div class="choose-profile">
+                        <input type="file" id="practiceImage" name="practiceImage" accept="image/png, image/jpeg">
+                      </div>
+                      <div class="d-none profile_img">
+                        <img
+                          src="<%= typeof responseData==='object' && responseData.img_path ? responseData.img_path: '/images/vet-practice-edit.png' %>"
+                          alt="Vet Practice" height="200" width="100%" id="practice-img">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                  <label for="practice_name" class="">Practice Name</label>
+                  <!-- <input type="hidden" name="id" id="id"
+                    value="<%= typeof responseData==='object' && typeof responseData.vetProfile==='object'?responseData.vetProfile.id:'' %>"> -->
+                    <input type="text" name="practice_name" id="practice_name" class="form-control"
+                      placeholder="Practice Name"
+                      value="<%= typeof responseData==='object'?responseData.practice_name:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="public_email" class="">Public Email</label>
+                      <input type="text" name="public_email" id="public_email" class="form-control"
+                        placeholder="Public Email"
+                        value="<%= typeof responseData==='object'?responseData.public_email:'' %>">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="address1" class="">Address</label>
+                    <input type="text" name="address1" id="address1" class="form-control" placeholder="Address 1"
+                      value="<%= typeof responseData==='object'?responseData.address1:'' %>" onblur="getAddress()">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="address2" class="">Address</label>
+                    <input type="text" name="address2" id="address2" class="form-control" placeholder="Address 2"
+                      value="<%= typeof responseData==='object'?responseData.address2:'' %>" onblur="getAddress()">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="countryId" class="">Country</label>
+                    <input type="hidden" name="country" id="country"
+                      value="<%= typeof responseData==='object'?responseData.country:'' %>">
+                    <select class="form-control type-select-box" id="countryId"
+                      value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                      <option <%=(typeof responseData!=='object' || !responseData.country)? 'selected' : '' %>
+                        disabled>Add an item..</option>
+                      <% for (var i=0; i < countryData.length; i++ ) { %>
+                        <option <%=typeof responseData==='object' ?countryData[i].id===responseData.country ? 'selected'
+                          : '' : '' %>
+                          id="<%= countryData[i].id %>">
+                            <%= countryData[i].country %>
+                        </option>
+                        <% } %>
+                    </select>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="stateId" class="">State/Postal/County</label>
+                    <input type="hidden" name="state" id="state"
+                      value="<%= typeof responseData==='object'?responseData.state:'' %>">
+                    <select class="form-control type-select-box" id="stateId"
+                      value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                      <option <%=(typeof responseData!=='object' || !responseData.state)? 'selected' : '' %>>
+                        Add an
+                        item..</option>
+                      <% if(typeof states==='object' ) { for (var i=0; i < states.length; i++ ) { %>
+                        <option <%=typeof responseData==='object' ?states[i].id===responseData.state ? 'selected' : ''
+                          : '' %>
+                          id="<%= states[i].id %>">
+                            <%= states[i].state %>
+                        </option>
+                        <% } } %>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="city" class="">City/Town</label>
+                    <input type="text" name="city" id="city" class="form-control" placeholder="City/Town"
+                      value="<%= typeof responseData==='object'?responseData.city:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="zip_code" class="">Zip Code/Post Code</label>
+                    <input type="Text" name="zip_code" id="zip_code" class="form-control" placeholder="Zip Code/Post Code"
+                      value="<%= typeof responseData==='object'?responseData.zip_code:'' %>"  onblur="getAddress()">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="int_code" class="">Int Code</label>
+                    <select class="form-control type-select-box" id="int_code" name="int_code">
+                      <option <%= typeof responseData!=='object' || !responseData.int_code ? 'selected' : '' %>
+                        disabled>Add an item..</option>
+                        <% for (var i=0; i < countryData.length; i++ ) { %>
+                          <% if(countryData[i].id){ %>
+                          <option <%=typeof responseData==='object' ?countryData[i].id==responseData.int_code ? 'selected'
+                            : '' : '' %>
+                            id="<%= countryData[i].id %>" value="<%= countryData[i].id %>">
+                            <%= countryData[i].country_code ? `${countryData[i].country} (+${countryData[i].country_code})` : countryData[i].country %>
+                          </option>
+                          <% }} %>
+                    </select>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="business_phone" class="">Business Phone</label>
+                    <input type="text" name="business_phone" id="business_phone" class="form-control"
+                      placeholder="Business Phone"
+                      value="<%= typeof responseData==='object'?responseData.business_phone:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="out_of_hr_phone" class="">Out of Hours Number</label>
+                    <input type="text" name="out_of_hr_phone" id="out_of_hr_phone" class="form-control"
+                    placeholder="Out of Hours Number"
+                    value="<%= typeof responseData==='object'?responseData.out_of_hr_phone:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="email" class="">Email Address</label>
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Email Address"
+                    value="<%= typeof responseData==='object'?responseData.email:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="website" class="">Website</label>
+                    <input type="text" name="website" id="website" class="form-control" placeholder="Website"
+                    value="<%= typeof responseData==='object'?responseData.website:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="typeId" class="">Treats Categories</label>
+                    <select class="form-control animal-type-multiple" id="typeId" name="types[]" multiple="multiple"
+                      value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                      <% if(typeof animalTypes==='object' ) { for (var i=0; i < animalTypes.length; i++ ) { %>
+                        <option <%=typeof responseData==='object' && responseData.VetPracticesTypeAnimal &&
+                          responseData.VetPracticesTypeAnimal.includes(animalTypes[i].id) ? 'selected' : '' %>
+                          value="<%= animalTypes[i].id %>">
+                            <%= animalTypes[i].category %>
+                        </option>
+                        <% } } %>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="speciality" class="">Notes, Interests and Specializations</label>
+                    <select class="form-control speciality-multiple" id="speciality" name="specialityData[]" multiple="multiple">
+                      <% if(typeof responseData==='object' && responseData.specialityArr ) { for (var i=0; i <
+                        responseData.specialityArr.length; i++ ) { %>
+                          <option selected %>
+                          value="<%= responseData.specialityArr[i] %>">
+                          <%= responseData.specialityArr[i] %>
+                        </option>
+                        <% } } %>
+                      </select>
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="ClassificationId" class="">Classifications</label>
+                      <select id="ClassificationId" class="classification-multiple form-control" name="classification[]"
+                        multiple="multiple" value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                        <% for (var i=0; i < classificationData.length; i++ ) { %>
+                          <option <%=typeof responseData==='object' && responseData.VetPracticesClassification &&
+                            responseData.VetPracticesClassification.includes(classificationData[i].id) ? 'selected' : ''
+                            %>
+                            value="<%= classificationData[i].id %>">
+                              <%= classificationData[i].title %>
+                          </option>
+                          <% } %>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-sm-6">
+                      <label for="practice_accreditation_no" class="">Registration No</label>
+                      <textarea class="form-control" rows="4" name="practice_accreditation_no" id="practice_accreditation_no"
+                        placeholder="Registration No"><%= typeof responseData==='object'?responseData.practice_accreditation_no:'' %></textarea>
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="practiceServiceId" class="">Practice Hours</label>
+                      <select id="practiceServiceId" class="practice-service-multiple form-control" name="practice_service[]"
+                        multiple="multiple" value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                        <% for (var i=0; i < practiceService.length; i++ ) { %>
+                          <option <%=typeof responseData==='object' && responseData.practiceService &&
+                            responseData.practiceService.includes(practiceService[i].id) ? 'selected' : ''
+                            %>
+                            value="<%= practiceService[i].id %>">
+                              <%= practiceService[i].name %>
+                          </option>
+                          <% } %>
+                      </select>
+                    </div>
+                  </div>
+
+                <div class="form-group row">
+                </div>
+
+                <!-- Multiple time blocks start -->
+                <div class="form-group vet-profile-hide row weekday-div<%= typeof responseData==='object'?' update-weekday':'' %>">
+    
+                  <div class="col-md-1 radio-div">
+                    <label class="mon-lbl">
+                      <input type="radio" name="weekDay" value="mon" class="card-input-element" checked />
+                        <div class="panel panel-default card-input">
+                          <div class="panel-heading">Mon</div>
+                        </div>
+                      </label>
+                      <span id="mon-span" class="custom-error-span day_error">Required</span>
+                  </div>
+                  <div class="col-md-1 radio-div">
+                    <label class="tue-lbl">
+                      <input type="radio" name="weekDay" value="tue" class="card-input-element" />
+                      <div class="panel panel-default card-input">
+                        <div class="panel-heading">Tue</div>
+                      </div>
+                    </label>
+                    <span id="tue-span" class="custom-error-span day_error">Required</span>
+                  </div>
+                  <div class="col-md-1 radio-div">
+                    <label class="wed-lbl">
+                      <input type="radio" name="weekDay" value="wed" class="card-input-element" />
+                        <div class="panel panel-default card-input">
+                          <div class="panel-heading">Wed</div>
+                        </div>
+                    </label>
+                    <span id="wed-span" class="custom-error-span day_error">Required</span>
+                  </div>
+                  <div class="col-md-1 radio-div">
+                    <label class="thu-lbl">
+                      <input type="radio" name="weekDay" value="thu" class="card-input-element" />
+                        <div class="panel panel-default card-input">
+                          <div class="panel-heading">Thu</div>
+                        </div>
+                    </label>
+                    <span id="thu-span" class="custom-error-span day_error">Required</span>
+                  </div>
+                  <div class="col-md-1 radio-div">
+                    <label class="fri-lbl">
+                      <input type="radio" name="weekDay" value="fri" class="card-input-element" />
+                        <div class="panel panel-default card-input">
+                          <div class="panel-heading">Fri</div>
+                        </div>
+                    </label>
+                    <span id="fri-span" class="custom-error-span day_error">Required</span>
+                  </div>
+                  <div class="col-md-1 radio-div">
+                    <label class="sat-lbl">
+                      <input type="radio" name="weekDay" value="sat" class="card-input-element" />
+                        <div class="panel panel-default card-input">
+                          <div class="panel-heading">Sat</div>
+                        </div>
+                    </label>
+                    <span id="sat-span" class="custom-error-span day_error">Required</span>
+                  </div>
+                  <div class="col-md-1 radio-div">
+                    <label class="sun-lbl">
+                      <input type="radio" name="weekDay" value="sun" class="card-input-element" />
+                        <div class="panel panel-default card-input">
+                          <div class="panel-heading">Sun</div>
+                        </div>
+                    </label>
+                    <span id="sun-span" class="custom-error-span day_error">Required</span>
+                  </div>
+              </div>
+              <div class="form-group mon-div custom-slot active vet-profile-hide">
+                <div class="" id="mon-buildyourform">
+                    
+                  <% if(typeof responseData==='object' && typeof responseData.VetPracticeTimeBlocks==='object' ) { 
+                    for (let i=0, cnt = 1; i < responseData.VetPracticeTimeBlocks.length; i++ ) {
+                      if(responseData.VetPracticeTimeBlocks[i].day === "monday") { %>
+                      <div class="form-group mon_fieldwrapper" id="field1">
+                        <label for="monday1" class="">Slot </label>&nbsp;<label class="slot-id mon"><%= cnt %></label>&nbsp;<label class="mon-invalid-time time-error"></label><br>
+                        <div class="col-sm-2 form-inline custom-input-padding from-time">
+                            <input type="hidden" name="monday[]" class="form-control" value="<%= responseData.VetPracticeTimeBlocks[i].id %>">
+                            <input type="time" name="monday[]" id="monday1" class="form-control mondayTime typeTime fromtime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].from_time).format('HH:mm') %>">
+                          </div>
+                        <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                            <input type="time" name="monday[]" id="monday2" class="form-control mondayTime typeTime totime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].to_time).format('HH:mm') %>">
+                          </div>
+                        <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                      </div>
+                  <% cnt++ }}} %>
+                </div>
+                <div class="form-group row vet-profile-hide">
+                  <div class="col-sm-6">
+                    <input type="button" value="Add a field" class="add" id="mon-add" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group tue-div custom-slot">
+                <div class="" id="tue-buildyourform">
+                  <% if(typeof responseData==='object' && typeof responseData.VetPracticeTimeBlocks==='object' ) { 
+                    for (let i=0, cnt = 1; i < responseData.VetPracticeTimeBlocks.length; i++ ) {
+                      if(responseData.VetPracticeTimeBlocks[i].day === "tuesday") { %>
+                        <div class="form-group tue_fieldwrapper" id="field1">
+                          <label for="tuesday1" class="">Slot </label>&nbsp;<label class="slot-id tue"><%= cnt %></label>&nbsp;<label class="tue-invalid-time time-error"></label><br>
+                          <div class="col-sm-2 form-inline custom-input-padding from-time">
+                              <input type="hidden" name="tuesday[]" class="form-control" value="<%= responseData.VetPracticeTimeBlocks[i].id %>">
+                              <input type="time" name="tuesday[]" id="tuesday1" class="form-control tuesdayTime tueTime typeTime fromtime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].from_time).format('HH:mm') %>">
+                          </div>
+                          <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                              <input type="time" name="tuesday[]" id="tuesday2" class="form-control tuesdayTime tueTime typeTime totime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].to_time).format('HH:mm') %>">
+                          </div>
+                          <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                        </div>
+                  <% cnt++ }}} %>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <input type="button" value="Add a field" class="add" id="tue-add" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group wed-div custom-slot">
+                <div class="" id="wed-buildyourform">
+                  <% if(typeof responseData==='object' && typeof responseData.VetPracticeTimeBlocks==='object' ) { 
+                    for (let i=0, cnt = 1; i < responseData.VetPracticeTimeBlocks.length; i++ ) {
+                      if(responseData.VetPracticeTimeBlocks[i].day === "wednesday") { %>
+                        <div class="form-group wed_fieldwrapper" id="field1">
+                          <label for="wednesday1" class="">Slot </label>&nbsp;<label class="slot-id wed"><%= cnt %></label>&nbsp;<label class="wed-invalid-time time-error"></label><br>
+                          <div class="col-sm-2 form-inline custom-input-padding from-time">
+                              <input type="hidden" name="wednesday[]" class="form-control" value="<%= responseData.VetPracticeTimeBlocks[i].id %>">
+                              <input type="time" name="wednesday[]" id="wednesday1" class="form-control wednesdayTime wedTime typeTime fromtime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].from_time).format('HH:mm') %>">
+                          </div>
+                          <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                              <input type="time" name="wednesday[]" id="wednesday2" class="form-control wednesdayTime wedTime typeTime totime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].to_time).format('HH:mm') %>">
+                          </div>
+                          <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                        </div>
+                  <% cnt++ }}} %>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <input type="button" value="Add a field" class="add" id="wed-add" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group thu-div custom-slot">
+                <div class="" id="thu-buildyourform">
+                  <% if(typeof responseData==='object' && typeof responseData.VetPracticeTimeBlocks==='object' ) { 
+                    for (let i=0, cnt = 1; i < responseData.VetPracticeTimeBlocks.length; i++ ) {
+                      if(responseData.VetPracticeTimeBlocks[i].day === "thursday") { %>
+                        <div class="form-group thu_fieldwrapper" id="field1">
+                          <label for="thursday1" class="">Slot </label>&nbsp;<label class="slot-id thu"><%= cnt %></label>&nbsp;<label class="thu-invalid-time time-error"></label><br>
+                          <div class="col-sm-2 form-inline custom-input-padding from-time">
+                              <input type="hidden" name="thursday[]" class="form-control" value="<%= responseData.VetPracticeTimeBlocks[i].id %>">
+                              <input type="time" name="thursday[]" id="thursday1" class="form-control thursdayTime thuTime typeTime fromtime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].from_time).format('HH:mm') %>">
+                          </div>
+                          <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                              <input type="time" name="thursday[]" id="thursday2" class="form-control thursdayTime thuTime typeTime totime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].to_time).format('HH:mm') %>">
+                          </div>
+                          <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                        </div>
+                  <% cnt++ }}} %>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <input type="button" value="Add a field" class="add" id="thu-add" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group fri-div custom-slot">
+                <div class="" id="fri-buildyourform">
+                  <% if(typeof responseData==='object' && typeof responseData.VetPracticeTimeBlocks==='object' ) { 
+                    for (let i=0, cnt = 1; i < responseData.VetPracticeTimeBlocks.length; i++ ) {
+                      if(responseData.VetPracticeTimeBlocks[i].day === "friday") { %>
+                        <div class="form-group fri_fieldwrapper" id="field1">
+                          <label for="friday1" class="">Slot </label>&nbsp;<label class="slot-id fri"><%= cnt %></label>&nbsp;<label class="fri-invalid-time time-error"></label><br>
+                          <div class="col-sm-2 form-inline custom-input-padding from-time">
+                            
+                              <input type="hidden" name="friday[]" class="form-control" value="<%= parseInt(responseData.VetPracticeTimeBlocks[i].id) %>">
+                              <input type="time" name="friday[]" id="friday1" class="form-control fridayTime friTime typeTime fromtime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].from_time).format('HH:mm') %>">
+                          </div>
+                          <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                              <input type="time" name="friday[]" id="friday2" class="form-control fridayTime friTime typeTime totime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].to_time).format('HH:mm') %>">
+                          </div>
+                          <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                        </div>
+                  <% cnt++ }}} %>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <input type="button" value="Add a field" class="add" id="fri-add" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group sat-div custom-slot">
+                <div class="" id="sat-buildyourform">
+                  <% if(typeof responseData==='object' && typeof responseData.VetPracticeTimeBlocks==='object' ) { 
+                    for (let i=0, cnt = 1; i < responseData.VetPracticeTimeBlocks.length; i++ ) {
+                      if(responseData.VetPracticeTimeBlocks[i].day === "saturday") { %>
+                        <div class="form-group sat_fieldwrapper" id="field1">
+                          <label for="saturday1" class="">Slot </label>&nbsp;<label class="slot-id sat"><%= cnt %></label>&nbsp;<label class="sat-invalid-time time-error"></label><br>
+                          <div class="col-sm-2 form-inline custom-input-padding from-time">
+                              <input type="hidden" name="saturday[]" class="form-control" value="<%= responseData.VetPracticeTimeBlocks[i].id %>">
+                              <input type="time" name="saturday[]" id="saturday1" class="form-control saturdayTime satTime typeTime fromtime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].from_time).format('HH:mm') %>">
+                          </div>
+                          <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                              <input type="time" name="saturday[]" id="saturday2" class="form-control saturdayTime satTime typeTime totime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].to_time).format('HH:mm') %>">
+                          </div>
+                          <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                        </div>
+                  <% cnt++ }}} %>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <input type="button" value="Add a field" class="add" id="sat-add" />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group sun-div custom-slot">
+                <div class="" id="sun-buildyourform">
+                  <% if(typeof responseData==='object' && typeof responseData.VetPracticeTimeBlocks==='object' ) { 
+                    for (let i=0, cnt = 1; i < responseData.VetPracticeTimeBlocks.length; i++ ) {
+                      if(responseData.VetPracticeTimeBlocks[i].day === "sunday") { %>
+                        <div class="form-group sun_fieldwrapper" id="field1">
+                          <label for="sunday1" class="">Slot </label>&nbsp;<label class="slot-id sun"><%= cnt %></label>&nbsp;<label class="sun-invalid-time time-error"></label><br>
+                          <div class="col-sm-2 form-inline custom-input-padding from-time">
+                              <input type="hidden" name="sunday[]" class="form-control" value="<%= parseInt(responseData.VetPracticeTimeBlocks[i].id) %>">
+                              <input type="time" name="sunday[]" id="sunday1" class="form-control sundayTime sunTime typeTime fromtime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].from_time).format('HH:mm') %>">
+                          </div>
+                          <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                              <input type="time" name="sunday[]" id="sunday2" class="form-control sundayTime sunTime typeTime totime" value="<%= moment(responseData.VetPracticeTimeBlocks[i].to_time).format('HH:mm') %>">
+                          </div>
+                          <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                        </div>
+                  <% cnt++ }}} %>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <input type="button" value="Add a field" class="add" id="sun-add" />
+                  </div>
+                </div>
+              </div>
+              <!-- Multiple time blocks end -->
+
+                <input type="hidden" name="latitude" id="latitude" value="<%= typeof responseData==='object'?responseData.latitude:'' %>">
+                <input type="hidden" name="longitude" id="longitude" value="<%= typeof responseData==='object'?responseData.longitude:'' %>">
+                <div class="form-group row">
+                  <label class="col-sm-2"></label>
+                  <div class="col-sm-5">
+                    <div id="vetMap"></div>
+                  </div>
+                </div>
+
+                <!-- <div class="form-group row">
+                  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <a href="/admin/vetPractices" class="btn btn-primary ml-10">Cancel</a>
+                  </div>
+                </div> -->
+                <!-- <div class="form-group row">
+                  <div class="row submit-row">
+                    <button type="submit" class="btn btn-success custom-save-btn custom-save-common custom-top">Save</button>
+                    <a href="/admin/vetPractices" class="btn btn-primary ml-10 custom-cancel-btn"></a>
+                  </div>
+                </div> -->
+              </form>
+          </div>
+
+          <!-- <div class="box-footer text-center">
+          </div> -->
+          <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+
+      </section>
+
+      <section class="content" id="form-details">
+        <div class="box custom-user-box">
+          <h4 class="text-center">How to fill in this form ?
+            <a data-toggle="collapse" id="collapse-show-details" href="#collapse-details" aria-expanded="false" style="color: black">
+              <i class="fa fa-plus"></i>
+              <i class="fa fa-minus"></i>
+            </a>
+          </h4></br>
+          <div class="collapse" id="collapse-details">
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Image : </label> Image of vet practice
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Practice Name ( practice_name ) * : </label> Name of the vet practice
+              </div>
+              <div class="col-md-6">
+                <label>Public Email ( public_email ) : </label> Public Email of the vet practice
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Address ( address ) * : </label> Address of the vet practice (Line 1)
+              </div>
+              <div class="col-md-6">
+                <label>Address ( address2 ) : </label> Address of the vet practice (Line 2)
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Country ( country ) * : </label> Country of the vet practice
+              </div>
+              <div class="col-md-6">
+                <label>State/Postal/County ( state ) * : </label> State/Postal/County of the vet practice
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>City/Town ( city ) * : </label> City/Town of the vet practice
+              </div>
+              <div class="col-md-6">
+                <label>Zip Code/Post Code ( zip_code ) : </label> Zip Code/Post Code of the vet practice
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Int Code ( int_code ) : </label> Country name of the vet practice
+              </div>
+              <div class="col-md-6">
+                <label>Business Phone ( business_phone ) * : </label> Business Phone of the vet practice ( Line 2 )
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Out of Hours Number ( out_of_hours_number ) : </label> Out of Hours Number of the vet practice
+              </div>
+              <div class="col-md-6">
+                <label>Email Address ( email_address ) * : </label> Email Address of the vet practice
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Website ( website ) : </label> Website of the vet practice
+              </div>
+              <div class="col-md-6">
+                <label>Treats Categories ( treated_type_of_pets_animal ) : </label> Treats Categories of the vet practice
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Notes, Interests and Specializations ( area_of_interest_or_specialisations ) : </label> Notes, Interests and Specializations of the vet practice
+              </div>
+              <div class="col-md-6">
+                <label>Classifications ( classification ) : </label> Classifications of the vet practice
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Registration No ( practice_accreditation_no ) : </label> Registration number of the vet practice
+              </div>
+              <div class="col-md-6">
+                <label>Practice Hours ( practice_service ) : </label> Practice Hours of the vet practice
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /.content -->
+  </div>
+  <%- include ./../layout/footer.ejs -%>
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script type="module" src="/js/vet-practice.js"></script>
+    </body>
+    <script
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBa-69OiLPSTIaj3_7JE0Svx2GUnV6anpM&callback=initMap&libraries=&v=weekly"
+defer></script>
+    <script>
+      $(document).ready(function() {
+        $("#form-details-icon").on("click", function(e) {
+          e.preventDefault();
+          $("body, html").animate({ 
+            scrollTop: $("#form-details").offset().top - 150
+          }, 600);
+          $('#collapse-details').collapse('show');
+        });
+      });
+
+      function mapshow(lat, lng) {
+        const location = { lat: lat, lng: lng };
+
+        window.map = new google.maps.Map(document.getElementById("vetMap"), {
+          zoom: 18,
+          center: location,
+        });
+
+        window.marker = new google.maps.Marker({
+          position: location,
+          draggable: true,
+          map: map,
+        });
+
+        window.marker.addListener("dragend", e => {
+          $("#latitude").val(marker.getPosition().lat());
+          $("#longitude").val(marker.getPosition().lng());
+        });
+      }
+
+      function initMap() {
+        var lat = $("#latitude").val();
+        var lng = $("#longitude").val();
+
+        if(!lat && !lng){
+          navigator.geolocation.getCurrentPosition((position) => {
+            lat = position.coords.latitude;
+            lng = position.coords.longitude;
+            $("#latitude").val(lat);
+            $("#longitude").val(lng);
+            this.mapshow(lat, lng);
+          }, (error) => {
+            this.mapshow(51.5149037, -0.1235842);
+          });
+        } else {
+          lat = parseFloat(lat);
+          lng = parseFloat(lng);
+          this.mapshow(lat, lng);
+        }
+      }
+
+      $(document).ready(function () {
+        $(".speciality-multiple").select2({
+          tags: true,
+          tokenSeparators: ['#'],
+          placeholder: "Select a Notes, Interests and Specializations"
+        })
+        $('.classification-multiple').select2({
+          placeholder: "Select a Classifications"
+        });
+        $('.animal-type-multiple').select2({
+          placeholder: "Select an animal categories"
+        });
+        $('.practice-service-multiple').select2({
+          placeholder: "Select a Practice Hours"
+        });
+      });
+
+      $("#countryId").change(function (event) {
+        var selectedCountry = $('#countryId option:selected').attr('id');
+        $("#country").val(selectedCountry);
+        var selectedCountryVal = $('#countryId').val();
+        $("#stateId").html('');
+        $.ajax({
+          url: "/admin/vetPractice",
+          type: "get",
+          data: {
+            country: selectedCountry,
+          },
+          success: function (data) {
+            var len = data.length;
+            $("#stateId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%>>Add an item..</option>")
+            for (var i = 0; i < len; i++) {
+              var value1 = data[i]['state'];
+              var value2 = data[i]['id'];
+              $("#stateId").append("<option id='" + value2 + "' >" + value1 + "</option>");
+            }
+          },
+        });
+        event.preventDefault();
+      });
+
+      $("#stateId").change(function (event) {
+        var selectedState = $('#stateId option:selected').attr('id');
+        $("#state").val(selectedState);
+        event.preventDefault();
+      });
+
+      $(".sidebar-menu li").removeClass("active");
+
+      $(".menu__vetPractices").addClass("active");
+
+      /* $("form").submit(function (event) {
+      }); */
+
+      function getAddress() {
+        // if(window.lng ==0 && window.lat == 0) {
+          var address1 = document.getElementById('address1').value;
+          var address2 = document.getElementById('address2').value;
+          var city = document.getElementById('city').value;
+          var zip_code = document.getElementById('zip_code').value
+          let addressToSearch = '';
+          if (address1) {
+            addressToSearch = address1;
+          }
+          if (address2) {
+            addressToSearch += ' '+address2;
+          }
+          if(city) {
+            addressToSearch += ' '+city;
+          }
+          if(zip_code) {
+            addressToSearch += ',' + zip_code
+          }
+
+          if(addressToSearch) {
+            fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${addressToSearch}&key=AIzaSyBa-69OiLPSTIaj3_7JE0Svx2GUnV6anpM`).then(x => x.text()).then(x => {
+              const data = JSON.parse(x);
+              if (data
+                && data.results
+                && data.results[0]
+                && data.results[0].geometry
+                && data.results[0].geometry.location) {
+                  var location = data.results[0].geometry.location;
+
+                  $("#latitude").val(location.lat);
+                  $("#longitude").val(location.lng);
+
+                  marker.setPosition({lat: location.lat, lng: location.lng});
+                  const center = new google.maps.LatLng(location.lat, location.lng);
+                  window.map.panTo(center);
+              }
+            });
+          }
+      }
+    </script>
+
+</html>

@@ -1,0 +1,191 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/subscription.css">
+    <!-- <link rel="stylesheet" href="/css/style.css"> -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+</head>
+
+<body>
+    <header class="header">
+        <nav class="custom-navbar">
+            <img src="/images/vetpassLogo.png" class="login-logo" />
+            <a class="menu-link custom-sub" href="/admin/subscriptionList">Subscriptions</a>
+            <a class="menu-link custom-ad" href="/admin/advertisement-details">Advertisement</a>
+            <a class="menu-link custom-logout" href="/admin/logout">Logout</a>
+        </nav>
+    </header>
+    <div class="container margin-con">
+        <center><h1>Advertisement Form</h1></center>
+        <form action="<%= typeof responseData==='object'?'/admin/advertisements/update':'/admin/advertisements' %>"
+            id="forumsForm" method="POST" enctype="multipart/form-data">
+            <section class="content">
+        
+            <!-- Default box -->
+            <div class="box custom-box">
+              <!-- <div class="box-header with-border">
+              </div> -->
+              <div class="box-body">
+                <!-- <%- include ./../layout/partials/alert-section.ejs -%> -->
+        
+                  <div class="form-group row">
+                    <div class="col-sm-6 add-width">
+                      <label for="advertisementImage" class="">Advertisement Image</label>
+                      <div class="position-relative">
+                        <div class="choose-profile-fanpage">
+                        <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                          <input type="file" id="advertisementImage" name="advertisementImage" accept="image/png, image/jpeg">
+                        </div>
+                        <div class="d-none profile_img">
+                          <img
+                            src="<%= typeof responseData==='object' && typeof responseData.banner==='object' && responseData.banner && responseData.banner.UploadFile && responseData.banner.UploadFile.url ? responseData.banner.UploadFile.url: '/images/vet-practice-edit.png' %>"
+                            alt="Vet Practice" height="200" width="100%" id="advertisement-img">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br/>
+
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <label for="title" class="">Advertisement Title</label>
+                      <input type="text" name="title" id="title" class="form-control" placeholder="Advertisement Title"
+                      value="<%= typeof responseData==='object'?responseData.title:'' %>">
+                    </div>
+                  </div>
+                  
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <label for="text" class="">Advertisement Text</label>
+                      <input type="text" name="text" id="text" class="form-control" placeholder="Advertisement Text"
+                      value="<%= typeof responseData==='object'?responseData.text:'' %>">
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <label for="website" class="">Website</label>
+                      <input type="text" name="website" id="website" class="form-control" placeholder="Website"
+                      value="<%= typeof responseData==='object'?responseData.website:'' %>">
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-sm-6">
+                      <label for="country" class="">Country</label>
+                      <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Country - Where Advertisement is shows to users."></i>
+                        <select class="form-control type-select-box" id="country" name="country">
+                          <option <%=(typeof responseData!=='object' || !responseData.country)? 'selected' : '' %>
+                            value="" disabled>Add an item..</option>
+                          <% for (var i=0; i < countryData.length; i++ ) { %>
+                            <option <%=typeof responseData==='object' ?countryData[i].id===responseData.country ? 'selected'
+                              : '' : '' %>
+                              value="<%= countryData[i].id %>" id="<%= countryData[i].id %>">
+                                <%= countryData[i].country %>
+                            </option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="stateId" class="">State</label>
+                      <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="State - Where Advertisement is shows to users."></i>
+                      <select class="form-control state-multiple" name="state[]" id="state"
+                        value="<%= typeof responseData==='object'?responseData.name:'' %>" multiple="multiple">
+                        <% if(typeof states==='object' ) { for (var i=0; i < states.length; i++ ) { %>
+                          <option <%=typeof responseData==='object' && responseData.stateData &&
+                            responseData.stateData.includes(states[i].id) ? 'selected' : ''
+                            %>
+                            value="<%= states[i].id %>">
+                              <%= states[i].state %>
+                          </option>
+                          <% } } %>
+                      </select>
+                    </div>
+                  </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-12 text-center">
+                        <button type="submit" class="btn btn-success custom-save-btn custom-reg-btn custom-save">Save</button>
+                </div>
+        
+              </div>
+        
+            </section>
+              
+          </form>
+        <br /><br />
+    </div>
+    <script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script type="module" src="/js/advertisement.js"></script>
+    <script src="/plugins/datatables/jquery.dataTables.js"></script>
+    <script src="/plugins/jQueryValidate/jquery.validate.min.js"></script>
+    <script src="/js/additional-validation-rules.js"></script>
+    <script src="/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script>
+      $("#state").select2({
+        tokenSeparators: ['#'],
+        placeholder: "Select states",
+        maximumSelectionLength: 3,
+      });
+      $("#country").change(function (event) {
+        var selectedCountry = $('#country option:selected').attr('id');
+        var selectedCountryVal = $('#country').val();
+        var states = '<%= typeof responseData =="object" && responseData.stateData ? responseData.stateData : [] %>';
+        states = states.split(',').map(Number);
+        $("#state").html('');
+        $.ajax({
+          url: "/admin/advertisement",
+          type: "get",
+          data: {
+            country: selectedCountry,
+          },
+          success: function (data) {
+            var len = data.length;
+            // $("#state").append("<option <%= typeof responseData!=='object'? 'selected' : ''%>>Add an item..</option>")
+            for (var i = 0; i < len; i++) {
+              var value1 = data[i]['state'];
+              var value2 = data[i]['id'];
+              var selected = states.includes(value2) ? "selected" : "";
+              $("#state").append("<option value='" + value2 + "' id='" + value2 + "' >" + value1 + "</option>");
+            }
+            $("#state").select2('destroy').val("").select2();
+            $("#state").select2({ placeholder: "Select states", maximumSelectionLength: 3 });
+          },
+        });
+        event.preventDefault();
+      });
+      function getSelectedStates() {
+        var selectedCountry = $('#country option:selected').attr('id');
+        var selectedCountryVal = $('#country').val();
+        var states = '<%= typeof responseData =="object" && responseData.stateData ? responseData.stateData : [] %>';
+        states = states.split(',').map(Number);
+        $("#state").html('');
+        $.ajax({
+          url: "/admin/advertisement",
+          type: "get",
+          data: {
+            country: selectedCountry,
+          },
+          success: function (data) {
+            var len = data.length;
+            // $("#state").append("<option <%= typeof responseData!=='object'? 'selected' : ''%>>Add an item..</option>")
+            for (var i = 0; i < len; i++) {
+              var value1 = data[i]['state'];
+              var value2 = data[i]['id'];
+              var selected = states.includes(value2) ? "selected" : "";
+              // console.log(states.includes(value2.toString()), states, value2.toString())
+              $("#state").append("<option value='" + value2 + "' id='" + value2 + "' "+ selected +">" + value1 + "</option>");
+            }
+          },
+        });
+      }
+      getSelectedStates();
+    </script>
+</body>
+</html>

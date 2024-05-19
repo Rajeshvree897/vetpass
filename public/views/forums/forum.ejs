@@ -1,0 +1,811 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+  <%- include ./../layout/partials/page-header-section.ejs -%>
+
+  <!-- Main content -->
+  <form action="<%= typeof responseData==='object'?'/admin/forums/update':'/admin/forums' %>"
+    id="forumsForm" method="POST" enctype="multipart/form-data">
+    <div class="form-group button-row">
+      <button type="submit" class="btn btn-success custom-save-btn custom-save-common custom-top save-user">Save</button>
+      <a href="/admin/forums" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> Forum</h1>
+      <h1 class="custom-add-heading-details" id="form-details-icon">How to fill in this form <i class="fa fa-question-circle"></i></h1>
+      <small class="custom-add-text">API ID : forum</small>
+    </div>
+    <section class="content">
+
+    <!-- Default box -->
+    <div class="box custom-box">
+      <!-- <div class="box-header with-border">
+      </div> -->
+      <div class="box-body">
+        <%- include ./../layout/partials/alert-section.ejs -%>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="forumImage" class="">Image  (Preferred resolution - 400 x 400)</label>
+              <div class="position-relative">
+                <div class="choose-profile-forum" style="height: 200px;"></div>
+                <script type="text/javascript">
+                  // to store files that were previously uploaded. used during edit forum
+                  // typeof oldImageData 
+                  // { 
+                  //   id: number, // id of upload morph
+                  //   src: string // url to the file
+                  // }[]
+                  var preloadedImages = JSON.parse('<%- JSON.stringify(!!locals.oldImageData ? oldImageData : []) %>');
+                </script>
+              </div>
+            </div>
+            <div class="col-sm-6">
+            <label for="question" class="">Question</label>
+              <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <input type="text" name="question" id="question" class="form-control" placeholder="Question"
+                value="<%= typeof responseData==='object'?responseData.question:'' %>" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'readonly' : '' %>>
+            </div>
+          </div>
+          
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="category" class="">Subject</label>
+              <input type="text" name="category" id="category" class="form-control" placeholder="Subject"
+              value="<%= typeof responseData==='object'?responseData.category:'' %>" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'readonly' : '' %>>
+            </div>
+            <% if(title === 'Forum Edit' && typeof responseData==='object' && typeof responseData.is_admin === 'boolean' && !responseData.is_admin) { %>
+            <div class="col-sm-6">
+              <label for="user_id" class="">User Name</label>
+              <input type="text" name="user_id" id="user_id" class="form-control" placeholder="UserID"
+              value="<%= typeof forumUser === 'object' && forumUser ? forumUser.first_name + ' ' + forumUser.last_name : 'admin' %>" disabled>
+            </div>
+            <% } %> 
+          </div>
+          
+          <div class="form-group row">
+            <!-- <div class="col-sm-6 forum">
+              <label for="date" class="">Date</label>
+              <input type="date" name="date" id="date" class="form-control" placeholder="Date"
+              value="<%= typeof responseData==='object'?responseData.date:'' %>">
+            </div> -->
+            <div class="col-sm-6">
+              <label for="status" class="">Status</label>
+              <select class="form-control type-select-box" id="status" name="status"
+                value="<%= typeof responseData==='object'?responseData.status:'' %>">
+                <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Choose here</option>
+                <% for (var i=0; i < postStatusData.length; i++ ) { %>
+                  <option <%=typeof responseData==='object' ?postStatusData[i]===responseData.status
+                    ? 'selected' : '' : '' %>>
+                    <%= postStatusData[i] %>
+                  </option>
+                <% } %>
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <label for="privacy" class="">Privacy</label>
+              <select class="form-control type-select-box" id="privacy" name="privacy" onchange="showDiv('userId','user_label','userList', this)" required
+                value="<%= typeof responseData==='object'?responseData.privacy:'' %>" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %>>
+                <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Choose here</option>
+                <% for (var i=0; i < privacyData.length; i++ ) { %>
+                  <option <%=typeof responseData==='object' ?privacyData[i]===responseData.privacy
+                    ? 'selected' : '' : '' %>>
+                    <%= privacyData[i] %>
+                  </option>
+                <% } %>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="categoryId" class="">Animal Categories (<span id="categoryCount"><%= typeof responseData==='object' ? responseData.types.length: 0 %></span>)</label>
+              <input type="hidden" name="animal_category" id="animal_category"
+                value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <select class="form-control type-select-box" id="categoryId" name="categoryId"
+                value="<%= typeof responseData==='object'?responseData.name:'' %>" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %>>
+                <option <%= typeof responseData!=='object'? 'selected' : ''%> value="">Add an item..</option>
+                <% if(typeof animalCategory === 'object') { for (var i=0; i < animalCategory.length;  i++ ) { %>
+                <option
+                  <%= typeof responseData==='object'?animalCategory[i].id === responseData.animal_category ? 'selected' : '': '' %>
+                  id="<%= animalCategory[i].id %>">
+                  <%= animalCategory[i].category %></option>
+                <% } } %>
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <label for="vet_only" class="">Vet Only</label>
+              <select name="vet_only" class="form-control type-select-box" id="vet_only" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %>>
+                <option <%=typeof responseData!=='object' || ((typeof responseData.vet_only == "boolean" || typeof responseData.vet_only == "object") && (responseData.vet_only == "" || responseData.vet_only == null) ) ? 'selected' : '' %> disabled>Choose here</option>
+                <option <%= (typeof responseData==='object' && typeof responseData.vet_only === "boolean" && responseData.vet_only === true)?'selected':'' %> value="true">Yes</option>
+                <option <%= (typeof responseData==='object' && typeof responseData.vet_only === "boolean" && responseData.vet_only === false)?'selected':'' %> value="false">No</option>
+            </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3">
+              <ul class="categoryList pl-0" id="categoryList">
+                <%  if(typeof responseData==='object') { for (var i=0; i < responseData.categories.length;  i++ ) { %>
+                  <% if(responseData.categories[i] && responseData.categories[i].id){ %>
+                  <li data-id="<%= responseData.categories[i].id %>" class="li-flex"><div><%= responseData.categories[i].category %></div>
+                    <% if(typeof responseData==='object' && userData.id == responseData.user_id) { %>
+                      <i id="<%= responseData.categories[i].id %>" class="fa fa-minus cat-delete-icon"></i>
+                    <% } %>
+                  </li>
+             <% }} }%>
+              </ul>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="typeId" class="">Animal Types (<span id="typeCount"><%= typeof responseData==='object' ? responseData.types.length: 0 %></span>)</label>
+              <input type="hidden" name="type" id="type"
+                value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <select class="form-control type-select-box" id="typeId" name="typeId"
+                value="<%= typeof responseData==='object'?responseData.name:'' %>" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %>>
+                <option <%= typeof responseData!=='object'? 'selected' : ''%> value="">Add an item..</option>
+                <% if(typeof animalTypes === 'object') { for (var i=0; i < animalTypes.length;  i++ ) { %>
+                <option
+                  <%= typeof responseData==='object'?animalTypes[i].id === responseData.animal_type ? 'selected' : '': '' %>
+                  id="<%= animalTypes[i].id %>">
+                  <%= animalTypes[i].type %></option>
+                <% } } %>
+              </select>
+            </div>
+            <!-- <div class="col-sm-6">
+              <label for="vet_only" class="">Vet Only</label>
+              <select name="vet_only" class="form-control type-select-box" id="vet_only" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %>>
+                <option <%=typeof responseData!=='object' || ((typeof responseData.vet_only == "boolean" || typeof responseData.vet_only == "object") && (responseData.vet_only == "" || responseData.vet_only == null) ) ? 'selected' : '' %> disabled>Choose here</option>
+                <option <%= (typeof responseData==='object' && typeof responseData.vet_only === "boolean" && responseData.vet_only === true)?'selected':'' %> value="true">Yes</option>
+                <option <%= (typeof responseData==='object' && typeof responseData.vet_only === "boolean" && responseData.vet_only === false)?'selected':'' %> value="false">No</option>
+            </select>
+            </div> -->
+          </div>
+
+          <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3">
+              <ul class="typeList pl-0" id="typeList">
+                <%  if(typeof responseData==='object') { for (var i=0; i < responseData.types.length;  i++ ) { %>
+                  <% if(responseData.types[i] && responseData.types[i].id){ %>
+                  <li data-id="<%= responseData.types[i].id %>" class="li-flex"><div><%= responseData.types[i].type %></div>
+                    <% if(typeof responseData==='object' && userData.id == responseData.user_id) { %>
+                      <i id="<%= responseData.types[i].id %>" class="fa fa-minus delete-icon"></i>
+                    <% } %>
+                  </li>
+             <% }} }%>
+              </ul>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="breedId" class="">Breeds (<span id="breedCount"><%= typeof responseData==='object' ? responseData.breeds.length: 0 %></span>)</label>
+              <input type="hidden" name="breed" id="breed"
+                value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <select class="form-control type-select-box" id="breedId" name="breedId"
+                value="<%= typeof responseData==='object'?responseData.name:'' %>" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %>>
+                <option <%= typeof responseData!=='object'? 'selected' : ''%> value="">Add an item..</option>
+                <% if(typeof breeds ==='object') { for (var i=0; i < breeds.length;  i++ ) { %>
+                <option
+                  <%= typeof responseData==='object'?breeds[i].id === responseData.animal_type ? 'selected' : '': '' %>
+                  id="<%= breeds[i].id %>">
+                  <%= breeds[i].name %></option>
+                <% } } %>
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <label for="userId" id="user_label" class="">Vet Users (<span id="userCount"><%= typeof responseData==='object' ? responseData.users.length: 0 %></span>)</label>
+              <input type="hidden" name="user" id="user"
+                value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <select class="form-control type-select-box custom_user" id="userId" name="userId"
+                value="<%= typeof responseData==='object'?responseData.first_name:'' %>" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %>>
+                <option <%= typeof responseData!=='object'? 'selected' : ''%> value="">Add an item..</option>
+                <% if(typeof users === 'object') { for (var i=0; i < users.length;  i++ ) { %>
+                <option
+                  <%= typeof responseData==='object'?users[i].id === responseData.users ? 'selected' : '': '' %>
+                  id="<%= users[i].id %>">
+                  <%= users[i].first_name %> <%= users[i].last_name %></option>
+                <% } } %>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3">
+              <ul class="breedList pl-0" id='breedList'>
+                  <%  if(typeof responseData==='object') { for (var i=0; i < responseData.breeds.length;  i++ ) { %>
+                    <% if(responseData.breeds[i] && responseData.breeds[i].id){ %>
+                    <li data-id="<%= responseData.breeds[i].id %>" class="li-flex"><div><%= responseData.breeds[i].name %></div>
+                      <% if(typeof responseData==='object' && userData.id == responseData.user_id) { %>
+                        <i id="<%= responseData.breeds[i].id %>" class="fa fa-minus breed-delete-icon"></i>
+                      <% } %>
+                    </li>
+               <% }} } %>
+              </ul>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3">
+              <ul class="userList pl-0" id='userList'>
+                  <%  if(typeof responseData==='object') { for (var i=0; i < responseData.users.length;  i++ ) { %>
+                    <% if(responseData.users[i] && responseData.users[i].id){ %>
+                    <li data-id="<%= responseData.users[i].id %>" class="li-flex"><div><%= responseData.users[i].first_name %> <%= responseData.users[i].last_name %></div>
+                      <% if(typeof responseData==='object' && userData.id == responseData.user_id) { %>
+                      <i id="<%= responseData.users[i].id %>" class="fa fa-minus user-delete-icon"></i>
+                      <% } %>
+                    </li>
+               <% }} } %>
+              </ul>
+            </div>
+          </div>
+
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <% var tempSpecializations = typeof responseData==='object' && responseData.specializations ? responseData.specializations.map(i => i.id) : []; %>
+                <label for="specializationId" class="">Specialization, Advanced Practitioner 
+                  (<span id="specializationCount">
+                    <%= (typeof responseData==='object' && typeof responseData.specializations==='object' ) ?
+                      responseData.specializations.length: 0 %>
+                  </span>)
+                </label>
+                <input type="hidden" name="specialization" id="specialization"
+                  value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                <select class="form-control type-select-box" id="specializationId" name="specializationId"
+                  value="<%= typeof responseData==='object'?responseData.name:'' %>" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %>>
+                  <option <%=typeof responseData!=='object' ? 'selected' : '' %> value="">Add an item..</option>
+                  <% for (var i=0; i < specializations.length; i++ ) { %>
+                    <% if(specializations[i] && !tempSpecializations.includes(specializations[i].id)) { %>
+                    <option <%=typeof responseData==='object' ?specializations[i].id===responseData.specializations
+                      ? 'selected' : '' : '' %>
+                      id="<%= specializations[i].id %>">
+                        <%= specializations[i].name %>
+                    </option>
+                  <% }} %>
+                </select>
+            </div>
+            <div class="col-sm-6">
+              <label for="countryId" class="">Country (<span id="countryCount"><%= typeof responseData==='object' ? responseData.country.length: 0 %></span>)</label>
+              <input type="hidden" name="country" id="country"
+                value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <select class="form-control type-select-box" id="countryId" name="countryId"
+                value="<%= typeof responseData==='object'?responseData.country:'' %>" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %>>
+                <option <%= typeof responseData!=='object'? 'selected' : ''%> value="">Add an item..</option>
+                <% if(typeof countryData ==='object') { for (var i=0; i < countryData.length;  i++ ) { if(typeof responseData === 'object' && responseData.countryIdArray.includes(countryData[i].id)) { continue; } %>
+                <option
+                  <%= typeof responseData==='object'?countryData[i].id === responseData.country ? 'selected' : '': '' %>
+                  id="<%= countryData[i].id %>">
+                  <%= countryData[i].country %></option>
+                <% } } %>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3">
+              <ul class="specializationList pl-0" id="specializationList">
+                <%  if(typeof responseData==='object') { for (var i=0; i < responseData.specializations.length;  i++ ) { %>
+                  <% if(responseData.specializations[i] && responseData.specializations[i].id){ %>
+                  <li data-id="<%= responseData.specializations[i].id %>" class="li-flex"><div><%= responseData.specializations[i].name %></div>
+                    <% if(typeof responseData==='object' && userData.id == responseData.user_id) { %>
+                      <i id="<%= responseData.specializations[i].id %>" class="fa fa-minus specialization-delete-icon"></i>
+                    <% } %>
+                  </li>
+             <% }} }%>
+              </ul>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3">
+              <ul class="countryList pl-0" id='countryList'>
+                  <%  if(typeof responseData==='object') { for (var i=0; i < responseData.country.length;  i++ ) { %>
+                    <% if(responseData.country[i] && responseData.country[i].id){ %>
+                    <li data-id="<%= responseData.country[i].id %>" class="li-flex"><div><%= responseData.country[i].country %></div>
+                      <% if(typeof responseData==='object' && userData.id == responseData.user_id) { %>
+                        <i id="<%= responseData.country[i].id %>" class="fa fa-minus country-delete-icon"></i>
+                      <% } %>
+                    </li>
+               <% }} } %>
+              </ul>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <label for="description" class="">Description</label>
+                <textarea class="form-control" rows="10" name="description" id="description" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'readonly' : '' %>
+                  placeholder="Description"><%= typeof responseData==='object'?responseData.description:'' %></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+      
+    <section class="content" id="form-details">
+      <div class="box custom-user-box">
+        <h4 class="text-center">How to fill in this form ?
+          <a data-toggle="collapse" id="collapse-show-details" href="#collapse-details" aria-expanded="false" style="color: black">
+            <i class="fa fa-plus"></i>
+            <i class="fa fa-minus"></i>
+          </a>
+        </h4></br>
+        <div class="collapse" id="collapse-details">
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Image : </label> Image of forum
+            </div>
+            <div class="col-md-6">
+              <label>Question ( question ) * : </label> Question of the forum
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Subject ( category ) * : </label> Subject of the forum
+            </div>
+            <div class="col-md-6">
+              <label>User Name ( user_id ) : </label> Name of the user who created the forum ( read only )
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Status ( status ) * : </label> Activation status of the forum
+            </div>
+            <div class="col-md-6">
+              <label>Privacy ( privacy ) * : </label> Privacy status of the forum
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Animal Categories ( animal_category ) : </label> Categories of animal for the forum
+            </div>
+            <div class="col-md-6">
+              <label>Vet Only ( vet_only ) : </label> To check if forum is visible to vets only or not
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Animal Types ( animal_type ) : </label> Types of animal for the forum
+            </div>
+            <div class="col-md-6">
+              <label>Description ( description ) : </label> Description for the forum
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Breeds ( breed ) : </label> Breeds for the forum
+            </div>
+            <div class="col-md-6">
+              <label>Vet Users ( user ) : </label> Name of vet users for the forum ( required if forum is private )
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Specialization, Advanced Practitioner ( specialization ) : </label> Specialization, Advanced Practitioner of the forum
+            </div>
+            <div class="col-md-6">
+              <label>Country ( country ) : </label> Country of the forum
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </form>
+
+</div>
+<%- include ./../layout/footer.ejs -%>
+    <script src="/plugins/image-uploader/src/image-uploader.js"></script>
+    <script type="module" src="/js/forum.js"></script>
+    <script src="/plugins/datatables/jquery.dataTables.js"></script>
+    <script src="/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="/plugins/datatables//dataTables.buttons.min.js"></script>
+
+    <script>
+      $(".sidebar-menu li").removeClass("active");
+      $(".menu__forums").addClass("active");
+      $(document).ready(function() {
+        $("#form-details-icon").on("click", function(e) {
+          e.preventDefault();
+          $("body, html").animate({ 
+            scrollTop: $("#form-details").offset().top - 150
+          }, 600);
+          $('#collapse-details').collapse('show');
+        });
+      });
+
+      // Set breed dropdown values
+      setBreeds();
+      setTypes();
+
+      $('.typeList li').each(function () {
+        const selectedTypeId = $(this).attr('data-id');
+        $(`#typeId option[id=${selectedTypeId}]`).remove();
+      });
+      $('.categoryList li').each(function () {
+        const selectedCategoryId = $(this).attr('data-id');
+        $(`#categoryId option[id=${selectedCategoryId}]`).remove();
+      });
+      $(document).ready(function() {
+          var privacy = $("#privacy").val();
+          document.getElementById('user_label').style.display = privacy == 'Private' ? 'block' : 'none'
+          document.getElementById('userId').style.display = privacy == 'Private' ? 'block' : 'none'
+          // In case forums privacy option is Public but forums__vet_id table contains vet_users
+          if(privacy == 'Public') {
+            $('.userList li').remove();
+            $("#userCount").html($('.userList li').length);
+          }
+      });
+
+      $(document).on("click", ".delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#typeCount").html($('.typeList li').length);
+        $("#typeId").append(`<option id=${id}>${values.html()}</option>`);
+        setBreeds();
+        resetBreeds(id);
+      });
+      $(document).on("click", ".cat-delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#categoryCount").html($('.categoryList li').length);
+        $("#categoryId").append(`<option id=${id}>${values.html()}</option>`);
+        setTypes();
+        resetTypes(id);
+      });
+      $("#categoryId").change(function (event) {
+        var selectedType = $('#categoryId option:selected').attr('id');
+        var selectedTypeVal = $('#categoryId').val();
+        $("#categoryCount").html($('.categoryList li').length + 1);
+        $(".categoryList").append(`<li data-id=${selectedType} class="li-flex"><div>${selectedTypeVal}</div><i id= ${selectedType} class="fa fa-minus cat-delete-icon"></i></li>`)
+        $("#categoryId option:selected").remove();
+        setTypes();
+        event.preventDefault();
+      });
+      $("#typeId").change(function (event) {
+        var selectedType = $('#typeId option:selected').attr('id');
+        var selectedTypeVal = $('#typeId').val();
+        $("#typeCount").html($('.typeList li').length + 1);
+        $(".typeList").append(`<li data-id=${selectedType} class="li-flex"><div>${selectedTypeVal}</div><i id= ${selectedType} class="fa fa-minus delete-icon"></i></li>`)
+        $("#typeId option:selected").remove();
+        setBreeds();
+        event.preventDefault();
+      });
+      $(document).on("click", ".breed-delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#breedCount").html($('.breedList li').length);
+        $("#breedId").append(`<option id=${id}>${values.html()}</option>`);
+        setBreeds();
+      });
+      $("#breedId").change(function () {
+        var selectedBreed = $('#breedId option:selected').attr('id');
+        var selectedBreedVal = $('#breedId').val();
+        $("#breedCount").html($('.breedList li').length + 1);
+        $(".breedList").append(`<li data-id=${selectedBreed} class="li-flex"><div>${selectedBreedVal}</div><i id= ${selectedBreed} class="fa fa-minus breed-delete-icon"></i></li>`)
+        $("#breedId option:selected").remove();
+      });
+      $(document).on("click", ".user-delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#userCount").html($('.userList li').length);
+        $("#userId").append(`<option id=${id}>${values.html()}</option>`);
+      });
+      $("#userId").change(function () {
+        var selectedUser = $('#userId option:selected').attr('id');
+        var selectedUserVal = $('#userId').val();
+        $("#userCount").html($('.userList li').length + 1);
+        $(".userList").append(`<li data-id=${selectedUser} class="li-flex"><div>${selectedUserVal}</div><i id= ${selectedUser} class="fa fa-minus user-delete-icon"></i></li>`)
+        $("#userId option:selected").remove();
+      });
+      $(document).on("click", ".specialization-delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#specializationCount").html($('.specializationList li').length);
+        $("#specializationId").append(`<option id=${id}>${values.html()}</option>`);
+      });
+      $("#specializationId").change(function () {
+        var selectedType = $('#specializationId option:selected').attr('id');
+        var selectedTypeVal = $('#specializationId').val();
+        $("#specializationCount").html($('.specializationList li').length + 1);
+        $(".specializationList").append(`<li data-id=${selectedType} class="li-flex"><div>${selectedTypeVal}</div><i id= ${selectedType} class="fa fa-minus specialization-delete-icon"></i></li>`)
+        $("#specializationId option:selected").remove();
+      });
+      $(document).on("click", ".country-delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#countryCount").html($('.countryList li').length);
+        $("#countryId").append(`<option id=${id}>${values.html()}</option>`);
+      });
+      $("#countryId").change(function () {
+        var selectedType = $('#countryId option:selected').attr('id');
+        var selectedTypeVal = $('#countryId').val();
+        $("#countryCount").html($('.countryList li').length + 1);
+        $(".countryList").append(`<li data-id=${selectedType} class="li-flex"><div>${selectedTypeVal}</div><i id= ${selectedType} class="fa fa-minus country-delete-icon"></i></li>`)
+        $("#countryId option:selected").remove();
+      });
+      function showDiv(userDropDown, userLabel, userList, element)
+      {
+          document.getElementById(userDropDown).style.display = element.value == 'Private' ? 'block' : 'none';
+          document.getElementById(userLabel).style.display = element.value == 'Private' ? 'block' : 'none';
+          document.getElementById(userList).style.display = element.value == 'Private' ? 'block' : 'none';
+          var selectedUsers = $('.userList li');
+          var selectedUsersIds = [];
+          if(element.value === 'Public') {
+            $('.userList li').remove()
+            $("#userCount").html($('.userList li').length);
+          }
+      }
+
+      $("form").submit(function (event) {
+        $("#forumsForm :input").prop("disabled", false);
+        var selectedCategories = $('.categoryList li');
+        var selectedTypes = $('.typeList li');
+        var selectedBreeds = $('.breedList li');
+        var selectedUsers = $('.userList li');
+        var selectedSpecializations = $('.specializationList li');
+        var selectedCountry = $('.countryList li');
+
+        var selectedCategoryIds = [];
+        var selectedTypesIds = [];
+        var selectedBreedsIds = [];
+        var selectedUsersIds = [];
+        var selectedSpecializationsIds = [];
+        var selectedCountryIds = [];
+
+        for (let i = 0; i < selectedCategories.length; i++) {
+          selectedCategoryIds.push(selectedCategories[i].getAttribute('data-id'))
+        }
+        for (let i = 0; i < selectedTypes.length; i++) {
+          selectedTypesIds.push(selectedTypes[i].getAttribute('data-id'))
+        }
+        for (let i = 0; i < selectedBreeds.length; i++) {
+          selectedBreedsIds.push(selectedBreeds[i].getAttribute('data-id'))
+        }
+        for (let i = 0; i < selectedUsers.length; i++) {
+          selectedUsersIds.push(selectedUsers[i].getAttribute('data-id'))
+        }
+        for (let i = 0; i < selectedSpecializations.length; i++) {
+          selectedSpecializationsIds.push(selectedSpecializations[i].getAttribute('data-id'))
+        }
+        for (let i = 0; i < selectedCountry.length; i++) {
+          selectedCountryIds.push(selectedCountry[i].getAttribute('data-id'))
+        }
+        $("#animal_category").val(selectedCategoryIds);
+        $("#user").val(selectedUsersIds);
+        $("#type").val(selectedTypesIds);
+        $("#breed").val(selectedBreedsIds);
+        $("#specialization").val(selectedSpecializationsIds);
+        $("#country").val(selectedCountryIds);
+      });
+      function resetTypes(categoryId) {
+        var selectedBreeds = [];
+        let removedBreeds = [];
+        
+        $('.typeList li').each(function () {
+          selectedBreeds.push($(this).attr('data-id'));
+        });
+
+        if (categoryId) {
+          $.ajax({
+            url: "/admin/forum",
+            type: "get",
+            data: {
+              animalCategory: categoryId,
+            },
+            success: function (data) {
+                var len = data.length;
+                for (var i = 0; i < len; i++) {
+                  var value1 = data[i]['type'];
+                  var value2 = data[i]['id'];
+                  if (selectedBreeds.includes(value2.toString())) {
+                    removedBreeds.push(value2)
+                  }
+                }
+
+                for(let i in removedBreeds) {
+                  $('.typeList li[data-id="' + removedBreeds[i] + '"]').remove();
+                }
+                // $("#typeId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%> value=''>Add an item..</option>")
+                $("#typeCount").html($('.typeList li').length);
+            },
+          });
+        }
+      }
+      function resetBreeds(typeId) {
+        var selectedBreeds = [];
+        let removedBreeds = [];
+        
+        $('.breedList li').each(function () {
+          selectedBreeds.push($(this).attr('data-id'));
+        });
+
+        if (typeId) {
+          $.ajax({
+            url: "/admin/forum",
+            type: "get",
+            data: {
+              animalType: typeId,
+            },
+            success: function (data) {
+                var len = data.length;
+                for (var i = 0; i < len; i++) {
+                  var value1 = data[i]['name'];
+                  var value2 = data[i]['id'];
+                  if (selectedBreeds.includes(value2.toString())) {
+                    removedBreeds.push(value2)
+                  }
+                }
+
+                for(let i in removedBreeds) {
+                  $('.breedList li[data-id="' + removedBreeds[i] + '"]').remove();
+                }
+                $("#breedId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%> value=''>Add an item..</option>")
+                $("#breedCount").html($('.breedList li').length);
+            },
+          });
+        }
+      }
+      function setBreeds() {
+        var selectedAnimals = [];
+        var selectedBreeds = [];
+
+        $('.breedList li').each(function () {
+          selectedBreeds.push($(this).attr('data-id'));
+        });
+        $('.typeList li').each(function () {
+          selectedAnimals.push($(this).attr('data-id'));
+        });
+        $("#breedId").html('');
+        if (selectedAnimals.length > 0) {
+          $.ajax({
+            url: "/admin/forum",
+            type: "get",
+            data: {
+              animalType: selectedAnimals,
+            },
+            success: function (data) {
+              var len = data.length;
+              $("#breedId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%> value=''>Add an item..</option>")
+              for (var i = 0; i < len; i++) {
+                var value1 = data[i]['name'];
+                var value2 = data[i]['id'];
+                if (!selectedBreeds.includes(value2.toString())) {
+                  $("#breedId").append("<option id='" + value2 + "' >" + value1 + "</option>");
+                }
+              }
+            },
+          });
+        }
+      }
+      function setTypes() {
+        var selectedCategory = [];
+        var selectedAnimals = [];
+        var selectedBreeds = [];
+
+        $('.breedList li').each(function () {
+          selectedBreeds.push($(this).attr('data-id'));
+        });
+        $('.typeList li').each(function () {
+          selectedAnimals.push($(this).attr('data-id'));
+        });
+        $('.categoryList li').each(function () {
+          selectedCategory.push($(this).attr('data-id'));
+        });
+      
+
+        $("#typeId").html('');
+        $("#typeId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%> value=''>Add an item..</option>")
+        if (selectedCategory.length > 0) {
+          $.ajax({
+            url: "/admin/forum",
+            type: "get",
+            data: {
+              animalCategory: selectedCategory,
+            },
+            success: function (data) {
+              var len = data.length;
+              for (var i = 0; i < len; i++) {
+                var value1 = data[i]['type'];
+                var value2 = data[i]['id'];
+                if (!selectedBreeds.includes(value2.toString())) {
+                  $("#typeId").append("<option id='" + value2 + "' >" + value1 + "</option>");
+                }
+              }
+            },
+          });
+        }
+        setTimeout(reset_breeds, 2000);
+
+      }
+
+      function reset_breeds() {
+        var selectedAnimals = [];
+        var selectedBreeds = [];
+        let removedBreeds = [];
+
+        $('.breedList li').each(function () {
+          selectedBreeds.push($(this).attr('data-id'));
+        });
+        $('.typeList li').each(function () {
+          selectedAnimals.push($(this).attr('data-id'));
+        });
+        console.log("here", selectedAnimals);
+        $("#breedId").html('');
+        if (selectedAnimals.length > 0) {
+          $.ajax({
+            url: "/admin/forum",
+            type: "get",
+            data: {
+              animalType: selectedAnimals,
+            },
+            success: function (data) {
+              console.log(data);
+              selectedBreeds = [];
+              $('.breedList li').each(function () {
+                selectedBreeds.push($(this).attr('data-id'));
+              });
+              var len = data.length;
+              $("#breedId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%> value=''>Add an item..</option>")
+              for (var i = 0; i < len; i++) {
+                var value1 = data[i]['name'];
+                var value2 = data[i]['id'];
+                if (!selectedBreeds.includes(value2.toString())) {
+                  $("#breedId").append("<option id='" + value2 + "' >" + value1 + "</option>");
+                }
+              }
+              var len = data.length;
+                for (var i = 0; i < len; i++) {
+                  var value1 = data[i]['name'];
+                  var value2 = data[i]['id'];
+                  selectedBreeds = [];
+                  $('.breedList li').each(function () {
+                    selectedBreeds.push($(this).attr('data-id'));
+                  });
+                  if (selectedBreeds.includes(value2.toString())) {
+                    removedBreeds.push(value2)
+                  }
+                }
+                console.log(removedBreeds, selectedBreeds);
+                for(let i in selectedBreeds) {
+                  console.log(removedBreeds, parseInt(selectedBreeds[i]), !removedBreeds.includes(parseInt(i)));
+                  if(!removedBreeds.includes(parseInt(selectedBreeds[i]))) {
+                    $('.breedList li[data-id="' + selectedBreeds[i] + '"]').remove();
+                  }
+                }
+                $("#breedId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%> value=''>Add an item..</option>")
+                $("#breedCount").html($('.breedList li').length);
+            },
+          });
+        } else {
+          // for(let i in selectedBreeds) {
+          //   $('.breedList li[data-id="' + i + '"]').remove();
+          // }
+          $('.breedList li').each(function () {
+            this.remove();
+          });
+          $("#breedId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%> value=''>Add an item..</option>")
+          $("#breedCount").html($('.breedList li').length);
+          console.log(">>>>>>>>>else........", $('.breedList li').length, selectedBreeds)
+          // $("#breedCount").html($('.breedList li').length);
+          // $("#breedId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%> value=''>Add an item..</option>")
+        }
+      }
+    </script>
+
+</body>
+
+</html>

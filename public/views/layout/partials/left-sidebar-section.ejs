@@ -1,0 +1,279 @@
+<aside class="main-sidebar custom-sidebar-bg">
+    <section class="sidebar">
+        <ul class="sidebar-menu">
+            <br/>
+            <% if(typeof userData === 'object' && userData.roleName === userData.practiceAdminName){ %>
+                <li class="treeview menu__users">
+                    <a href="/admin/practice-users">
+                        <i class="fa fa-user"></i> <span class="custom-list-item">Users</span>
+                    </a>
+                </li>
+                <li class="treeview menu__users">
+                    <a href="/admin/chat" target="">
+                        <i class="fa fa-comments"></i> <span class="custom-list-item">Chat</span>
+                    </a>
+                </li>
+                <!-- <li class="treeview menu__users">
+                    <a href="/admin/send-invoice" target="">
+                        <i class="fa calendar-check-o"></i> <span class="custom-list-item">Send Invoice</span>
+                    </a>
+                </li> -->
+                <!-- <li class="treeview menu__users">
+                    <a href="/admin/advertisement-subscriptions">
+                        <i class="fa fa-user"></i> <span class="custom-list-item">Advertisements</span>
+                    </a>
+                </li>
+                <li class="treeview menu__users">
+                    <a href="/admin/subscriptionList">
+                        <i class="fa fa-user"></i> <span class="custom-list-item">Subscription</span>
+                    </a>
+                </li> -->
+            <% } else if(typeof userData === 'object' && userData.roleName === userData.thirdPartyCompanyRoleName){ %>
+                <!-- <li class="treeview menu__users">
+                    <a href="/admin/advertisement-subscriptions">
+                        <i class="fa fa-user"></i> <span class="custom-list-item">Advertisements</span>
+                    </a>
+                </li>
+                <li class="treeview menu__users">
+                    <a href="/admin/subscriptionList">
+                        <i class="fa fa-user"></i> <span class="custom-list-item">Subscription</span>
+                    </a>
+                </li> -->
+            <% } else { %>
+            <li class="treeview menu__dashboard">
+                <a href="/admin/dashboard">
+                    <i class="fa fa-dashboard"></i> <span class="custom-list-item">Dashboard</span>
+                </a>
+            </li>
+            <li class="treeview menu__users">
+                <a href="/admin/users">
+                    <i class="fa fa-user"></i> <span class="custom-list-item">Users</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="menu__users_users">
+                        <a href="/admin/users">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-edit"></i> Users
+                        </a>
+                    </li>
+                    <li class="menu__users_super_admin">
+                        <a href="/admin/super-admins">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-edit"></i> Super Admin
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview menu__posts">
+                <a href="/admin/posts">
+                    <i class="fa fa-edit"></i> <span class="custom-list-item">Our Friends</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="menu__posts_posts"><a href="/admin/posts">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-edit"></i> Posts</a></li>
+                    <li class="menu__import-export-posts"><a href="/admin/import-export-posts">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-cloud-upload"></i> Import/Export Posts</a></li>
+                    <li class="menu__posts_report_posts"><a href="/admin/report-posts">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-ban"></i> Reported Posts</a></li>
+                    <li class="menu__report-reason"><a href="/admin/report-reasons">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-exclamation-circle"></i> Post Report Reasons</a></li>
+                </ul>
+            </li>
+            <!-- <li class="treeview menu__advertisements">
+                <a href="/admin/advertisements">
+                    <i class="fa fa-paw"></i> 
+                    <span class="custom-list-item">Advertisements</span> 
+                </a>
+            </li>
+            <li class="treeview menu__subscriptions">
+                <a href="/admin/subscriptions">
+                    <i class="fa fa-paw"></i> 
+                    <span class="custom-list-item">Subscriptions</span> 
+                </a>
+            </li>
+            <li class="treeview menu__subscribers">
+                <a href="/admin/subscribers">
+                    <i class="fa fa-paw"></i> 
+                    <span class="custom-list-item">Subscribers</span> 
+                </a>
+            </li> -->
+            <li class="treeview menu__animalProfiles">
+                <a href="/admin/animalProfiles">
+                    <i class="fa fa-paw"></i> 
+                    <span class="custom-list-item">Animal Profiles </span> 
+                </a>
+            </li>
+            <li class="treeview menu__animal_classification">
+                <a href="/admin/animalCategories">
+                    <i class="fa fa-paw"></i> <span class="custom-list-item">Animal Classifications</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="menu__animalCategories"><a href="/admin/animalCategories">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Animal Categories</a></li>
+                    <li class="menu__animalTypes"><a href="/admin/animalTypes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Animal Types</span> </a> </li>
+                    <li class="menu__breeds"><a href="/admin/breeds">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Breeds</a></li>
+                </ul>
+            </li>
+
+            <!-- <li class="treeview menu__animal_service">
+                <a href="/admin/mainService">
+                    <i class="fa fa-paw"></i> <span class="custom-list-item">Service Provider</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="menu__main_service"><a href="/admin/mainService">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Service</a></li>
+                    <li class="menu__sub_servivce"><a href="/admin/subService">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Sub Service</span> </a> </li>
+                </ul>
+            </li> -->
+            <!-- <li class="treeview menu__appointments">
+                <a href="/admin/appointments">
+                    <i class="fa fa-paw"></i> <span class="custom-list-item">Appointments</span>
+                </a>
+            </li> -->
+            <li class="treeview menu__appointments">
+                <a href="/admin/appointments">
+                    <i class="fa fa-paw"></i> <span class="custom-list-item">Appointments</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="menu__vet_appointments"><a href="/admin/appointments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Vet/Nurse Appointments</a></li>
+                    <li class="menu__groomers_appointments"><a href="/admin/service-provider-appointments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Service Provider Appointments</a></li>
+                    <li class="menu__walkers_appointments d-none"><a href="/admin/walkers-appointments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Walkers Appointments</a></li>
+                    <li class="menu__therapists_appointments d-none"><a href="/admin/therapists-appointments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Therapists Appointments</a></li>
+                    <li class="menu__nutritionist_appointments d-none"><a href="/admin/nutritionist-appointments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Nutritionist Appointments</a></li>
+                    <li class="menu__breeders_appointments d-none"><a href="/admin/breeders-appointments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Breeder Appointments</a></li>
+                </ul>
+            </li>
+            <li class="treeview menu__questions">
+                <a href="/admin/questions">
+                    <i class="fa fa-question"></i> <span class="custom-list-item">Frequently Asked Questions</span>
+                </a>
+            </li>
+            <!-- <li class="treeview menu__notificationTypes">
+                <a href="/admin/notificationTypes">
+                    <i class="fa fa-bell"></i> <span class="custom-list-item">Notification Types</span>
+                </a>
+            </li> -->
+            <!-- <li class="treeview menu__vetPractices">
+                <a href="/admin/vetPractices">
+                    <i class="fa fa-hospital-o"></i> <span class="custom-list-item">Vet Practices</span>
+                </a>
+            </li>
+            <li class="treeview menu__favoriteVetPractices">
+                <a href="/admin/favoriteVetPractices">
+                    <i class="fa fa-hospital-o"></i> <span class="custom-list-item">Favorite Vet Practices</span>
+                </a>
+            </li>
+            <li class="treeview menu__reportedPractices">
+                <a href="/admin/reportedPractices">
+                    <i class="fa fa-hospital-o"></i> <span class="custom-list-item">Reported Vet Practices</span>
+                </a>
+            </li> -->
+            <li class="treeview menu__practices">
+                <a href="/admin/vetPractices">
+                    <i class="fa fa-hospital-o"></i> <span class="custom-list-item">Practices</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="menu__vetPractices"><a href="/admin/vetPractices">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-hospital-o"></i> Vet Practices</a></li>
+                    <li class="menu__favoriteVetPractices"><a href="/admin/favoriteVetPractices">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-hospital-o"></i> Favorite Vet Practices</a></li>
+                    <li class="menu__reportedPractices"><a href="/admin/reportedPractices">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-hospital-o"></i> Reported Vet Practices</a></li>
+                </ul>
+            </li>
+            <li class="treeview menu__stores">
+                <a href="/admin/vetPractices">
+                    <i class="fa fa-hospital-o"></i> <span class="custom-list-item">Stores</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="menu__store"><a href="/admin/stores">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-hospital-o"></i> Stores</a></li>
+                    <li class="menu__favoritestores"><a href="/admin/favoriteStores">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-hospital-o"></i> Favorite Stores</a></li>
+                    <li class="menu__reportedstores"><a href="/admin/reportedStores">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-hospital-o"></i> Reported Stores</a></li>
+                </ul>
+            </li>
+            <li class="treeview menu__advices">
+                <a href="/admin/nutritionAdvices">
+                    <i class="fa fa-info-circle"></i> <span class="custom-list-item">Advices</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="menu__nutritionAdvices"><a href="/admin/nutritionAdvices">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-heartbeat"></i> Health Concerns</a></li>
+                    <li class="menu__wellbeingAdvices"><a href="/admin/wellbeingAdvices">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-info-circle"></i> Wellbeing Advices</a></li>
+                </ul>
+            </li>
+            <li class="treeview menu__contactUs">
+                <a href="/admin/contactUs">
+                    <i class="fa fa-phone"></i> <span class="custom-list-item">Contact Us</span>
+                </a>
+            </li>
+            <li class="treeview menu__cms">
+                <a href="/admin/cms">
+                    <i class="fa fa-file-text"></i> <span class="custom-list-item">CMS</span>
+                </a>
+            </li>
+            <li class="treeview menu__forums">
+                <a href="/admin/forums">
+                    <i class="fa fa-file-text"></i> <span class="custom-list-item">Forums</span>
+                </a>
+            </li>
+            <li class="treeview menu__fanpages">
+                <a href="/admin/fanPages">
+                    <i class="fa fa-newspaper-o"></i> <span class="custom-list-item">Fan Pages</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="menu__fanpages_fanpages"><a href="/admin/fanPages">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-newspaper-o"></i> Fan Pages</a></li>
+                    <li class="menu__fanpages_fanpages_followrequests"><a href="/admin/fanPages-followers">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-check"></i> Follow Requests</a></li>
+                    <li class="menu__fanpages_fanpages_posts"><a href="/admin/fanPagePosts">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-edit"></i> Posts</a></li>
+                    <li class="menu__fanpages_import-export-posts"><a href="/admin/import-export-fanpage-posts">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-cloud-upload"></i> Import/Export Posts</a></li>
+                </ul>
+            </li>
+            <li class="treeview menu__master_modules">
+                <a href="">
+                    <i class="fa fa-table"></i> <span class="custom-list-item">Master Modules</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="menu__countries"><a href="/admin/countries">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-flag"></i> Countries</a></li>
+                    <li class="menu__states"><a href="/admin/states">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-university"></i> States</a></li>
+                    <li class="menu__specialities"><a href="/admin/specialities">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-stethoscope"></i> Specialities</a></li>
+                    <li class="menu__specializations"><a href="/admin/specializations">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-user-md"></i> Specializations</a></li>
+                    <li class="menu__chips"><a href="/admin/chips">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Chips</a></li>
+                    <li class="menu__insurers"><a href="/admin/insurers">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus-square"></i> Insurers</a></li>
+                    <li class="menu__classifications"><a href="/admin/classifications">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Practice Classifications</a></li>
+                    <li class="menu__store_classifications"><a href="/admin/store-classifications">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-paw"></i> Store Classifications</a></li>
+                    <li class="menu__practice_services"><a href="/admin/practice-services">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus-square"></i> Practice Services</a></li>
+                    <li class="menu__pet_services"><a href="/admin/pet-services">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus-square"></i> Pet Services</a></li>
+                    <li class="menu__settings"><a href="/admin/settings">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-cog"></i> Settings</a></li>
+                    <li class="menu__practitioner_liabilities"><a href="/admin/practitioner-liabilities">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus-square"></i> Practitioner Liabilities</a></li>
+                    <li class="menu__serviceProvider_liabilities"><a href="/admin/service-provider-liabilities">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus-square"></i> Service Provider Liabilities</a></li>
+                    <li class="menu__symptoms_how_long"><a href="/admin/symptom-how-long">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-heartbeat"></i> Symptoms Duration</a></li>
+                    <!-- <li class="menu__groomers_services"><a href="/admin/groomer-services">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus-square"></i> Groomer Services</a></li>
+                    <li class="menu__walkers_services"><a href="/admin/walker-services">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus-square"></i> Walker Services</a></li>
+                    <li class="menu__therapists_services"><a href="/admin/therapist-services">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus-square"></i> Therapist Services</a></li>
+                    <li class="menu__nutritionists_services"><a href="/admin/nutritionist-services">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus-square"></i> Nutritionist Services</a></li>
+                    <li class="menu__breeders_services"><a href="/admin/breeder-services">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus-square"></i> Breeder Services</a></li> -->
+                    <li class="menu__main_service"><a href="/admin/mainService">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus-square"></i> Service Provider Main Service</a></li>
+                    <li class="menu__sub_service"><a href="/admin/subService">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus-square"></i> Service Provider Sub Service</a></li>
+                </ul>
+            </li>
+            <% } %>
+        </ul>
+    </section>
+</aside>

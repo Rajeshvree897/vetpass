@@ -1,0 +1,63 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+
+  <!-- Main content -->
+  <form action="<%= typeof responseData==='object'?'/admin/classification/update':'/admin/classification' %>" id="classificationForm"
+    method="POST">
+    <div class="form-group button-row">
+      <a href="/admin/classifications" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <button type="submit" class="btn btn-success custom-save-btn custom-top-user">Save</button>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> Classification</h1>
+      <small class="custom-add-text">API ID : classification</small>
+    </div>
+
+    <section class="content">
+      <!-- Default box -->
+      <div class="box custom-box">
+        <!-- <div class="box-header with-border">
+        </div> -->
+        <div class="box-body">
+            <%- include ./../layout/partials/alert-section.ejs -%>
+            <div class="form-group row">
+              <div class="col-sm-6">
+                <label for="title" class="">Classification Title * </label>
+                <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Title of the classification (title)"></i>
+                <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                <input type="text" name="title" id="title" class="form-control" placeholder="Title"
+                  value="<%= typeof responseData==='object'?responseData.title:'' %>">
+              </div>
+              <div class="col-sm-6">
+                <label for="order" class="">Order * </label>
+                <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Order of the classifications"></i>
+                <input type="number" name="order" id="order" class="form-control" placeholder="Order"
+                  value="<%= typeof responseData==='object' && responseData.order ? responseData.order:'' %>">
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-12">
+                <label for="description" class="">Description * </label>
+                <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Description of the classification (description)"></i>
+                  <textarea class="form-control" rows="10" name="description" id="description"
+                    placeholder="Description"><%= typeof responseData==='object'?responseData.description:'' %></textarea>
+              </div>
+            </div>
+        </div>
+      </div>
+      <!-- /.box -->
+    </section>
+  </form>
+  <!-- /.content -->
+</div>
+<%- include ./../layout/footer.ejs -%>
+<script type="module" src="/js/classification.js"></script>
+</body>
+<script>
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__master_modules").addClass("active");
+  $(".menu__classifications").addClass("active");
+</script>
+
+</html>

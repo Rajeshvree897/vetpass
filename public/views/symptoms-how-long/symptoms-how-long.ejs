@@ -1,0 +1,49 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+
+  <!-- Main content -->
+  <form action="<%= typeof responseData==='object'?'/admin/symptoms-how-long/update':'/admin/symptoms-how-long' %>" id="symptomsHowLongForm"
+    method="POST">
+    <div class="form-group button-row">
+      <a href="/admin/symptom-how-long" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <button type="submit" class="btn btn-success custom-save-btn custom-top-user">Save</button>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> Symptom Details</h1>
+      <small class="custom-add-text">API ID : symptoms-how-long</small>
+    </div>
+
+    <section class="content">
+      <!-- Default box -->
+      <div class="box custom-box">
+        <!-- <div class="box-header with-border">
+        </div> -->
+        <div class="box-body">
+            <%- include ./../layout/partials/alert-section.ejs -%>
+            <div class="form-group row">
+              <div class="col-sm-6">
+                <label for="symptoms-how-long" class="">Symptoms Duration * </label>
+                <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Name of the symptoms duration (name)"></i>
+                <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                <input type="text" name="name" id="name" class="form-control" placeholder="Symptoms Duration"
+                  value="<%= typeof responseData==='object'?responseData.name:'' %>">
+              </div>
+            </div>
+        </div>
+      </div>
+      <!-- /.box -->
+    </section>
+  </form>
+  <!-- /.content -->
+</div>
+<%- include ./../layout/footer.ejs -%>
+<script type="module" src="/js/symptoms-how-long.js"></script>
+</body>
+<script>
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__master_modules").addClass("active");
+  $(".menu__symptoms_how_long").addClass("active");
+</script>
+
+</html>

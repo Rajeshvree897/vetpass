@@ -1,0 +1,189 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+  <%- include ./../layout/partials/page-header-section.ejs -%>
+
+  <!-- Main content -->
+  <form action="<%= typeof responseData==='object'?'/admin/subscriptions/update':'/admin/subscriptions' %>"
+    id="subscriptionForm" method="POST">
+    <div class="form-group button-row">
+      <button type="submit" class="btn btn-success custom-save-btn custom-save-common custom-top save-user">Save</button>
+      <a href="/admin/subscriptions" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> subscription</h1>
+      <!-- <h1 class="custom-add-heading-details" id="form-details-icon">How to fill in this form <i class="fa fa-question-circle"></i></h1> -->
+      <small class="custom-add-text">API ID : subscriptions</small>
+    </div>
+    <section class="content">
+
+    <!-- Default box -->
+    <div class="box custom-box">
+      <!-- <div class="box-header with-border">
+      </div> -->
+      <div class="box-body">
+        <%- include ./../layout/partials/alert-section.ejs -%>
+
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <label for="title" class="">Subscription Title</label>
+            <input type="text" name="title" id="title" class="form-control" placeholder="Subscription Title"
+            value="<%= typeof responseData==='object'?responseData.title:'' %>">
+          </div>
+        </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <label for="title" class="">Subscription Type</label>
+              <!-- <input type="text" name="title" id="title" class="form-control" placeholder="Subscription Title"
+              value="<%= typeof responseData==='object'?responseData.title:'' %>"> -->
+              <select class="form-control type-select-box" id="subscription_type" name="subscription_type"
+                value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                <option <%=(typeof responseData!=='object' || !responseData.subscription_type)? 'selected' : '' %>
+                  disabled>Add an item..</option>
+                  <% for (var i=0; i < subscriptionTitleData.length; i++ ) { %>
+                    <option <%=typeof responseData==='object'
+                      ?subscriptionTitleData[i].id == responseData.subscription_type ? 'selected' : '' : '' %> value="<%= subscriptionTitleData[i].id %>">
+                      <%= subscriptionTitleData[i].name %>
+                    </option>
+                  <% } %>
+                  <!-- <% for (var i=0; i < subscriptionTitleData.length; i++ ) { %>
+                    <% if(subscriptionTitleData && subscriptionTitleData[i] && subscriptionTitleData[i] === "Promotion") { %>
+                      <option <%=typeof responseData==='object' && subscriptionTitleData[i]===responseData.title
+                        ? 'selected' : '' %> value="Promotion">
+                        Promotion
+                      </option>
+                    <% } else if(subscriptionTitleData && subscriptionTitleData[i] && subscriptionTitleData[i] === "Advertisement") { %>
+                      <option <%=typeof responseData==='object' && subscriptionTitleData[i]===responseData.title
+                        ? 'selected' : '' %> value="Advertisement">
+                        Advertisement
+                      </option>
+                    <% } else if(subscriptionTitleData && subscriptionTitleData[i] && subscriptionTitleData[i] === "Promotion_and_advertisement") { %>
+                      <option <%=typeof responseData==='object' && subscriptionTitleData[i]===responseData.title
+                        ? 'selected' : '' %> value="Promotion_and_advertisement">
+                        Promotion & Advertisement
+                      </option>
+                  <% }} %> -->
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <label for="subscription_for" class="">Subscription For</label>
+              <select class="form-control type-select-box" id="subscription_for" name="subscription_for"
+                value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                <option <%=(typeof responseData!=='object' || !responseData.subscription_for)? 'selected' : '' %>
+                  disabled>Add an item..</option>
+                  <% for (var i=0; i < subscriptionForData.length; i++ ) { %>
+                    <% if(subscriptionForData && subscriptionForData[i] && subscriptionForData[i] === "service_provider") { %>
+                      <option <%=typeof responseData==='object' && subscriptionForData[i]===responseData.subscription_for
+                        ? 'selected' : '' %> value="service_provider">
+                        Service Provider
+                      </option>
+                    <% } else if(subscriptionForData && subscriptionForData[i] && subscriptionForData[i] === "vet") { %>
+                      <option <%=typeof responseData==='object' && subscriptionForData[i]===responseData.subscription_for
+                        ? 'selected' : '' %> value="vet">
+                        Vet
+                      </option>
+                    <% } else if(subscriptionForData && subscriptionForData[i] && subscriptionForData[i] === "vet_practice") { %>
+                      <option <%=typeof responseData==='object' && subscriptionForData[i]===responseData.subscription_for
+                        ? 'selected' : '' %> value="vet_practice">
+                        Vet Practice
+                      </option>
+                    <% } else if(subscriptionForData && subscriptionForData[i] && subscriptionForData[i] === "third_party_company") { %>
+                      <option <%=typeof responseData==='object' && subscriptionForData[i]===responseData.subscription_for
+                        ? 'selected' : '' %> value="third_party_company">
+                        Third Party Company
+                      </option>
+                    <% } %>
+                  <% } %>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-12">
+            <label for="description" class="">Subscription Description</label>
+            <textarea class="description" name="description" id="description"><%= typeof responseData==='object'?responseData.description:'' %></textarea>
+            </div>
+          </div>
+          
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="currency_type" class="">Currency Type</label>
+              <select class="form-control type-select-box" id="currency_type" name="currency_type"
+                value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                <option <%=(typeof responseData!=='object' || !responseData.currency_type)? 'selected' : '' %>
+                  disabled>Add an item..</option>
+                  <% for (var i=0; i < currencyTypeData.length; i++ ) { %>
+                    <option <%=typeof responseData==='object'
+                      ?currencyTypeData[i]===responseData.currency_type ? 'selected' : '' : '' %>>
+                      <%= currencyTypeData[i] %>
+                    </option>
+                  <% } %>
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <label for="amount" class="">Subscription Amount</label>
+              <input type="text" name="amount" id="amount" class="form-control" placeholder="Subscription Amount"
+              value="<%= typeof responseData==='object'?responseData.amount:'' %>">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="duration" class="">Subscription Duration</label>
+              <select class="form-control type-select-box" id="duration" name="duration"
+                value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                <option <%=(typeof responseData!=='object' || !responseData.duration)? 'selected' : '' %>
+                  disabled>Add an item..</option>
+                  <% for (var i=0; i < subscriptionDurationData.length; i++ ) { %>
+                    <% if(subscriptionDurationData && subscriptionDurationData[i] && subscriptionDurationData[i] === "Month") { %>
+                      <option <%=typeof responseData==='object' && subscriptionDurationData[i]===responseData.duration
+                        ? 'selected' : '' %> value="Month">
+                        Month
+                      </option>
+                    <% } else if(subscriptionDurationData && subscriptionDurationData[i] && subscriptionDurationData[i] === "Year") { %>
+                      <option <%=typeof responseData==='object' && subscriptionDurationData[i]===responseData.duration
+                        ? 'selected' : '' %> value="Year">
+                        Year
+                      </option>
+                      <% } else if(subscriptionDurationData && subscriptionDurationData[i] && subscriptionDurationData[i] === "Custom") { %>
+                        <option <%=typeof responseData==='object' && subscriptionDurationData[i]===responseData.duration
+                          ? 'selected' : '' %> value="Custom">
+                          Custom
+                        </option>
+                      <% } %>
+                  <% } %>
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <label for="per_day_price" class="">Subscription price per day</label>
+              <input type="text" name="per_day_price" id="per_day_price" class="form-control" placeholder="Subscription price per day"
+              value="<%= typeof responseData==='object'?responseData.per_day_price:'' %>">
+            </div>
+          </div>
+
+      </div>
+    </section>
+      
+  </form>
+
+</div>
+<%- include ./../layout/footer.ejs -%>
+    <script type="module" src="/js/subscription.js"></script>
+    <script src="/plugins/datatables/jquery.dataTables.js"></script>
+    <script src="/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="/plugins/datatables//dataTables.buttons.min.js"></script>
+    <script src="/plugins/ckeditor/ckeditor.js"></script>
+    <script>
+      CKEDITOR.replace('description');
+      CKEDITOR.instances.description.on('change', function () {
+        $("#description").val(CKEDITOR.instances.description.getData());
+      })
+      $(".sidebar-menu li").removeClass("active");
+      $(".menu__subscriptions").addClass("active");
+    </script>
+
+</body>
+
+</html>

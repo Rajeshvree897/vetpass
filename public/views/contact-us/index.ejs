@@ -1,0 +1,145 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper custom-bg">
+    <!-- Content Header (Page header) -->
+    <%- include ./../layout/partials/page-header-section.ejs -%>
+
+      <!-- Main content -->
+      <form action="<%= '/admin/contactUs/update' %>" id="contactUsForm" method="POST">
+        <div class="form-group button-row">
+          <button type="submit" class="btn btn-success custom-save-btn custom-top save-user">Save</button>
+          <a href="/admin/dashboard" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+          <h1 class="custom-add-heading">Contact Us</h1>
+          <h1 class="custom-add-heading-details" id="form-details-icon">How to fill in this form <i class="fa fa-question-circle"></i></h1>
+          <small class="custom-add-text">API ID : contact-us</small>
+        </div>
+      <section class="content">
+
+        <!-- Default box -->
+        <div class="box custom-box">
+          <!-- <div class="box-header with-border">
+          </div> -->
+          <div class="box-body">
+            <%- include ./../layout/partials/alert-section.ejs -%>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="compnay_name" class="">Company Name</label>
+                      <input type="text" name="compnay_name" id="compnay_name" class="form-control"
+                        placeholder="Compnay Name"
+                        value="<%= typeof responseData==='object'?responseData.compnay_name:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="contact_email" class="">Email</label>
+                    <input type="hidden" name="id" id="id"
+                      value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                      <input type="text" name="contact_email" id="contact_email" class="form-control" placeholder="Email"
+                        value="<%= typeof responseData==='object'?responseData.contact_email:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="contact_mobile" class="">Mobile</label>
+                    <input type="text" name="contact_mobile" id="contact_mobile" class="form-control"
+                      placeholder="Mobile" value="<%= typeof responseData==='object'?responseData.contact_mobile:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-12">
+                  <label for="address" class="">Address</label>
+                  <textarea class="form-control" rows="5" name="contact_address" id="contact_address"
+                  placeholder="Contact address"><%= typeof responseData==='object'?responseData.contact_address:'' %></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-12">
+                  <label for="about" class="">About</label>
+                  <input type="hidden" name="contact_about" id="contact_about"
+                    value="<%= typeof responseData==='object'?responseData.contact_about:'' %>">
+                    <div id="aboutEditor">
+                      <%- typeof responseData==='object' ?responseData.contact_about:'' %>
+                    </div>
+                  </div>
+                </div>
+
+
+                <!-- <div class="form-group row">
+                  <div class="row submit-row">
+                    <button type="submit" class="btn btn-success custom-save-btn custom-top">Save</button>
+                    <a href="/admin/dashboard" class="btn btn-primary ml-10 custom-cancel-btn"></a>
+                  </div>
+                </div> -->
+              </form>
+          </div>
+
+          <!-- <div class="box-footer text-center">
+          </div> -->
+          <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+
+      </section>
+
+      <section class="content" id="form-details">
+        <div class="box custom-user-box">
+          <h4 class="text-center">How to fill in this form ?
+            <a data-toggle="collapse" id="collapse-show-details" href="#collapse-details" aria-expanded="false" style="color: black">
+              <i class="fa fa-plus"></i>
+              <i class="fa fa-minus"></i>
+            </a>
+          </h4></br>
+          <div class="collapse" id="collapse-details">
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Company Name ( compnay_name ) * : </label> Name of the company
+              </div>
+              <div class="col-md-6">
+                <label>Email ( contact_email ) * : </label> Email address for company contact
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Mobile ( contact_mobile ) * : </label> Mobile number for company contact
+              </div>
+              <div class="col-md-6">
+                <label>Address ( contact_address ) * : </label> Address for company contact
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>About ( contact_about ) : </label> Information about the company
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /.content -->
+  </div>
+  <%- include ./../layout/footer.ejs -%>
+    <script type="module" src="/js/contact-us.js"></script>
+    <script src="/plugins/ckeditor/ckeditor.js"></script>
+    </body>
+    <script>
+      CKEDITOR.replace('aboutEditor');
+
+      CKEDITOR.instances.aboutEditor.on('change', function () {
+        $("#contact_about").val(CKEDITOR.instances.aboutEditor.getData());
+      })
+      $(".sidebar-menu li").removeClass("active");
+      $(".menu__contactUs").addClass("active");
+      $(document).ready(function() {
+        $("#form-details-icon").on("click", function(e) {
+          e.preventDefault();
+          $("body, html").animate({ 
+            scrollTop: $("#form-details").offset().top - 150
+          }, 600);
+          $('#collapse-details').collapse('show');
+        });
+      });
+    </script>
+
+    </html>

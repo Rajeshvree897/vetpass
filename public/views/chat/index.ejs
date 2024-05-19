@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>VETPASS Messaging</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="/js/chat/emojis.js"></script>
+</head>
+<body>
+  <input type="hidden" id="loggedInUserId" name="loggedInUserId" value="<%= userData && userData.id ? userData.id : '' %>" user-name="<%= userData && userData.first_name ? userData.first_name : '' %>" timezone="<%=timeZone ? timeZone : null %>" />
+  <input type="hidden" id="contact" name="contact" />
+  <input type="hidden" id="conversationId" name="conversationId" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <% include ./../layout/header.ejs %>
+    <div class="main-chat-wrapper">
+      <div class="app-one">
+        <div class="side main-chat">
+          <div class="side-one">
+            <div class="heading">
+              <div class="heading-avatar">
+                <div class="heading-avatar-icon">
+                  <img src="<%= profilePic ? profilePic : '/images/person-default.png' %>">
+                </div>
+              </div>
+              <!-- <div class="col-sm-1 col-xs-1  heading-dot  pull-right">
+                <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
+              </div> -->
+              <!-- <div class="col-sm-2 col-xs-2 heading-compose  pull-right">
+                <i class="fa fa-comments fa-2x  pull-right" aria-hidden="true"></i>
+              </div> -->
+              <div class="heading-filter-wrapper">
+                <div class="create-group">
+                  <i class="fa fa-users fa-2x" aria-hidden="true"></i>
+                </div>
+                <div class="heading-filter">
+                  <i class="fa fa-comments fa-2x" aria-hidden="true"></i>
+                </div>
+                <div class="heading-archived-chat">
+                  <i class="fa fa-archive fa-2x" aria-hidden="true"></i>
+                </div>
+                <div class="favorites">
+                  <i class="fa fa-bookmark fa-2x" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row searchBox">
+              <div class="col-sm-12 searchBox-inner">
+                <div class="form-group has-feedback">
+                  <input id="searchContact" type="text" class="form-control" data-id="contact" name="searchText" placeholder="Search" autocomplete="off">
+                  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row sideBar chat-list">
+              <% if(contactUsers.length){%>
+              <% for (var i=0; i < contactUsers.length;  i++ ) { %>
+                <% if (contactUsers && contactUsers[i] && contactUsers[i].is_archived == false) { %>
+                <div class="sideBar-body contact-list" conversationId = "<%= contactUsers[i]._id%>" last-unread-id = "<%= contactUsers[i]._id%>" is_read="<%= contactUsers[i].is_read ? 1 : 0 %>" contact-id="<%= contactUsers[i].contactId %>" room-name="<%= contactUsers[i].roomName ? contactUsers[i].roomName : contactUsers[i].contactName %>" room-id="<%= contactUsers[i].group_id ?  contactUsers[i].group_id : 0 %>" onclick="fetchContact('<%= contactUsers[i].contactId%> ', '<%= contactUsers[i].group_id ?  contactUsers[i].group_id : 0 %>', '<%= contactUsers[i]._id%>')" id="<%=contactUsers[i].contactId %>" name="<%=contactUsers[i].contactName%>" profile="">
+                <div class="sideBar-avatar">
+                  <div class="avatar-icon">
+                    <img class="contactProfile<%= contactUsers[i].contactId %>" src='<%=  contactUsers[i].group_id ? (contactUsers[i].icon ? contactUsers[i].icon : "/images/group-default.png") : contactUsers[i].contactIcon ?  contactUsers[i].contactIcon : "/images/person-default.png"  %> '>
+                  </div>
+                </div>
+                <div class="sideBar-main">
+                  <div class="sidebar-name-wrapper">
+                    <div class="sideBar-name">
+                      <span class="name-meta"><%=contactUsers[i].contactName%>
+                      </span>
+                      <span class="time-meta previewMsg" contact-id="<%= contactUsers[i].contactId %>">
+                        <% if(contactUsers[i].latestMessage.message && (contactUsers[i].latestMessage.deleted_for && contactUsers[i].latestMessage.deleted_for == null || !contactUsers[i].latestMessage.deleted_for.includes(userData.id)) && !contactUsers[i].is_left){ %>
+                          <%- (!contactUsers[i].latestMessage.is_deleted  || contactUsers[i].latestMessage.is_deleted == null ? contactUsers[i].latestMessage.message.replace(/<\/?a(?:\s+[^>]+)?>/g, '') : 'This message was deleted') %>
+                          <%}%>
+                          <!-- <%= contactUsers[i].latestMessage.message %> -->
+                      </span>                  
+                    </div>
+                    <div class="sideBar-time">
+                      <span class="time-meta msgDate" contact-id="<%= contactUsers[i].contactId %>">
+                      <% if(contactUsers[i].latestMessage.deleted_for == null || !contactUsers[i].latestMessage.deleted_for.includes(userData.id) && !contactUsers[i].is_left){ %>
+                        <%= contactUsers[i].latestMessage.created_at %>
+                      <%}%>
+                      </span>
+                      <% if(!contactUsers[i].is_left && contactUsers[i].unread){ %>
+                        <span class="time-meta read-message<%= contactUsers[i]._id%> <%= contactUsers[i].unread && contactUsers[i].user_id != userData.id ? 'unread-msg'  : 'read-msg'%>" contact-id="<%= contactUsers[i].contactId %>">
+                          <span class="unread-count">
+                            <%= contactUsers[i].unread %>
+                          </span>
+                        </span>
+                      <%}%>
+      
+                    </div>
+                  </div>
+                </div>
+                </div>
+              <%}}} else { %>
+                <div class="startChatDiv">
+                <!-- <a class="heading-filter"><img src="/images/new-chat-icon.gif" height="250px" width="250px" data-toggle="tooltip" data-placement="top" title="New chat"></a> -->
+                </div>
+            <% } %>
+            </div>
+          </div>
+          <div class="side-two">
+            <div class="newMessage-heading">
+              <div class="newMessage-main">
+                <div class="newMessage-back group-back">
+                  <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </div>
+                <div class="newMessage-title">
+                  New Group
+                </div>
+                <div class="refresh-chats" onclick="refreshDetails(true)"><i class="fa fa-refresh" aria-hidden="true"></i></div>
+                <img src="/images/chat-loader.gif" id="refreshGroupCon" alt="Iphone-spinner-2" border="0" class="displayNonecls" width="20px" height="20px">
+              </div>
+            </div>
+  
+            <div class="row composeBox create-group-search">
+              <div class="col-sm-12 composeBox-inner">
+                <div class="form-group has-feedback">
+                  <input id="SearchNewContact" type="text" class="form-control" data-id="new-contact"  name="searchText" placeholder="Search People" autocomplete="off">
+                  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+              </div>
+            </div>
+  
+            <div class="compose-sideBar">
+              <!-- <form action=""> -->
+                <div class="sideBar-body create-group-body"  style="display: none;">
+                  <div class="group-phase-inner group-second-phase">
+                    <!-- <div class="col-sm-6 col-xs-6"> -->
+                      <input type="text" name="group-name" class="form-control" id="groupName" style="display: none;" placeholder="Group Name">
+                    <!-- </div> -->
+                  </div>
+                  <div class="group-phase-inner group-second-phase">
+                    <!-- <div class="col-sm-6 col-xs-6"> -->
+                      <input type="submit" id="createGroup" value="Create Group" class="form-control group-btn">
+                    <!-- </div> -->
+                  </div>
+                  <div class="group-phase-inner group-first-phase">
+                    <input type="submit" id="nextPhase" value="Next" class="form-control group-btn">
+                  </div>
+                </div>
+              <% for (var i=0; i < vetUsers.length;  i++ ) { %>
+                <div class="sideBar-body new-group-cls group-contact new_contact_person_or_grp" for="groupContact<%=vetUsers[i].id%>" data-id="<%=vetUsers[i].id%>" contact-id="<%=vetUsers[i].id%>" name="<%=vetUsers[i].name%>">
+                  <div class="sideBar-avatar">  
+                    <div class="avatar-icon">
+                      <!-- <input type="checkbox" class="group-contact-cls" name="groupContact" value="<%=vetUsers[i].id%>" id="groupContact<%=vetUsers[i].id%>"> -->
+                      <img  class="vet-img<%=vetUsers[i].id%>" src='<%= vetUsers[i].profileImgPath ? vetUsers[i].profileImgPath : "/images/person-default.png" %>'>
+                    </div>
+                  </div>
+                  <div class="sideBar-main">
+                    <div class="group-contact-row">
+                      <div class="sideBar-name">
+                        <span class="name-meta"><%=vetUsers[i].name%>
+                        </span>
+                      </div>
+                      <div class="sideBar-time checkbox-container">
+                        <label class="time-meta pull-right">
+                          <input type="checkbox" class="group-contact-cls comman-cls" name="groupContact" value="<%=vetUsers[i].id%>" id="groupContact<%=vetUsers[i].id%>">
+                          <span class="checkmark"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <%}%>
+            </div>
+          </div>
+          <div class="side-three">
+            <div class="newMessage-heading">
+              <div class="newMessage-main">
+                <div class="newMessage-back-filter">
+                  <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </div>
+                <div class="newMessage-title">
+                  New Chat
+                </div>
+                <div class="refresh-chats">
+                <img src="/images/chat-loader.gif" id="refreshLoad" alt="Iphone-spinner-2" border="0" class="displayNonecls" width="20px" height="20px">
+                </div>
+              </div>
+            </div>
+  
+            <div class="row composeBox">
+              <div class="col-sm-12 composeBox-inner">
+                <div class="form-group has-feedback">
+                  <input id="SearchNewContact" type="text" class="form-control" data-id="new-contact" name="searchText" placeholder="Search People" autocomplete="off">
+                  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+              </div>
+            </div>
+  
+            <div class="compose-sideBar new-chat-f-pvt" id="vet-list">
+              
+            </div>
+          </div>
+          <div class="side-four">
+            <div class="newMessage-heading">
+              <div class="newMessage-main">
+                <div class="archived-chat-back-filter">
+                  <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </div>
+                <div class="newMessage-title">
+                  Archived Chat
+                </div>
+                <div class="refresh-chats" onclick="refreshArchivedContacts()"><i class="fa fa-refresh" aria-hidden="true"></i>
+                <img src="/images/chat-loader.gif" id="refreshLoad" alt="Iphone-spinner-2" border="0" class="displayNonecls" width="20px" height="20px">
+                </div>
+              </div>
+            </div>
+  
+            <div class="row searchBox">
+              <div class="col-sm-12 searchBox-inner">
+                <div class="form-group has-feedback">
+                  <input id="searchContact" type="text" class="form-control" data-id="contact" name="searchText" placeholder="Search" autocomplete="off">
+                  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- TODO currently static data added -->
+            <div class="row sideBar chat-list archived-chat-list">
+              <% if(contactUsers.length){%>
+                <% for (var i=0; i < contactUsers.length;  i++ ) { %>
+                  <% if (contactUsers && contactUsers[i] && contactUsers[i].is_archived == true) { %>
+                  <div class="sideBar-body contact-list" conversationId = "<%= contactUsers[i]._id%>" last-unread-id = "<%= contactUsers[i]._id%>" is_read="<%= contactUsers[i].is_read ? 1 : 0 %>" contact-id="<%= contactUsers[i].contactId %>" room-name="<%= contactUsers[i].roomName ? contactUsers[i].roomName : contactUsers[i].contactName %>" room-id="<%= contactUsers[i].group_id ?  contactUsers[i].group_id : 0 %>" onclick="fetchContact('<%= contactUsers[i].contactId%> ', '<%= contactUsers[i].group_id ?  contactUsers[i].group_id : 0 %>', '<%= contactUsers[i]._id%>')" id="<%=contactUsers[i].contactId %>" name="<%=contactUsers[i].contactName%>" profile="">
+                  <div class="sideBar-avatar">
+                    <div class="avatar-icon">
+                      <img src='<%=  contactUsers[i].room_id ? (contactUsers[i].profilePic ? contactUsers[i].profilePic : "/images/group-default.png") : contactUsers[i].profilePic ?  contactUsers[i].profilePic : "/images/person-default.png"  %> '>
+                    </div>
+                  </div>
+                  <div class="sideBar-main">
+                    <div class="sidebar-name-wrapper">
+                      <div class="sideBar-name">
+                        <span class="name-meta"><%=contactUsers[i].contactName%>
+                        </span>
+                        <span class="time-meta previewMsg" contact-id="<%= contactUsers[i].contactId %>">
+                          <% if(contactUsers[i].latestMessage.message && (contactUsers[i].latestMessage.deleted_for && contactUsers[i].latestMessage.deleted_for == null || !contactUsers[i].latestMessage.deleted_for.includes(userData.id))){ %>
+                            <%- (!contactUsers[i].latestMessage.message_deleted  || contactUsers[i].latestMessage.message_deleted == null ? contactUsers[i].latestMessage.message.replace(/<\/?a(?:\s+[^>]+)?>/g, '') : 'This message was deleted') %>
+                            <%}%>
+                            <!-- <%= contactUsers[i].latestMessage.message %> -->
+                        </span>                  
+                      </div>
+                      <div class="sideBar-time">
+                        <span class="time-meta msgDate" contact-id="<%= contactUsers[i].contactId %>">
+                        <% if(contactUsers[i].latestMessage.deleted_for == null || !contactUsers[i].latestMessage.deleted_for.includes(userData.id)){ %>
+                          <%= contactUsers[i].latestMessage.created_at %>
+                        <%}%>
+                        </span>
+                        <% if(contactUsers[i].unread){ %>
+                          <span class="unread-count">
+                            <%= contactUsers[i].unread %>
+                          </span>
+                        <%}%>
+        
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                <%}}} else { %>
+                  <div class="startChatDiv">
+                  <!-- <a class="heading-filter"><img src="/images/new-chat-icon.gif" height="250px" width="250px" data-toggle="tooltip" data-placement="top" title="New chat"></a> -->
+                  </div>
+              <% } %>
+            </div>
+            <!-- TODO currently static data added -->
+            
+          </div>
+
+          <div class="side-five">
+            <div class="newMessage-heading">
+              <div class="newMessage-main">
+                <div class="newMessage-back  favorite-back">
+                  <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </div>
+                <div class="newMessage-title">
+                  Owners
+                </div>
+              </div>
+            </div>
+  
+            <div class="row composeBox">
+              <div class="col-sm-12 composeBox-inner">
+                <div class="form-group has-feedback">
+                  <input id="SearchFavoritesOwner" type="text" class="form-control" data-id="favoritesOwners" name="searchText" placeholder="Search People" autocomplete="off">
+                  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+              </div>
+            </div>
+  
+            <div class="compose-sideBar new-chat-f-pvt">
+              <% for (var i=0; i < favorites.length;  i++ ) { %>
+                <div class="sideBar-body new_contact_person favorites-owners new_contact_person_or_grp" data-id="<%=favorites[i].id%>" contact-id="<%=favorites[i].id%>" name="<%=favorites[i].first_name%>">
+                  <div class="sideBar-avatar">
+                    <div class="avatar-icon">
+                      <img class="vet-img<%=favorites[i].id%>" src='<%= favorites[i].profileImgPath ? favorites[i].profileImgPath : "/images/person-default.png" %>'>
+                    </div>
+                  </div>
+                  <div class="sideBar-main">
+                    <div class="group-contact-row">
+                      <div class="sideBar-name">
+                        <span class="name-meta"><%=favorites[i].first_name%> <%=favorites[i].last_name%>
+                        </span>
+                      </div>
+                      <div class="sideBar-time">
+                        <span class="time-meta pull-right">
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <%}%>   
+            </div>
+          </div>
+        </div>
+        <div class="conversation" id="chat-screen">
+          <div class="row message" id="conversation">
+            <!-- <div class="row message-previous">
+              <div class="col-sm-12 previous">
+                <a onclick="previous(this)" id="ankitjain28" name="20">
+                  Show Previous Message!
+                </a>
+  
+              </div>
+            </div> -->
+            <div>
+              <div class="startChatDiv">
+                <h1>Welcome To Vetpass</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-home">
+          <h2>Welcome to VETPASS</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layout/footer.ejs %>
+
+  <!-- forward message popup -->
+  <div class="forward-popup chat-info-popup" >
+     <div class="forward-header">
+      <h3> Forward message to</h3>
+      <div><i class="fa fa-times forward-close-popup"></i></div>        
+    </div>
+    <div class="forward-header">
+        <input type="text" class="search-input forward-user-search" placeholder="Search users...">
+        <div>
+          <div class="refresh-chats forward-refresh">
+          <img src="/images/chat-loader.gif" id="refreshForwardCon" alt="Iphone-spinner-2" border="0" class="displayNonecls" width="20px" height="20px">
+        </div>
+    </div>
+      <ul class="user-list forward-to-section" id="forward-lis-dv">
+          
+          <% for (var i=0; i < rooms.length;  i++ ) { %>
+            <li class="contact_forward to_room_forward" room-id="<%=rooms[i]._id%>" is-left=0>
+                <div class="member-avatar">
+                  <img src='<%= rooms[i].icon ? rooms[i].icon : "/images/group-default.png" %>' alt="Member Avatar">
+                </div>
+                <div class="member-info">
+                    <h4 class="user-name forwardComman<%=rooms[i]._id%>"><%=rooms[i].group_name%></h4>
+                </div>
+                <div class="admin-add-member">
+                  <input type="checkbox" class="forward-msg-to comman-cls" room-id="<%=rooms[i]._id%>" id="forwardComman<%=rooms[i]._id%>" name="forwardMessageTo" value="<%=rooms[i]._id%>">
+                </div>
+            </li>
+          <%}%>
+      </ul>
+      <div class="forward-button chat-popup-btn">
+        <div>
+          <button class="send-btn forward-to-user">Forward</button>
+        </div>
+      </div>
+  </div>
+
+  <!-- GROUP DETAILS POP-UP -->
+  <div class="chat-info-popup group-details-popup" style="height: auto !important;">
+    <div><i class="fa fa-times user-popupcross"></i></div>
+    <div class="group-image-uploader">
+        <span class="align_grp_img_and_name">
+          <div class="upload-image-wrapper">
+            <label for="upload-image" class="circle-view">
+                <input type="file" id="upload-image" class="upload-input user-image-inpt group_permission comman-cls" name="group-icon" admin=0 accept="image/*" icon-id="0">
+                <i class="fa fa-camera user-profile-camera"></i>
+                    <img id="preview" src="#" alt="Image Preview" class="userAccountProfile"> 
+            </label>
+            <span class="edit">
+              <i class="fa fa-user-pen comman-cls"></i>
+            </span>
+          </div> 
+          <h1 class="margine_grp_name"></h1> 
+        </span>
+    </div>
+    <div class="group-members current-exist-members" style="display: none;">
+        <h3>Group Members:</h3>
+        <div id="groupLoader"><img src="/images/chat-loader.gif" alt="Iphone-spinner-2" border="0"></div>
+        <ul class="members_scroll current-exist-ul">
+        </ul>
+    </div>
+    <div class="group-members add-memebrs-on" style="display: none;">
+      <h3>Add Group Members:</h3>
+      <ul class="members_scroll add-memebrs-on-ul">
+        <% for (var i=0; i < vetUsers.length;  i++ ) { %>
+          <li class="new-group-member-li" data-id="<%=vetUsers[i].id %>" user-name ="<%=vetUsers[i].name%>">
+              <div class="member-avatar">
+                  <img src='<%= vetUsers[i].profileImgPath ? vetUsers[i].profileImgPath : "/images/person-default.png" %>' alt="Member Avatar">
+              </div>
+              <div class="member-info">
+                  <h4><%=vetUsers[i].name%></h4>
+              </div>
+              <div class="admin-add-member">
+                  <label class="checkbox-container"><input type="checkbox" class="add-member-on-grp comman-cls" name="addParticipant" value="<%=vetUsers[i].id%>" id="participant<%=vetUsers[i].id%>">
+              </div>
+          </li>
+        <%}%>
+        </ul>
+    </div>
+    <div class="add-group add-participanton-group add-participantgroupcss chat-popup-btn" style="display: none;">
+      <button>Add</button>
+    </div>
+    <div class="group-add-remv-btn chat-popup-btn" style="display: none;">
+      <div class="add-participantgroup add-participantgroupcss">
+        <button>Add participant</button>
+      </div>
+      <div class="leave-group chat-popup-btn" current_user="1" left-status = 0>
+          <button>Leave Group</button>
+      </div>
+    </div>
+    <div class="chat-delete chat-popup-btn" style="display: none;">
+      <div class="delete-group">
+        <button>Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE REMAINDER FORM -->
+  <div class="chat-info-popup create-remainder-popup" style="height: auto !important;">
+    <div>
+      <i class="fa fa-times user-popupcross"></i>
+      <h3 class="text-center">Create Remainder</h3>
+    </div>
+    <!-- <div class="row"> -->
+    <!-- </div> -->
+    <form id="createRemainderForm" method="post">
+      <div class="row">
+        <div class="col-sm-12">
+          <label for="message" class="">Message</label>
+          <!-- <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Remainder Name"></i> -->
+          <input type="text" name="message" id="message" class="form-control" placeholder="Remainder Message">
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+        <div class="col-sm-12">
+          <label for="remainder_name" class="">Remainder Name</label>
+          <!-- <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Remainder Name"></i> -->
+          <input type="text" name="remainder_name" id="remainder_name" class="form-control" placeholder="Remainder Name">
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+        <div class="col-sm-12">
+          <label for="remainder_datetime" class="">Remainder Date & Time</label>
+          <!-- <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Remainder Name"></i> -->
+          <input type="datetime-local" name="remainder_datetime" id="remainder_datetime" class="form-control">
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+        <div class="col-sm-12">
+          <label for="before_day" class="">Before Day</label>
+          <!-- <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Remainder Name"></i> -->
+          <input type="number" name="before_day" id="before_day" class="form-control" placeholder="Before Day">
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+        <div class="col-sm-12">
+          <label for="before_hour" class="">Before Hour</label>
+          <!-- <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Remainder Name"></i> -->
+          <input type="number" name="before_hour" id="before_hour" class="form-control" placeholder="Before Hour">
+        </div>
+      </div>
+      <br/>
+      <div class="row text-center">
+        <input type="submit" value="Create" class="" id="createRemainderBtn">
+        <!-- <button id="createRemainderBtn">Create</button> -->
+      </div>
+    </form>
+  </div>
+
+  <link rel="stylesheet" href="/css/chat.css">
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <script src="/js/chat/constants.js"></script>
+  <script src="/js/chat/classes.js"></script>
+  <script src="/js/chat/variables.js"></script>
+  <script src="/js/chat/functions.js"></script>
+  <script src="/js/chat/scripts.js"></script>
+    <script>
+      var userMapping = [];
+      var newUserMapping = [];
+      var favoritesOwners = [];
+    </script>
+      <%if(contactUsers.length) { %>
+        <% for (var i=0; i < contactUsers.length;  i++ ) { %>
+          <script>
+            userMapping.push({"<%= contactUsers[i].contactId %>" : "<%= contactUsers[i].contactName %>".toLocaleLowerCase()}) 
+          </script>
+      <% }} %>
+
+      <%if(favorites.length) { %>
+        <% for (var i=0; i < favorites.length;  i++ ) { %>
+          <script>
+            favoritesOwners.push({"<%= favorites[i].id %>" : "<%= favorites[i].first_name %>".toLocaleLowerCase()}) 
+          </script>
+      <% }} %>
+
+      <%if(vetUsers.length) { %>
+        <% for (var i=0; i < vetUsers.length;  i++ ) { %>
+          <script>
+            newUserMapping.push({"<%= vetUsers[i].id %>" : "<%= vetUsers[i].name %>".toLocaleLowerCase()}) 
+          </script>
+      <% }} %>
+</body>
+</html>

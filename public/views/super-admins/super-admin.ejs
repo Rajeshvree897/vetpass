@@ -1,0 +1,149 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper custom-bg">
+    <!-- Content Header (Page header) -->
+    <%- include ./../layout/partials/page-header-section.ejs -%>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+      <!-- Main content -->
+      <form action="<%= typeof user==='object'?'/admin/super-admin/update':'/admin/super-admin' %>" 
+        id="usersForm" method="POST" >  
+
+        <% if (typeof user != "undefined" && typeof user === 'object') { %>
+          <input type="hidden" name="id" id="id" value="<%= user.id %>" />
+        <% } %>
+
+        <div class="form-group button-row">
+          <button type="submit" class="btn btn-success custom-save-btn custom-top-user save-user">
+            Save
+          </button>
+          <a href="/admin/super-admins" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal">
+          </a>
+          <h1 class="custom-add-heading">
+            <%= typeof user === 'object' ? 'Edit' : 'Create' %> Super Admin
+          </h1>
+          <h1 class="custom-add-heading-details" id="form-details-icon">
+            How to fill in this form <i class="fa fa-question-circle"></i>
+          </h1>
+          <small class="custom-add-text">
+            API ID : super-admins
+          </small>
+        </div>
+
+        <section class="content">
+          <div class="box custom-user-box">
+            <div class="box-body">
+              <%- include ./../layout/partials/alert-section.ejs -%>
+
+                  <div class="form-group row">
+                    <div class="col-md-6">
+                      <label for="firstname" class="">First Name</label>
+                      <input type="text" name="firstname" id="firstname" class="form-control" placeholder="First name"
+                        value="<%= typeof user === 'object' ? user.firstname : '' %>" />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="lastname" class="">Last Name</label>
+                      <input type="text" name="lastname" id="lastname" class="form-control" placeholder="Last name"
+                        value="<%= typeof user === 'object' ? user.lastname : '' %>" />
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-md-6">
+                      <label for="email" class="">Email</label>
+                      <input type="email" name="email" id="email" class="form-control" placeholder="Email"
+                          value="<%= typeof user === 'object' ? user.email : '' %>" />
+                    </div>
+                  </div>
+
+                  <!-- Add/update Unavailability Modal -->
+                  <div class="modal fade" id="UnavailabilityModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                  aria-hidden="true">
+                  <div class="modal-dialog dialog-custm" role="document">
+                  <div class="modal-content modal-content-custm unavailability-modal">
+                      <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                      <h5 class="modal-title text-center font-weight-bold">Unavailability</h5>
+                      </div>
+                      <div class="modal-body">
+                      <div class="custom-modal-body">
+                      </div>
+                      </div>
+                      <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary pull-left" data-dismiss="modal">Cancel</button>
+                      <a href="" class="btn btn-primary submit-unavil">Submit</a>
+                      </div>
+                  </div>
+                  </div>
+              </div>
+
+              <!-- Delete Confirmation Modal -->
+              <div class="modal fade" id="deleteUnavailConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                  aria-hidden="true">
+                  <div class="modal-dialog dialog-custm" role="document">
+                  <div class="modal-content modal-content-custm">
+                      <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                      <h5 class="modal-title text-center font-weight-bold">Please confirm</h5>
+                      </div>
+                      <div class="modal-body">
+                      <div class="custom-modal-body">
+                          <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTEuMzYzIDEyLjcyN3YxLjU0NWMwIC4xMi0uMDQ0LjIyMy0uMTMxLjMxYS40MjQuNDI0IDAgMDEtLjMxLjEzMkg5LjE1NWEuNDI0LjQyNCAwIDAxLS4zMS0uMTMxLjQyNC40MjQgMCAwMS0uMTMxLS4zMXYtMS41NDZjMC0uMTIuMDQ0LS4yMjMuMTMtLjMxYS40MjQuNDI0IDAgMDEuMzExLS4xMzJoMS43NjdjLjEyIDAgLjIyMy4wNDQuMzEuMTMxLjA4Ny4wODguMTMxLjE5MS4xMzEuMzF6bS4yMDctNy4yODVsLS4xOTMgNS4yOThhLjQ0NC40NDQgMCAwMS0uMTQyLjMxLjQzNi40MzYgMCAwMS0uMzEzLjEzMUg5LjE1NWEuNDM2LjQzNiAwIDAxLS4zMTQtLjEzLjQ0NC40NDQgMCAwMS0uMTQtLjMxMWwtLjE5NC01LjI5OGEuNDA2LjQwNiAwIDAxLjEyLS4zMUEuNDEzLjQxMyAwIDAxOC45MzYgNWgyLjIwN2MuMTIgMCAuMjIyLjA0NC4zMDcuMTMxLjA4NS4wODcuMTI2LjE5MS4xMjEuMzF6IiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGw9IiNGRjVEMDAiLz48cmVjdCBzdHJva2U9IiNGRjVEMDAiIHg9Ii41IiB5PSIuNSIgd2lkdGg9IjE5IiBoZWlnaHQ9IjE5IiByeD0iOS41Ii8+PC9nPjwvc3ZnPg==" alt="icon" class="sc-eWnSVe cSfwyt">
+                          <p color="lightOrange" font-size="md" font-weight="regular" class="sc-cTJmaU sc-eXuzZk iibFUT dSTtmP">
+                          <span>Are you sure you want to delete this entry?</span>
+                          </p>
+                      </div>
+                      </div>
+                      <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary pull-left" data-dismiss="modal">No, cancel</button>
+                      <a href="" class="btn btn-primary delete-item">Yes, confirm</a>
+                      </div>
+                  </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </form>
+      
+      <section class="content" id="form-details">
+        <div class="box custom-user-box">
+          <h4 class="text-center">How to fill in this form ?
+            <a data-toggle="collapse" id="collapse-show-details" href="#collapse-details" aria-expanded="false" style="color: black">
+              <i class="fa fa-plus"></i>
+              <i class="fa fa-minus"></i>
+            </a>
+          </h4>
+          <br/>
+          <div class="collapse" id="collapse-details">
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>First Name ( first_name ) * : </label> 
+                First name of Super Admin
+              </div>
+              <div class="col-md-6">
+                <label>Last Name ( last_name ) * : </label> 
+                Last name of Super Admin
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Email ( email ) * : </label> Email of Super Admin
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /.content -->
+  </div>
+  <%- include ./../layout/footer.ejs -%>
+  <script src="/plugins/datatables/jquery.dataTables.js"></script>
+  <script src="/plugins/datatables/dataTables.bootstrap.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+  <script type="module" src="/js/super-admins.js"></script>
+</body>
+</html>

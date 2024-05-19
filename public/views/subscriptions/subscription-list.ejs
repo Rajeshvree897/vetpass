@@ -1,0 +1,70 @@
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="/css/subscription.css">
+</head>
+
+<body>
+	<header class="header">
+		<nav class="custom-navbar">
+			<img src="/images/vetpassLogo.png" class="login-logo" />
+            <a class="menu-link custom-sub" href="/admin/subscriptionList">Subscriptions</a>
+            <a class="menu-link custom-ad active" href="/admin/advertisement-details">Advertisement</a>
+			<a class="menu-link custom-logout" href="/admin/logout">Logout</a>
+		</nav>
+	</header>
+	<div class="container margin-con">
+		<% if (mySubcriptionId) { %>
+			<h1>Your Current Plan</h1>
+			<div class="grid">
+				<% for (var i=0; i < responseData.length; i++ ) { %>
+					<% if (mySubcriptionId && mySubcriptionId == responseData[i].id) { %>
+					<label class="card">
+						<input name="sub_id"  type="radio" class="radio" value="<%= responseData[i].id ? responseData[i].id : ""  %>" checked>
+						<span class="plan-details">
+							<span class="plan-type"><%= responseData[i].title ? responseData[i].title : ""  %></span>
+							<%= userData && userData.sub_end_date ? "Plan Expires on " + userData.sub_end_date : "" %>
+							<span class="plan-cost"><%= responseData[i].currency_type ? responseData[i].currency_type : ""  %> <%= responseData[i].amount ? responseData[i].amount : ""  %><span class="slash">/</span><abbr class="plan-cycle"
+									title="month"><%= responseData[i].duration ? responseData[i].duration : ""  %></abbr></span>
+									<%- responseData[i].description ? responseData[i].description : ""  %>
+					</label>
+				<% }} %>
+			</div>
+		<% } %>
+		<form id="subForm" method="post" action="/admin/create-checkout-session">
+			<h1><%= mySubcriptionId ? "Upgrade Your Plan" : "Choose Your Plan" %></h1>
+			<div class="grid">
+				<% for (var i=0; i < responseData.length; i++ ) { %>
+					<label class="card">
+						<input name="sub_id"  type="radio" class="radio" value="<%= responseData[i].id ? responseData[i].id : ""  %>" checked>
+
+						<span class="plan-details">
+							<span class="plan-type">
+								<%= responseData[i].title ? responseData[i].title : ""  %> 
+								<!-- <label id="blink"><%= mySubcriptionId && mySubcriptionId == responseData[i].id ? "[Current Plan]" : ""  %></label> -->
+							</span>
+							<span class="plan-cost"><%= responseData[i].currency_type ? responseData[i].currency_type : ""  %> <%= responseData[i].amount ? responseData[i].amount : ""  %><span class="slash">/</span><abbr class="plan-cycle"
+									title="month"><%= responseData[i].duration ? responseData[i].duration : ""  %></abbr></span>
+									<%- responseData[i].description ? responseData[i].description : ""  %>
+					</label>
+				<% } %>
+			</div>
+			<br/>
+			<button type="submit" id="checkout-button" class="custom-reg-btn">Continue to checkout</button>
+		</form>
+		<br/><br/>
+	</div>
+</body>
+<!-- <script type="text/javascript">
+	var blink = document.getElementById('blink');
+
+	setInterval(function () {
+		blink.style.opacity = 
+		(blink.style.opacity == 0 ? 1 : 0);
+	}, 500); 
+</script> -->
+</html>

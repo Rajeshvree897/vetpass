@@ -1,0 +1,3 @@
+animal_type,breed,question,description,category,status,vet_only,privacy
+Domestic Cat,"Indoor,Outdoor",Do dogs dream?,This question is all about vet practice,Dog and Pet,1,0,Public
+"Pigeon,Lovebird","Fischer's,Tumbler",Import Question?,Import Description.,Bird,0,1,Private

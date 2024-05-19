@@ -1,0 +1,230 @@
+<% include ../layout/header.ejs %>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper custom-bg">
+    <!-- Content Header (Page header) -->
+    <% include ../layout/partials/page-header-section.ejs %>
+      <!-- Main content -->
+      <div class="form-group button-row">
+        <a href="/admin/subscription" class="btn btn-success float-right custom-add-btn">
+          <i class="fa fa-plus" aria-hidden="true"> </i> Add New Subscription
+        </a>
+        <div class="clear-state">
+          <h1 class="custom-add-heading custome-list-title">Subscriptions &nbsp;&nbsp;
+            <i id="refresh-icon" style="font-size: 80%;" class="fa fa-refresh fa-lg" data-toggle="tooltip" title="Refresh"></i>
+          </h1>
+        </div>
+      </div>
+      <section class="content">
+
+        <!-- Default box -->
+        <div class="box">
+          <!-- <div class="box-header with-border">
+            <h3 class="box-title">Animal Type list</h3>
+          </div>
+          <div class="box-header with-border">
+            <a href="/admin/animalType" class="btn btn-success float-right custom-add-btn">
+              <i class="fa fa-plus" aria-hidden="true"></i> &nbsp;Add Animal Type
+            </a>
+          </div> -->
+          <% include ../layout/partials/alert-section.ejs %>
+          <div class="box-body">
+            <table id="subscriptionList" class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Duration</th>
+                  <th>Subscription For</th>
+                  <th>Currency type</th>
+                  <th>Amount</th>
+                  <th>Is Archived</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+            </table>
+    
+          </div>
+          <!-- Delete Confirmation Modal -->
+          <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog dialog-custm" role="document">
+              <div class="modal-content modal-content-custm">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h5 class="modal-title text-center font-weight-bold">Please confirm</h5>
+                </div>
+                <div class="modal-body">
+                  <div class="custom-modal-body">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTEuMzYzIDEyLjcyN3YxLjU0NWMwIC4xMi0uMDQ0LjIyMy0uMTMxLjMxYS40MjQuNDI0IDAgMDEtLjMxLjEzMkg5LjE1NWEuNDI0LjQyNCAwIDAxLS4zMS0uMTMxLjQyNC40MjQgMCAwMS0uMTMxLS4zMXYtMS41NDZjMC0uMTIuMDQ0LS4yMjMuMTMtLjMxYS40MjQuNDI0IDAgMDEuMzExLS4xMzJoMS43NjdjLjEyIDAgLjIyMy4wNDQuMzEuMTMxLjA4Ny4wODguMTMxLjE5MS4xMzEuMzF6bS4yMDctNy4yODVsLS4xOTMgNS4yOThhLjQ0NC40NDQgMCAwMS0uMTQyLjMxLjQzNi40MzYgMCAwMS0uMzEzLjEzMUg5LjE1NWEuNDM2LjQzNiAwIDAxLS4zMTQtLjEzLjQ0NC40NDQgMCAwMS0uMTQtLjMxMWwtLjE5NC01LjI5OGEuNDA2LjQwNiAwIDAxLjEyLS4zMUEuNDEzLjQxMyAwIDAxOC45MzYgNWgyLjIwN2MuMTIgMCAuMjIyLjA0NC4zMDcuMTMxLjA4NS4wODcuMTI2LjE5MS4xMjEuMzF6IiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGw9IiNGRjVEMDAiLz48cmVjdCBzdHJva2U9IiNGRjVEMDAiIHg9Ii41IiB5PSIuNSIgd2lkdGg9IjE5IiBoZWlnaHQ9IjE5IiByeD0iOS41Ii8+PC9nPjwvc3ZnPg==" alt="icon" class="sc-eWnSVe cSfwyt">
+                    <p color="lightOrange" font-size="md" font-weight="regular" class="sc-cTJmaU sc-eXuzZk iibFUT dSTtmP">
+                      <span>Are you sure you want to archive/delete this entry?</span><br/>
+                      <span>If this subscription is already in use then it will be archived instead of deleted</span>
+                    </p>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary pull-left" data-dismiss="modal">No, cancel</button>
+                  <a href="" class="btn btn-primary delete-item">Yes, confirm</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Unarchive Confirmation Modal -->
+          <div class="modal fade" id="unArchiveConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog dialog-custm" role="document">
+              <div class="modal-content modal-content-custm">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h5 class="modal-title text-center font-weight-bold">Please confirm</h5>
+                </div>
+                <div class="modal-body">
+                  <div class="custom-modal-body">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTEuMzYzIDEyLjcyN3YxLjU0NWMwIC4xMi0uMDQ0LjIyMy0uMTMxLjMxYS40MjQuNDI0IDAgMDEtLjMxLjEzMkg5LjE1NWEuNDI0LjQyNCAwIDAxLS4zMS0uMTMxLjQyNC40MjQgMCAwMS0uMTMxLS4zMXYtMS41NDZjMC0uMTIuMDQ0LS4yMjMuMTMtLjMxYS40MjQuNDI0IDAgMDEuMzExLS4xMzJoMS43NjdjLjEyIDAgLjIyMy4wNDQuMzEuMTMxLjA4Ny4wODguMTMxLjE5MS4xMzEuMzF6bS4yMDctNy4yODVsLS4xOTMgNS4yOThhLjQ0NC40NDQgMCAwMS0uMTQyLjMxLjQzNi40MzYgMCAwMS0uMzEzLjEzMUg5LjE1NWEuNDM2LjQzNiAwIDAxLS4zMTQtLjEzLjQ0NC40NDQgMCAwMS0uMTQtLjMxMWwtLjE5NC01LjI5OGEuNDA2LjQwNiAwIDAxLjEyLS4zMUEuNDEzLjQxMyAwIDAxOC45MzYgNWgyLjIwN2MuMTIgMCAuMjIyLjA0NC4zMDcuMTMxLjA4NS4wODcuMTI2LjE5MS4xMjEuMzF6IiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGw9IiNGRjVEMDAiLz48cmVjdCBzdHJva2U9IiNGRjVEMDAiIHg9Ii41IiB5PSIuNSIgd2lkdGg9IjE5IiBoZWlnaHQ9IjE5IiByeD0iOS41Ii8+PC9nPjwvc3ZnPg==" alt="icon" class="sc-eWnSVe cSfwyt">
+                    <p color="lightOrange" font-size="md" font-weight="regular" class="sc-cTJmaU sc-eXuzZk iibFUT dSTtmP">
+                      <span>Are you sure you want to UnArchive this entry?</span><br/>
+                      <span>This subscription is again visible to users for subscribing</span>
+                    </p>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary pull-left" data-dismiss="modal">No, cancel</button>
+                  <a href="" class="btn btn-primary unArchive-item">Yes, confirm</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.box-body -->
+          <div class="box-footer text-center">
+          </div>
+          <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+    
+      </section>
+      <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <% include ../layout/footer.ejs %>
+    <script src="/plugins/datatables/jquery.dataTables.js"></script>
+    <script src="/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="/plugins/datatables//dataTables.buttons.min.js"></script>
+
+    <script type="text/javascript">
+    var dataTableoOBJ;
+      $(function () {
+        dataTableoOBJ = $("#subscriptionList").dataTable({
+          "lengthChange": true,
+          "processing": true,
+          "language": {
+            "infoFiltered": "",
+            processing: '<i style="color: rgb(41, 43, 44);" class="fa fa-circle-o-notch fa-spin fa-2x fa-fw"></i><span class="sr-only"></span> ',
+            paginate: {
+              previous: '<i class="fa fa-angle-left fa-5" aria-hidden="true"></i>',
+              next:     '<i class="fa fa-angle-right fa-5" aria-hidden="true"></i>',
+              },
+          },
+          "initComplete": function (settings, json) {
+            if(json && json.status) {
+              $('#table-filter').val(json.status).attr("selected", "selected");
+            }
+            $("#subscriptionList").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+          },
+          "stateSave": true,
+          "serverSide": true,
+          "ajax": "/admin/subscriptions/data",
+          "createdRow": function (row, data, rowIndex) {
+            // Per-cell function to do whatever needed with cells
+            $.each($('td', row), function (colIndex) {
+                // For example, adding data-* attributes to the cell
+                $(this).attr('data-id', data.id);
+            });
+          },
+          'columns': [
+            { data: "id" },
+            {
+              data: "title",
+            },
+            {
+              data: "duration",
+            },
+            {
+              data: "subscription_for",
+            },
+            {
+              data: "currency_type",
+            },
+            {
+              data: "amount",
+            },
+            { 
+              data: "is_archived",
+              render: function (id, type, full, meta) {
+                if (id) { 
+                    return '<label class="text-danger">Yes</label>';
+                } else {
+                    return '<label class="text-success">No</label>';
+                }
+              }
+            },
+            {
+              data: "id",
+              searchable: false,
+              sortable: false,
+              render: function (id, type, full, meta) {
+                if (full.is_archived) {
+                  let html = '<a href="/admin/subscriptions/' + id + '" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></a> &nbsp; &nbsp; <span data-id=' + id + ' data-toggle="modal" data-target="#deleteConfirmModal" class="text-red delete-icon"><i class="fa fa-trash" data-toggle="tooltip" title="Delete"></i></span> &nbsp; &nbsp; ';
+                  html += '<span data-id=' + id + ' data-toggle="modal" data-target="#unArchiveConfirmModal" class="text-green unArchive-icon"><i class="fa fa-undo" data-toggle="tooltip" title="UnArchive"></i></span>';
+                  return html;
+                }
+                return '<a href="/admin/subscriptions/' + id + '" data-toggle="tooltip" title="Edit"><i class="fa fa-pencil"></i></a> &nbsp; &nbsp; <span data-id=' + id + ' data-toggle="modal" data-target="#deleteConfirmModal" class="text-red delete-icon"><i class="fa fa-trash" data-toggle="tooltip" title="Delete"></i></span>';
+              }
+            },
+          ],
+          "order": [[ 0, "desc" ]],
+        });
+        if (performance.navigation.type === 1){
+          var table = $('#subscriptionList').DataTable();
+          table.state.clear();
+          table.search("").draw(); 
+          table.column( '0:visible' ).order( 'desc' ).draw();
+          table.page.len(10).draw();
+          dataTableoOBJ.dataTable().fnFilter('', 6);
+        }
+        
+        $('#table-filter').on('change', function(){
+          dataTableoOBJ.dataTable().fnFilter(this.value, 6);
+        });
+      });
+
+      $(document).on("click", ".delete-icon", function () {
+        var id = $(this).attr("data-id");
+        $('.delete-item').attr("href", '/admin/subscriptions/' + id + '/delete');
+      });
+
+      $(document).on("click", ".unArchive-icon", function () {
+        var id = $(this).attr("data-id");
+        $('.unArchive-item').attr("href", '/admin/subscriptions/' + id + '/unArchive');
+      });
+      
+      $("#refresh-icon").click(function(event){
+          var table = $('#subscriptionList').DataTable();
+          table.state.clear();
+          table.search("").draw(); 
+          table.column( '0:visible' ).order( 'desc' ).draw();
+          table.page.len(10).draw();
+          $("#table-filter").val('');
+          dataTableoOBJ.dataTable().fnFilter('', 6);
+      });
+      $(".sidebar-menu li").removeClass("active");
+      $(".menu__subscriptions").addClass("active");
+    </script>
+
+    </body>
+
+    </html>

@@ -1,0 +1,46 @@
+<div class="navbar-custom-menu">
+    <ul class="nav navbar-nav">
+        <li class="dropdown user user-menu">
+            <!-- <a href="#" class="dropdown-toggle" data-toggle="dropdown"> -->
+                <!-- <img src="/images/person-default.png" class="user-image" alt="User Image">
+                <span class="hidden-xs"><%= //userData.first_name %> <%= //userData.last_name %></span> -->
+            <!-- </a> -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary dropdown-toggle custom-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-sort-desc fa-4 pull-right" aria-hidden="true"></i>Super Admin&nbsp;
+                </button>
+                <div class="dropdown-menu dropdown-menu-right custom-dropdown-div">
+                  <% if(typeof userData === 'object' && userData.roleName === userData.adminRoleName){ %>
+                      <a href="/admin/adminProfile" class="dropdown-item custom-dropdown-btn prifile-btn" type="button">Profile</a>
+                  <% } else { %>
+                      <a href="/admin/userProfile" class="dropdown-item custom-dropdown-btn prifile-btn" type="button">Profile</a>
+                  <% } %>
+                  <% if(typeof userData === 'object' && userData.vetPractice && userData.roleName === userData.practiceAdminName && userData.option == 'practice'){ %>
+                    <a href="/admin/vetPracticeProfile" class="dropdown-item custom-dropdown-btn prifile-btn" type="button">Vet Practice</a>
+                  <% } else if(typeof userData === 'object' && userData.vetPractice && userData.roleName === userData.practiceAdminName && userData.option == 'store'){ %>
+                    <a href="/admin/storeProfile" class="dropdown-item custom-dropdown-btn prifile-btn" type="button">Store Details</a>
+                  <% } %>
+                  <!-- <button class="dropdown-item" type="button">Another action</button> -->
+                  <a href="/admin/logout" class="dropdown-item custom-dropdown-btn logout-btn" type="button">Logout &nbsp; <i class="fa fa-sign-out logout-icon" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            <!-- <ul class="dropdown-menu"> -->
+                <!-- User image -->
+                <!-- <li class="user-header">
+                    <img src="/images/person-default.png" class="user-image" alt="User Image">
+                    <p><%= //userData.username %></p>
+                </li> -->
+                <!-- Menu Footer-->
+                <!-- <li class="user-footer">
+                    <div class="pull-left">
+                        <a href="/admin/profile" class="btn btn-default btn-flat">Profile</a>
+                    </div>
+                    <div class="pull-right">
+                        <a href="/admin/logout" class="btn btn-default btn-flat">Sign out</a>
+                    </div>
+                </li>
+            </ul> -->
+        </li>
+    </ul>
+</div>

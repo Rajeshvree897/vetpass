@@ -1,0 +1,107 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<link rel="stylesheet" href="/css/subscription.css">
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+  <%- include ./../layout/partials/page-header-section.ejs -%>
+
+  <!-- Main content -->
+  <div class="form-group button-row">
+	  <a href="/admin/advertisements" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+	  <h1 class="custom-add-heading">Subscriptions</h1>
+  </div>
+  <section class="content" id="activeSubscriptionList">
+	<!-- Default box -->
+    <div class="box custom-box">
+	<!-- <div class="box-body"> -->
+  <div class="container margin-con">
+	<% if (activeSubscriptionList.length) { %>
+		<h1>Your Active Plans</h1><br/>
+		<div class="grid">
+			<% for (var i=0; i< activeSubscriptionList.length; i++ ) { %>
+				<label class="card">
+					<!-- <input name="sub_id" value="<%= activeSubscriptionList[i].id ? activeSubscriptionList[i].id : ""  %>" checked> -->
+					<span class="plan-details">
+						<p><span class="plan-type"><%= activeSubscriptionList[i].title ? activeSubscriptionList[i].title : ""  %></span></p>
+						<p><span>Subscription type: <%= activeSubscriptionList[i].Type && activeSubscriptionList[i].Type.name ? activeSubscriptionList[i].Type.name : ""  %></span></p>
+						<p><span>Start date: <%= activeSubscriptionList[i].sub_start_date ? activeSubscriptionList[i].sub_start_date : ""  %> &nbsp;&nbsp;
+						End date: <%= activeSubscriptionList[i].sub_end_date ? activeSubscriptionList[i].sub_end_date : ""  %></span></p>
+						
+						<% var date = new Date() %>
+						<% var day = (activeSubscriptionList[i].sub_end_date ? Number((new Date(activeSubscriptionList[i].sub_end_date) - new Date(date.toISOString().split('T')[0]))/(1000 * 60 * 60 * 24)) : 0) %>
+						<p><span class="expire_date"><%= activeSubscriptionList[i].sub_end_date ? "Plan Expires on " + activeSubscriptionList[i].sub_end_date + " (" + (day)  + " Days left)" : "" %></span></p>
+						<% if(activeSubscriptionList && activeSubscriptionList[i] && activeSubscriptionList[i].duration && activeSubscriptionList[i].duration == "Custom") { %>
+							<span class="plan-cost"><%= activeSubscriptionList[i].currency_type ? activeSubscriptionList[i].currency_type : ""  %> <%= activeSubscriptionList[i].amount ? activeSubscriptionList[i].amount : ""  %><span class="slash">/</span><span class="plan-cycle"
+									title="month"><%= activeSubscriptionList[i].no_of_subscription_days ? activeSubscriptionList[i].no_of_subscription_days : ""  %> Days</span></span>
+						<% } else { %>
+							<span class="plan-cost"><%= activeSubscriptionList[i].currency_type ? activeSubscriptionList[i].currency_type : ""  %> <%= activeSubscriptionList[i].amount ? activeSubscriptionList[i].amount : ""  %><span class="slash">/</span><span class="plan-cycle"
+									title="month"><%= activeSubscriptionList[i].duration ? activeSubscriptionList[i].duration : ""  %></span></span>
+						<% } %>
+								<%- activeSubscriptionList[i].description ? activeSubscriptionList[i].description : ""  %>
+				</label>
+			<% } %>
+		</div>
+		<br/>
+	<% } %>
+
+  </div>
+  </div>
+  </section>
+
+
+	<section class="content" id="subscriptionList">
+		<!-- Default box -->
+		<div class="box custom-box">
+		<!-- <div class="box-body"> -->
+	  <div class="container margin-con">
+	<form id="subForm" method="post" action="/admin/create-checkout-session">
+		<h1>Choose Your Plan</h1><br/>
+		<div class="form-group row">
+			<div class="col-sm-4">
+				<label for="no_of_subscription_days">No of subscription days: </label>
+				<input name="no_of_subscription_days" id="no_of_subscription_days" class="form-control" type="number" min="1" placeholder="No of subscription days">
+			</div>
+		</div>
+				<br/><br/>
+		<div class="grid">
+			<% for (var i=0; i < responseData.length; i++ ) { %>
+				<label class="card">
+					<!-- <input name="duration" id="duration" type="hidden" value="<%= responseData[i].id ? responseData[i].per_day_price : ""  %>"> -->
+					<input name="sub_id" id="sub_id" type="radio" class="radio subscription" data-id="<%= responseData[i].id ? responseData[i].per_day_price : ""  %>" value="<%= responseData[i].id ? responseData[i].id : ""  %>" checked>
+
+					<span class="plan-details">
+						<p class="title-width"><span class="plan-type"><%= responseData[i].title ? responseData[i].title : ""  %></span></p>
+						<p><span>Subscription type: <%= responseData[i].Type && responseData[i].Type.name ? responseData[i].Type.name : ""  %></span></p>
+						<!-- <%= responseData[i].title ? responseData[i].title : ""  %> -->
+						<% if(responseData && responseData[i] && responseData[i].duration && responseData[i].duration == "Custom") { %>
+							<span class="plan-cost"><%= responseData[i].currency_type ? responseData[i].currency_type : ""  %> <%= responseData[i].per_day_price ? responseData[i].per_day_price : ""  %><span class="slash">/</span><span class="plan-cycle"
+									title="month">Day</span></span>
+									<%- responseData[i].description ? responseData[i].description : ""  %>
+						<% } else { %>
+							<span class="plan-cost"><%= responseData[i].currency_type ? responseData[i].currency_type : ""  %> <%= responseData[i].amount ? responseData[i].amount : ""  %><span class="slash">/</span><span class="plan-cycle"
+							title="month"><%= responseData[i].duration ? responseData[i].duration : ""  %></span></span>
+							<%- responseData[i].description ? responseData[i].description : ""  %>
+						<% } %>
+				</label>
+			<% } %>
+		</div>
+		<br/>
+		<button type="submit" id="checkout-button" class="custom-reg-btn">Continue to checkout</button>
+	</form>
+	<br/>
+</div>
+</section>
+
+<br/>
+
+</div>
+</div>
+<br/><br/><br/>
+</div>
+<%- include ./../layout/footer.ejs -%>
+<script type="module" src="/js/subscription-purchase.js"></script>
+</body>
+
+</html>

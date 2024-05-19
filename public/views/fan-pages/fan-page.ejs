@@ -1,0 +1,187 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+  <%- include ./../layout/partials/page-header-section.ejs -%>
+
+  <!-- Main content -->
+  <form enctype="multipart/form-data" action="<%= typeof responseData==='object'?'/admin/fanPage/update':'/admin/fanPage' %>"
+    id="fanPageForm" method="POST">
+    <div class="form-group button-row">
+      <button type="submit" class="btn btn-success custom-save-btn custom-save-common custom-top save-user">Save</button>
+      <a href="/admin/fanPages" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> Fan Page</h1>
+      <h1 class="custom-add-heading-details" id="form-details-icon">How to fill in this form <i class="fa fa-question-circle"></i></h1>
+    </div>
+    <section class="content">
+      <div class="box custom-box">
+        <div class="box-body">
+          <%- include ./../layout/partials/alert-section.ejs -%>
+          <div class="">
+            <div class="row">
+              <div class="col-sm-6 ">
+                <div class="form-group">
+                  <label for="title" class="">Title</label>
+                  <input type="hidden" name="id" id="id" required value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                  <input type="text" name="title" id="title" class="form-control" placeholder="Title"
+                    value="<%= typeof responseData==='object'?responseData.title:'' %>"  <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %> >
+                </div>
+                <div class="form-group">
+                  <label for="status" class="">Status</label>
+                  <select class="form-control type-select-box" id="status" name="status" required
+                    value="<%= typeof responseData==='object'?responseData.status:'' %>">
+                    <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Choose here</option>
+                    <option <%=typeof responseData==='object' ?1===responseData.status
+                        ? 'selected' : '' : '' %> value=1>
+                        Active
+                      </option>
+                    <option <%=typeof responseData==='object' ?0===responseData.status
+                        ? 'selected' : '' : '' %> value=0>
+                        Inactive
+                      </option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="intCode" class="">Int Code</label>
+                  <select class="form-control type-select-box" id="int_code" name="int_code" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %>>
+                  <option <%= typeof responseData!=='object' || !responseData.int_code ? 'selected' : '' %>
+                    disabled>Add an item..</option>
+                    <% for (var i=0; i < countryData.length; i++ ) { %>
+                      <% if(countryData[i].id){ %>
+                      <option <%=typeof responseData==='object' ?countryData[i].id==responseData.int_code ? 'selected'
+                        : '' : '' %>
+                        id="<%= countryData[i].id %>" value="<%= countryData[i].id %>">
+                        <%= countryData[i].country_code ? `${countryData[i].country} (+${countryData[i].country_code})` : countryData[i].country %>
+                      </option>
+                      <% }} %>
+                </select>
+                </div>
+                <div class="form-group">
+                  <label for="fanPageImage" class="">Image</label>
+                  <div class="position-relative">
+                    <div class="choose-profile-fanpage">
+                      <input <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %> type="file" id="fanPageImage" name="fanPageImage" accept="image/png, image/jpeg">
+                    </div>
+                    <div class="d-none profile_img">
+                      <img
+                        src="<%= typeof responseData==='object' && typeof responseData.FanPageImage==='object' && responseData.FanPageImage && responseData.FanPageImage.UploadFile && responseData.FanPageImage.UploadFile.url ? responseData.FanPageImage.UploadFile.url: '/images/vet-practice-edit.png' %>"
+                        alt="Vet Practice" height="200" width="100%" id="fan-page-img">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6 ">
+                <div class="form-group">
+                  <label for="website" class="">Website</label>
+                  <input type="text" name="website" id="website" class="form-control" placeholder="Website"
+                    value="<%= typeof responseData==='object'?responseData.website:'' %>"  <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %> >
+                </div>
+                <div class="form-group">
+                  <label for="email" class="">Email</label>
+                    <input type="text" name="email" id="email" class="form-control" placeholder="Email" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %>
+                    value="<%= typeof responseData==='object'?responseData.email:'' %>">
+                </div>
+                <div class="form-group">
+                  <label for="mobile" class="">Contact No</label>
+                  <input type="text" name="mobile" id="mobile" class="form-control" <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %>
+                    placeholder="Allow only number and space"
+                    value="<%= typeof responseData==='object'?responseData.mobile:'' %>">
+                </div>
+                <div class="form-group">
+                  <label for="FanPageBannerImage" class="">Banner Image</label>
+                  <div class="position-relative">
+                    <div class="choose-profile-fanpage">
+                      <input <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %> type="file" id="fanPageBannerImage" name="fanPageBannerImage" accept="image/png, image/jpeg">
+                    </div>
+                    <div class="d-none profile_img">
+                      <img
+                        src="<%= typeof responseData==='object' && typeof responseData.FanPageBannerImage==='object' && responseData.FanPageBannerImage && responseData.FanPageBannerImage.UploadFile && responseData.FanPageBannerImage.UploadFile.url ? responseData.FanPageBannerImage.UploadFile.url: '/images/vet-practice-edit.png' %>"
+                        alt="Vet Practice" height="200" width="100%" id="fan-page-banner-img">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="description" class="">Description</label>
+              <textarea class="form-control" rows="10" name="description" id="description" placeholder="Description"
+              <%= ( typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %> ><%= typeof responseData==='object'?responseData.description:'' %></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+      
+    <section class="content" id="form-details">
+      <div class="box custom-user-box">
+        <h4 class="text-center">How to fill in this form ?
+          <a data-toggle="collapse" id="collapse-show-details" href="#collapse-details" aria-expanded="false" style="color: black">
+            <i class="fa fa-plus"></i>
+            <i class="fa fa-minus"></i>
+          </a>
+        </h4></br>
+        <div class="collapse" id="collapse-details">
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Title ( title ) * : </label> Title of the fan page
+            </div>
+            <div class="col-md-6">
+              <label>Website ( website ) * : </label> Website's URL for the fan page
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Status ( status ) * : </label> Activation status of the fan page
+            </div>
+            <div class="col-md-6">
+              <label>Email ( email ) * : </label> Email address for the fan page
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Int Code ( int_code ) * : </label> Country name for the fan page
+            </div>
+            <div class="col-md-6">
+              <label>Contact No ( mobile ) * : </label> Contact Number for the fan page
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Image * : </label> Image of fan page
+            </div>
+            <div class="col-md-6">
+              <label>Banner Image * : </label> Banner image of fan page
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Description ( description ) * : </label> Description for the fan page
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </form>
+</div>
+<%- include ./../layout/footer.ejs -%>
+<script type="module" src="/js/fan-pages.js"></script>
+<script>
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__fanpages").addClass("active");
+  $(".menu__fanpages_fanpages").addClass("active");
+  $(document).ready(function() {
+    $("#form-details-icon").on("click", function(e) {
+      e.preventDefault();
+      $("body, html").animate({ 
+        scrollTop: $("#form-details").offset().top - 150
+      }, 600);
+      $('#collapse-details').collapse('show');
+    });
+  });
+</script>
+</body>
+
+</html>

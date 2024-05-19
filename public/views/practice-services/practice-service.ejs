@@ -1,0 +1,55 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+
+  <!-- Main content -->
+  <form action="<%= typeof responseData==='object'?'/admin/practice-service/update':'/admin/practice-service' %>" id="practiceServiceForm"
+    method="POST">
+    <div class="form-group button-row">
+      <a href="/admin/practice-services" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <button type="submit" class="btn btn-success custom-save-btn custom-top-user">Save</button>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> Practice Service</h1>
+      <small class="custom-add-text">API ID : practice-service</small>
+    </div>
+
+    <section class="content">
+      <!-- Default box -->
+      <div class="box custom-box">
+        <!-- <div class="box-header with-border">
+        </div> -->
+        <div class="box-body">
+            <%- include ./../layout/partials/alert-section.ejs -%>
+            <div class="form-group row">
+              <div class="col-sm-6">
+                <label for="name" class="">Practice Service Name * </label>
+                <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Name of the practice service (name)"></i>
+                <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                <input type="text" name="name" id="name" class="form-control" placeholder="Name"
+                  value="<%= typeof responseData==='object'?responseData.name:'' %>">
+              </div>
+              <div class="col-sm-6">
+                <label for="order" class="">Order * </label>
+                <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Order of the practice service"></i>
+                <input type="number" name="order" id="order" class="form-control" placeholder="Order"
+                  value="<%= typeof responseData==='object' && responseData.order ? responseData.order:'' %>">
+              </div>
+            </div>
+        </div>
+      </div>
+      <!-- /.box -->
+    </section>
+  </form>
+  <!-- /.content -->
+</div>
+<%- include ./../layout/footer.ejs -%>
+<script type="module" src="/js/practice-service.js"></script>
+</body>
+<script>
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__master_modules").addClass("active");
+  $(".menu__practice_services").addClass("active");
+</script>
+
+</html>

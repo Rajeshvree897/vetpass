@@ -1,0 +1,117 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+
+  <!-- Main content -->
+  <form action="<%= typeof responseData==='object'?'/admin/animalTypes/update':'/admin/animalTypes' %>" id="typeForm"
+    method="POST" enctype="multipart/form-data">
+    <div class="form-group button-row">
+      <a href="/admin/animalTypes" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <button type="submit" class="btn btn-success custom-save-btn custom-top-user">Save</button>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> Animal Type</h1>
+        <small class="custom-add-text">API ID : animal-type</small>
+    </div>
+
+  <section class="content">
+
+    <!-- Default box -->
+    <div class="box custom-box">
+      <!-- <div class="box-header with-border">
+      </div> -->
+      <div class="box-body">
+          <%- include ./../layout/partials/alert-section.ejs -%>
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="type" class="">Type * </label>
+              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Type of the animal (type)"></i>
+              <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <input type="text" name="type" id="type" class="form-control" placeholder="Type"
+                value="<%= typeof responseData==='object'?responseData.type:'' %>">
+            </div>
+            <div class="col-sm-6">
+              <label for="category" class="">Animal Category * </label>
+              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Category of the animal (category)"></i>
+                <input type="hidden" name="categoryId" id="categoryId"
+                  value="<%= typeof responseData==='object'?responseData.animal_category:'' %>">
+                <select class="form-control type-select-box" id="category" name="category"
+                  value="<%= typeof responseData==='object'?responseData.category:'' %>">
+                  <option <%= typeof responseData!=='object'? 'selected' : ''%> disabled>Add an item..</option>
+                  <% for (var i=0; i < animalCategory.length;  i++ ) { %>
+                  <option
+                    <%= typeof responseData==='object'?animalCategory[i].id === responseData.animal_category ? 'selected' : '': '' %>
+                    id="<%= animalCategory[i].id %>">
+                    <%= animalCategory[i].category %></option>
+                  <% } %>
+                </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <!-- <div class="col-sm-6">
+            <label for="icon" class="">Icon</label>
+              <div class="position-relative">
+                <div class="<%= typeof responseData==='object' && typeof responseData.AnimalTypesIcon==='object' && responseData.AnimalTypesIcon && responseData.AnimalTypesIcon.UploadFile && responseData.AnimalTypesIcon.UploadFile.url ? 'choose-profile': '' %>">
+                  <input type="file" id="icon" name="icon" accept="image/png, image/jpeg">
+                </div>
+                <div class="d-none profile_img">
+                  <img src="<%= typeof responseData==='object' && typeof responseData.AnimalTypesIcon==='object' && responseData.AnimalTypesIcon && responseData.AnimalTypesIcon.UploadFile && responseData.AnimalTypesIcon.UploadFile.url ? responseData.AnimalTypesIcon.UploadFile.url: '' %>" alt="Animal Type" height="200" width="100%">
+                </div>
+              </div>
+            </div> -->
+            <div class="col-sm-6">
+              <label for="icon" class="">Image  (Preferred resolution - 400 x 400)</label>
+              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Image of animal type"></i>
+              <div class="position-relative">
+                <div class="choose-profile">
+                  <input type="file" id="icon" name="icon" accept="image/png, image/jpeg">
+                </div>
+                <div class="d-none profile_img">
+                  <img
+                    src="<%= typeof responseData==='object' && typeof responseData.AnimalTypesIcon==='object' && responseData.AnimalTypesIcon && responseData.AnimalTypesIcon.UploadFile && responseData.AnimalTypesIcon.UploadFile.url ? responseData.AnimalTypesIcon.UploadFile.url: '/images/vet-practice-edit.png' %>"
+                    alt="Vet Practice" height="200" width="100%" id="animal-type-img">
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <label for="status" class="">Status * </label>
+              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Activation status of the animal type (status)"></i>
+              <select name="status" class="form-control type-select-box" id="status">
+                  <option <%=typeof responseData!=='object' || ((typeof responseData.status == "boolean" || typeof responseData.status == "object") && (responseData.status == "" || responseData.status == null) ) ? 'selected' : '' %> disabled>Choose here</option>
+                  <option <%= (typeof responseData==='object' && typeof responseData.status === "boolean" && responseData.status === true)?'selected':'' %> value="true">Active</option>
+                  <option <%= (typeof responseData==='object' && typeof responseData.status === "boolean" && responseData.status === false)?'selected':'' %> value="false">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- <div class="form-group row">
+            <div class="row submit-row">
+            </div>
+          </div> -->
+        </form>
+      </div>
+
+      <!-- <div class="box-footer text-center">
+      </div> -->
+      <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+  </section>
+  <!-- /.content -->
+</div>
+<%- include ./../layout/footer.ejs -%>
+<script type="module" src="/js/animal-type.js"></script>
+</body>
+<script>
+  $('.type-select-box').change(function () {
+    var selectedId = $('.type-select-box option:selected').attr('id');
+    $('#categoryId').val(selectedId);
+  });
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__animal_classification").addClass("active");
+  $(".menu__animalTypes").addClass("active");
+</script>
+
+</html>

@@ -1,0 +1,105 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+  <%- include ./../layout/partials/page-header-section.ejs -%>
+
+  <!-- Main content -->
+  <form action="<%= typeof responseData==='object'?'/admin/questions/update':'/admin/questions' %>"
+    id="questionForm" method="POST">
+    <div class="form-group button-row">
+      <button type="submit" class="btn btn-success custom-save-btn custom-top save-user">Save</button>
+      <a href="/admin/questions" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> FAQ</h1>
+      <h1 class="custom-add-heading-details" id="form-details-icon">How to fill in this form <i class="fa fa-question-circle"></i></h1>
+      <small class="custom-add-text">API ID : faqs</small>
+    </div>
+  <section class="content">
+
+    <!-- Default box -->
+    <div class="box custom-box">
+      <!-- <div class="box-header with-border">
+      </div> -->
+      <div class="box-body">
+        <%- include ./../layout/partials/alert-section.ejs -%>
+
+        <div class="form-group row">
+            <div class="col-sm-6">
+            <label for="question" class="">Question</label>
+              <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <textarea class="form-control" rows="10" name="question" id="question"
+                placeholder="Question"><%= typeof responseData==='object'?responseData.question:'' %></textarea>
+            </div>
+            <div class="col-sm-6">
+              <label for="answer" class="">Answer</label>
+                <textarea class="form-control" rows="10" name="answer" id="answer"
+                  placeholder="Answer"><%= typeof responseData==='object'?responseData.answer:'' %></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="application" class="">Application</label>
+              <select name="application" class="form-control type-select-box" id="application">
+                  <option <%=typeof responseData!=='object' || !responseData.application ? 'selected' : '' %> disabled>Choose here</option>
+                  <option <%= typeof responseData==='object'&&responseData.application&&responseData.application=='Both'?'selected':'' %> value="Both">Both</option>
+                  <option <%= typeof responseData==='object'&&responseData.application&&responseData.application=='User'?'selected':'' %> value="User">User</option>
+                  <option <%= typeof responseData==='object'&&responseData.application&&responseData.application=='Vet'?'selected':'' %> value="Vet">Vet</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- <div class="box-footer text-center">
+      </div> -->
+      <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+  </section>
+
+  <section class="content" id="form-details">
+    <div class="box custom-user-box">
+      <h4 class="text-center">How to fill in this form ?
+        <a data-toggle="collapse" id="collapse-show-details" href="#collapse-details" aria-expanded="false" style="color: black">
+          <i class="fa fa-plus"></i>
+          <i class="fa fa-minus"></i>
+        </a>
+      </h4></br>
+      <div class="collapse" id="collapse-details">
+        <div class="form-group row">
+          <div class="col-md-6">
+            <label>Question ( question ) * : </label> Frequently asked question
+          </div>
+          <div class="col-md-6">
+            <label>Answer ( answer ) * : </label> Answer of frequently asked question
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-md-6">
+            <label>Application ( application ) * : </label> FAQ visible in the selected application ( Both/User/Vet )
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /.content -->
+</div>
+<%- include ./../layout/footer.ejs -%>
+<script type="module" src="/js/frequently-asked-questions.js"></script>
+</body>
+<script>
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__questions").addClass("active");
+  $(document).ready(function() {
+    $("#form-details-icon").on("click", function(e) {
+      e.preventDefault();
+      $("body, html").animate({ 
+        scrollTop: $("#form-details").offset().top - 150
+      }, 600);
+      $('#collapse-details').collapse('show');
+    });
+  });
+</script>
+</html>

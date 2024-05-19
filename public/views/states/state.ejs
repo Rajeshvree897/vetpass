@@ -1,0 +1,65 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+
+  <!-- Main content -->
+  <form action="<%= typeof responseData==='object'?'/admin/state/update':'/admin/state' %>" id="stateForm"
+    method="POST">
+    <div class="form-group button-row">
+      <a href="/admin/states" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <button type="submit" class="btn btn-success custom-save-btn custom-top-user">Save</button>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> State</h1>
+      <small class="custom-add-text">API ID : state</small>
+    </div>
+
+    <section class="content">
+      <!-- Default box -->
+      <div class="box custom-box">
+        <!-- <div class="box-header with-border">
+        </div> -->
+        <div class="box-body">
+            <%- include ./../layout/partials/alert-section.ejs -%>
+            <div class="form-group row">
+              <div class="col-sm-6">
+                <label for="state" class="">State Name * </label>
+                <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Name of the state (state)"></i>
+                <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                <input type="text" name="state" id="state" class="form-control" placeholder="Name"
+                  value="<%= typeof responseData==='object'?responseData.state:'' %>">
+              </div>
+              <div class="col-sm-6">
+                <label for="country" class="">Country * </label>
+                <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Country name of the state (country)"></i>
+                  <select class="form-control type-select-box" id="country" name="country"
+                    value="<%= typeof responseData==='object'?responseData.country:'' %>">
+                    <option <%=(typeof responseData!=='object' || !responseData.country)? 'selected' : '' %>
+                      disabled>Add an item..</option>
+                    <% for (var i=0; i < countryData.length; i++ ) { %>
+                      <option <%=typeof responseData==='object' ?countryData[i].id===responseData.country ? 'selected'
+                        : '' : '' %>
+                        id="<%= countryData[i].id %>" value="<%= countryData[i].id %>">
+                          <%= countryData[i].country %>
+                      </option>
+                      <% } %>
+                  </select>
+              </div>
+            </div>
+        </div>
+      </div>
+      <!-- /.box -->
+    </section>
+  </form>
+  <!-- /.content -->
+</div>
+<%- include ./../layout/footer.ejs -%>
+<script type="module" src="/js/state.js"></script>
+</body>
+<script>
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__master_modules").addClass("active");
+  $(".menu__states").addClass("active");
+</script>
+
+</html>

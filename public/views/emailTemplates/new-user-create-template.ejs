@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Welcome Vet User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+    @media screen {
+        @font-face {
+            font-family: 'Source Sans Pro';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'), url(https://fonts.gstatic.com/s/sourcesanspro/v10/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format('woff');
+        }
+
+        @font-face {
+            font-family: 'Source Sans Pro';
+            font-style: normal;
+            font-weight: 700;
+            src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(https://fonts.gstatic.com/s/sourcesanspro/v10/toadOcfmlt9b38dHJxOBGFkQc6VGVFSmCnC_l7QZG60.woff) format('woff');
+        }
+    }
+
+    /**
+   * Avoid browser level font resizing.
+   * 1. Windows Mobile
+   * 2. iOS / OSX
+   */
+    body,
+    table,
+    td,
+    a {
+        -ms-text-size-adjust: 100%;
+        /* 1 */
+        -webkit-text-size-adjust: 100%;
+        /* 2 */
+    }
+
+    /**
+   * Remove extra space added to tables and cells in Outlook.
+   */
+    table,
+    td {
+        mso-table-rspace: 0pt;
+        mso-table-lspace: 0pt;
+    }
+
+    /**
+   * Better fluid images in Internet Explorer.
+   */
+    img {
+        -ms-interpolation-mode: bicubic;
+    }
+
+    /**
+   * Remove blue links for iOS devices.
+   */
+    a[x-apple-data-detectors] {
+        font-family: inherit !important;
+        font-size: inherit !important;
+        font-weight: inherit !important;
+        line-height: inherit !important;
+        color: inherit !important;
+        text-decoration: none !important;
+    }
+
+    /**
+   * Fix centering issues in Android 4.4.
+   */
+    div[style*="margin: 16px 0;"] {
+        margin: 0 !important;
+    }
+
+    br {
+        display: block;
+        margin: 5px 0;
+    }
+
+    .link-decoration-none {
+        text-decoration: none;
+    }
+
+    .yellow-font {
+        color: #ffc844;
+        font-size: 12pt;
+        font-weight: 700;
+    }
+
+    .yellow-color {
+        color: #ffc844;
+    }
+
+    .red-font {
+        color: red;
+    }
+
+    body {
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /**
+   * Collapse table borders to avoid space between cells.
+   */
+    table {
+        border-collapse: collapse !important;
+    }
+
+    a {
+        color: #1a82e2;
+    }
+
+    img {
+        height: auto;
+        line-height: 100%;
+        text-decoration: none;
+        border: 0;
+        outline: none;
+    }
+    </style>
+</head>
+
+<body style="background-color: #e9ecef;">
+    <!-- start body -->
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <!-- start hero -->
+        <tr>
+            <td align="center" bgcolor="#e9ecef">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 720px;">
+                    <tr>
+                        <td align="center" bgcolor="#ffffff" style="padding: 24px 24px 0; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; border-top: 3px solid #d4dadf;">
+                            <img src="<%= data.baseUrl %>images/vetpassLogo.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <!-- end hero -->
+        <!-- start copy block -->
+        <tr>
+            <td align="center" bgcolor="#e9ecef">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 720px;">
+                    <!-- start copy -->
+                    <tr>
+                        <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
+                            <p style="margin: 0;">Dear <b><%= data.userName %></b></p> <br />
+                            <p style="margin: 0;">You have been invited by your veterinary practice or school to join your colleagues, and veterinarians in over 50,000 practices and schools globally.</p><br />
+                            <p style="margin: 0;">VETPASS is the world’s largest pet and animal care digital platform and its free to use. Your practice or school is already registered and now waiting for you to connect.</p><br />
+                            <p style="margin: 0;">There is an “orange” VETPASS app for owners and veterinarians, and exclusively for veterinarians a “blue” VETPASS for VETS app.</p><br />
+                            <p style="margin: 0;">This link will create your password for the VETPASS for VETS app. <a href="<%= data.resetPasswordURL %>"><b>CREATE PASSWORD</b></a></p><br />
+                            <p style="margin: 0;">We strongly recommend you download both apps, but you will need different registration email addresses e.g. work address for VETPASS for VETS and private email for VETPASS.</p><br />
+                            <p style="margin: 0;">In the VETPASS for VETS app you can securely connect one to one, to groups and with colleagues around the world.</p><br />
+                            <p style="margin: 0;"> Join forums, seek job opportunities, and earn CPD/CEE credits, find or refer specialists. It’s all in the app. It also provides the most advanced and easiest to use in-clinic and online appointment booking and consultation tool including automated patient discharge, with prescriptions and ability to download consultations to your PMS. Every vet in the world now has a complete online consultation tool on their smartphone and only a few minutes of training is required on a single smartphone.</p><br />
+                            <p style="margin: 0;">Practices can connect and engage with their clients and even local, owners to promote their services.</p><br />
+                            <p style="margin: 0;">We are currently recruiting one thousand veterinary surgeons, technicians and nurses across 20 countries to work with owners and patients. For more information see here. VETPASS RECRUITMENT</p><br />
+                            <p style="margin: 0;">A veterinarian can offer their own services part-time, full-time, generalist or specialist in the app today and we will manage the administration. Once you have downloaded the app you can start working immediately. Already working online? Join us and increase your opportunities.</p><br />
+                            <p style="margin: 0;">It all starts when you download the VETPASS for VETS and VETPASS apps, registering and connecting to your practice, or to a VETPASS practice if you are not sure. The whole process typically takes less than five minutes from downloading to be able to offer online services.</p><br />
+                            <p style="margin: 0;">Part-time staff can instantaneously change their connected practice for each session and administrators can be added or subtracted in seconds.</p><br />
+                            <p style="margin: 0;">We uniquely in veterinary meet all the global recognised standards of quality, information security and privacy. Ask any service provider you currently deal with.</p><br />
+                            <p style="margin: 0;">Ultimately, it’s your choice. You only use the services you need. But we believe VETPASS for VETS is the only app you will ever want.</p><br />
+                            <p style="margin: 0;">Once you have registered, we will email with details how to organize and hold an online appointment. We think it is intuitive. You can arrange and hold an appointment with yourself using the orange Owner VETPASS and the blue VETPASS for VETS apps on the same phone. Update your own availability, and an online price of 0 for an appointment and try it!</p><br />
+                            <p style="margin: 0;">Have a question? Email us at admin@vetpass.com or chat to us on our website www.vetpass.com or in the VETPASS app.</p><br />
+                            <p style="margin: 0; color: #ffc844;" class="yellow-font">Our app just for Veterinarians!</p><br />
+                            <a style="text-decoration: none;" href="https://play.google.com/store/apps/details?id=com.vetpass&hl=en&gl=US">
+                                <img src="<%= data.baseUrl %>images/google-play.png" onerror=this.src="https://vetpass.com/wp-content/uploads/2021/08/google-play.png" width="150" height="80" />
+                            </a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a style="text-decoration: none;" href="https://apps.apple.com/us/app/vetpass/id1542015125">
+                                <img src="<%= data.baseUrl %>images/app-store.png" onerror=this.src="https://vetpass.com/wp-content/themes/videovet/images/app-store.png" width="150" height="80" /><br /><br />
+                            </a>
+                            <p style="margin: 0; color: #ffc844;" class="yellow-font">For Owners, Veterinarians and Pets Everywhere!</p><br />
+                            <a style="text-decoration: none;" href="https://play.google.com/store/apps/details?id=com.vetpass.vet&hl=en&gl=US">
+                                <img src="<%= data.baseUrl %>images/google-play.png" onerror=this.src="https://vetpass.com/wp-content/uploads/2021/08/google-play.png" width="150" height="80" />
+                            </a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a style="text-decoration: none;" href="https://apps.apple.com/us/app/vetpass-for-vets/id1554266833">
+                                <img src="<%= data.baseUrl %>images/app-store.png" onerror=this.src="https://vetpass.com/wp-content/themes/videovet/images/app-store.png" width="150" height="80" /><br /><br />
+                            </a>
+                            <p style="margin: 0; color: #ffc844;" class="yellow-font">Administrators? Login to your practice’s dedicated web portal here</p><br />
+                            <a style="text-decoration: none;" href="https://admin.vetpass.com/admin/login">
+                                <img src="<%= data.baseUrl %>images/damian-sign.png" onerror=this.src="https://vetpass.com/wp-content/uploads/2021/08/google-play.png" width="150" height="80" /><br /><br />
+                            </a>
+                            <p style="margin: 0; color: red;" class="red-font"><a class="red-font" href="https://admin.vetpass.com/admin/login">https://admin.vetpass.com/admin/login</a> (Need a link box “Vet Practices” as per Website)</p><br />
+                            <!-- <br/> -->
+                            <p style="margin: 0;">
+                                <h2 style="color: #ffc844">Damian Kissane</h2>
+                                <h3 style="color: #ffc844">Founder</h3>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                      <td align="center" bgcolor="#ffffff">
+                            <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                                <tbody>
+                                    <tr>
+                                        <td width="100"></td>
+                                        <td>
+                                           <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                <tbody>
+                                                    <tr>
+                                                        <td align="center">
+                                                            <hr />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td bgcolor="#ffffff" width="200" height="50">
+                                                            <a style="text-decoration: none; display: inline-block;" href="https://vetpass.com/">
+                                                                <img style="width: 200px; height: 50px;" src="<%= data.baseUrl %>images/vetpassLogo.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height="10" style="font-size:0; line-height:0;"></td>
+                                                    </tr>
+                                                    <tr>
+                                                      <td>
+                                                        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                          <tbody>
+                                                              <tr>
+                                                                <td>
+                                                                  <img width="50" height="55" src="<%= data.baseUrl %>images/iso-9001-2015.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                                </td>
+                                                                <td width="3" style="font-size:0; line-height:0;"></td>
+                                                                <td>
+                                                                  <img width="50" height="55" src="<%= data.baseUrl %>images/iso-9001-2017.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                                </td>
+                                                                <td width="3" style="font-size:0; line-height:0;"></td>
+                                                                <td>
+                                                                  <img width="50" height="55" src="<%= data.baseUrl %>images/iso-9001-2018.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                                </td>
+                                                                <td width="3" style="font-size:0; line-height:0;"></td>
+                                                                <td>
+                                                                  <img width="50" height="55" src="<%= data.baseUrl %>images/consumer-privacy-act-2018.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                                </td>
+                                                                <td width="3" style="font-size:0; line-height:0;"></td>
+                                                                <td>
+                                                                  <img width="50" height="55" src="<%= data.baseUrl %>images/GDPR-compliant-2018.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                                </td>
+                                                                <td width="3" style="font-size:0; line-height:0;"></td>
+                                                                <td>
+                                                                  <img width="50" height="55" src="<%= data.baseUrl %>images/data-protection-act-2018.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                                </td>
+                                                                <td width="3" style="font-size:0; line-height:0;"></td>
+                                                                <td>
+                                                                  <img width="50" height="55" src="<%= data.baseUrl %>images/privacy-act-2020.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                                </td>
+                                                                <td width="3" style="font-size:0; line-height:0;"></td>
+                                                                <td>
+                                                                  <img width="50" height="55" src="<%= data.baseUrl %>images/privacy-act-1988.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                                </td>
+                                                                <td width="3" style="font-size:0; line-height:0;"></td>
+                                                                <td>
+                                                                  <img width="50" height="55" src="<%= data.baseUrl %>images/privacy-act-2020png.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                                </td>
+                                                                <td width="3" style="font-size:0; line-height:0;"></td>
+                                                                <td>
+                                                                  <img width="45" height="55" src="<%= data.baseUrl %>images/hippa-compliant.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                                </td>
+                                                              </tr>
+                                                            </tbody>
+                                                          </table>
+                                                      </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td height="10" style="font-size:0; line-height:0;"></td>
+                                                    </tr> 
+                                                    <tr>
+                                                      <td bgcolor="#ffffff" align="center">
+                                                          <!-- <img style="height:65px; margin-left: 14%;" src="footer-image.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" /> -->
+                                                          <a style="text-decoration: none;" href="https://www.facebook.com/vetpassapp">
+                                                              <img style="width: 30px;" src="<%= data.baseUrl %>images/facebook.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                          </a>
+                                                          <a style="text-decoration: none;" href="https://twitter.com/vetpassapp">
+                                                              <img style="width: 30px;" src="<%= data.baseUrl %>images/twitter.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                          </a>
+                                                          <a style="text-decoration: none;" href="https://www.linkedin.com/company/vetpass">
+                                                              <img style="width: 30px;" src="<%= data.baseUrl %>images/linkdin.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                          </a>
+                                                          <a style="text-decoration: none;" href="https://www.pinterest.com/Vetpass">
+                                                              <img style="width: 30px;" src="<%= data.baseUrl %>images/pinterest.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                          </a>
+                                                          <a style="text-decoration: none;" href="https://www.youtube.com/channel/UCHdgYjoH-bLVsbAOIfEBOmQ">
+                                                              <img style="width: 30px;" src="<%= data.baseUrl %>images/youtube.png" alt="VERPASS LOGO" onerror=this.src="https://admin.vetpass.com/images/vetpassLogo.png" />
+                                                          </a>
+                                                      </td>
+                                                  </tr>                                                   
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td width="100"></td>
+                                    </tr>
+                                     <tr>
+                                        <td height="10" style="font-size:0; line-height:0;"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- end copy -->
+                </table>
+            </td>
+        </tr>
+        <!-- end copy block -->
+    </table>
+    <!-- end body -->
+</body>
+
+</html>

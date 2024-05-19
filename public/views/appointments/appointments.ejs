@@ -1,0 +1,214 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+  <%- include ./../layout/partials/page-header-section.ejs -%>
+
+  <!-- Main content -->
+  <form action="" id="appointmentsForm" method="POST">
+    <div class="form-group button-row">
+      <a href="/admin/appointments" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <h1 class="custom-add-heading">View an entry</h1>
+      <small class="custom-add-text">API ID : appointments</small>
+  </div>
+  <section class="content">
+
+    <!-- Default box -->
+    <div class="box custom-box">
+      <!-- <div class="box-header with-border">
+      </div> -->
+      <div class="box-body">
+        <%- include ./../layout/partials/alert-section.ejs -%>
+
+          <div class="form-group row">
+            <div class="col-md-6">
+            <label for="animal_name" class="">Animal name</label>
+              <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <input type="text" name="animal_name" id="animal_name" class="form-control"
+                value="<%= typeof responseData==='object' && responseData.animalName && responseData.animalName.name ? responseData.animalName.name : '' %>" readonly>
+            </div>
+            <div class="col-sm-6">
+              <label for="symptoms" class="">Symptoms</label>
+              <input type="text" name="symptoms" id="symptoms" class="form-control"
+                value="<%= typeof responseData==='object'&&responseData.symptoms?responseData.symptoms:'' %>" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-md-6">
+            <label for="note" class="">Note</label>
+              <input type="text" name="note" id="note" class="form-control"
+                value="<%= typeof responseData==='object'&&responseData.note?responseData.note:'' %>" readonly>
+            </div>
+            <div class="col-sm-6">
+              <label for="vet_practice" class="">Practice Name</label>
+              <input type="text" name="vet_practice" id="vet_practice" class="form-control"
+                value="<%= typeof responseData==='object' && responseData.vetPractice && responseData.vetPractice.practice_name ? responseData.vetPractice.practice_name : '' %>" readonly>
+            </div>
+          </div>
+
+          <!-- Sub service details -->
+          <div class="form-group row">
+            <div class="col-md-6">
+            <label for="service" class="">Service</label>
+              <input type="text" name="service" id="service" class="form-control"
+                value="<%= typeof responseData==='object'&&responseData.service?responseData.service.service:'' %>" readonly>
+            </div>
+            <div class="col-sm-6">
+              <label for="description" class="">Description</label>
+              <input type="text" name="description" id="vet_practice" class="form-control"
+                value="<%= typeof responseData==='object' && responseData.service && responseData.service.description ? responseData.service.description : '' %>" readonly>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+            <label for="duration" class="">Duration</label>
+              <input type="number" name="duration" id="" class="form-control"
+                value="<%= typeof responseData==='object'&&responseData.service&&responseData.service.duration?responseData.service.duration:'' %>" readonly>
+            </div>
+            <div class="col-sm-6">
+              <label for="price" class="">Price</label>
+              <input type="number" name="price" id="vet_practice" class="form-control"
+                value="<%= typeof responseData==='object' && responseData.service && responseData.service.price ? responseData.service.price : '' %>" readonly>
+            </div>
+          </div>
+          <!-- End sub service details -->
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="user_name" class="">User Name</label>
+              <input type="text" name="user_name" id="user_name" class="form-control"
+                value="<%= typeof responseData==='object' && responseData.users && responseData.users.user_name ? responseData.users.user_name : '' %>" readonly>
+            </div>
+            <div class="col-sm-6">
+              <label for="vet_name" class="">Vet Name</label>
+              <input type="text" name="vet_name" id="vet_name" class="form-control"
+                value="<%= typeof responseData==='object' && responseData.vet && responseData.vet.vet_name ? responseData.vet.vet_name : '' %>" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="isOnlineAppointment" class="">Is Online Appointment</label>
+              <input type="text" name="isOnlineAppointment" id="isOnlineAppointment" class="form-control"
+                value="<%= typeof responseData==='object' && responseData.isOnlineAppointment && responseData.isOnlineAppointment == "1" ? "Yes" : 'No' %>" readonly>
+            </div>
+            <div class="col-sm-6">
+              <label for="isTakingMedications" class="">Is Taking Medications</label>
+              <input type="text" name="isTakingMedications" id="isTakingMedications" class="form-control"
+                value="<%= typeof responseData==='object'?responseData.isTakingMedications:'' %>" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="isAnyAllergies" class="">Is Any Allergies</label>
+              <input type="text" name="isAnyAllergies" id="isAnyAllergies" class="form-control"
+              value="<%= typeof responseData==='object'?responseData.isAnyAllergies:'' %>" readonly>
+            </div>
+            <div class="col-sm-6">
+              <label for="sinceFromSymptoms" class="">Symptoms Since From</label>
+              <input type="text" name="sinceFromSymptoms" id="sinceFromSymptoms" class="form-control"
+                value="<%= typeof responseData==='object'?responseData.sinceFromSymptoms:'' %>" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="medical_info" class="">Medical Info</label>
+              <input type="text" name="medical_info" id="medical_info" class="form-control"
+              value="<%= typeof responseData==='object'?responseData.medical_info:'' %>" readonly>
+            </div>
+            <div class="col-sm-6">
+              <label for="allergy_medication_info" class="">Allergy Medication Info</label>
+              <input type="text" name="allergy_medication_info" id="allergy_medication_info" class="form-control"
+                value="<%= typeof responseData==='object'?responseData.allergy_medication_info:'' %>" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="appointment_date" class="">Appointment Date</label>
+              <input type="text" name="appointment_date" id="appointment_date" class="form-control"
+              value="<%= typeof responseData==='object'&&responseData.appointment_date?responseData.appointment_date.toLocaleString():'' %>" readonly>
+            </div>
+            <div class="col-sm-6 row">
+              <div class="col-sm-6">
+                <label for="appointment_from" class="">Appointment From</label>
+                <input type="text" name="appointment_from" id="appointment_from" class="form-control"
+                value="<%= typeof responseData==='object'&&responseData.from_time?responseData.from_time:'' %>" readonly>
+              </div>
+              <div class="col-sm-6">
+                <label for="appointment_to" class="">Appointment To</label>
+                <input type="text" name="appointment_to" id="appointment_to" class="form-control"
+                value="<%= typeof responseData==='object'&&responseData.to_time?responseData.to_time:'' %>" readonly>
+              </div>
+            </div>
+          </div>
+
+          <hr/>
+          <h4 class="text-center">Appointment note details</h4><br/>
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="appointment_note_history" class="">History</label>
+              <input type="text" name="appointment_note_history" id="appointment_note_history" class="form-control"
+              value="<%= typeof responseData==='object'&&responseData.appointmentNote&&responseData.appointmentNote.history?responseData.appointmentNote.history:'' %>" readonly>
+            </div>
+            <div class="col-sm-6">
+              <label for="appointment_note_examination" class="">Examination</label>
+              <input type="text" name="appointment_note_examination" id="appointment_note_examination" class="form-control"
+              value="<%= typeof responseData==='object'&&responseData.appointmentNote&&responseData.appointmentNote.examination?responseData.appointmentNote.examination:'' %>" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="appointment_note_diagnosis" class="">Diagnosis</label>
+              <input type="text" name="appointment_note_diagnosis" id="appointment_note_diagnosis" class="form-control"
+              value="<%= typeof responseData==='object'&&responseData.appointmentNote&&responseData.appointmentNote.diagnosis?responseData.appointmentNote.diagnosis:'' %>" readonly>
+            </div>
+            <div class="col-sm-6">
+              <label for="appointment_note_plan" class="">Plan</label>
+              <input type="text" name="appointment_note_plan" id="appointment_note_plan" class="form-control"
+              value="<%= typeof responseData==='object'&&responseData.appointmentNote&&responseData.appointmentNote.plan?responseData.appointmentNote.plan:'' %>" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="appointment_note_follow_up" class="">Follow Up</label>
+              <input type="text" name="appointment_note_follow_up" id="appointment_note_follow_up" class="form-control"
+              value="<%= typeof responseData==='object'&&responseData.appointmentNote&&responseData.appointmentNote.follow_up?responseData.appointmentNote.follow_up:'' %>" readonly>
+            </div>
+            <div class="col-sm-6">
+              <label for="appointment_note_prescription" class="">Prescription</label>
+              <input type="text" name="appointment_note_prescription" id="appointment_note_prescription" class="form-control"
+              value="<%= typeof responseData==='object'&&responseData.appointmentNote&&responseData.appointmentNote.prescription?responseData.appointmentNote.prescription:'' %>" readonly>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="appointment_note_note" class="">Note</label>
+              <input type="text" name="appointment_note_note" id="appointment_note_note" class="form-control"
+              value="<%= typeof responseData==='object'&&responseData.appointmentNote&&responseData.appointmentNote.note?responseData.appointmentNote.note:'' %>" readonly>
+            </div>
+          </div>
+        </form>
+      </div>
+
+
+    </div>
+    <!-- /.box -->
+
+  </section>
+  <!-- /.content -->
+</div>
+<%- include ./../layout/footer.ejs -%>
+<script>
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__appointments").addClass("active");
+</script>
+</body>
+
+</html>

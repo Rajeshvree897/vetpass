@@ -1,0 +1,179 @@
+<% include ../../layout/header.ejs %>
+<% include ../../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+  <% include ../../layout/partials/page-header-section.ejs %>
+
+  <!-- Main content -->
+  <% if(fanPageQuery) { %>
+    <% if(typeof responseData === 'object') { %>
+    <form enctype="multipart/form-data" action="/admin/fanPagePosts/update?fanPage=<%= fanPageQuery %>"
+      id="postsForm" method="POST">
+    <% } else { %> 
+    <form enctype="multipart/form-data" action="/admin/fanPagePosts?fanPage=<%= fanPageQuery %>"
+      id="postsForm" method="POST">
+    <% } %> 
+  <% } else { %>
+    <% if(typeof responseData === 'object') { %>
+    <form enctype="multipart/form-data" action="/admin/fanPagePosts/update"
+      id="postsForm" method="POST">
+    <% } else { %> 
+    <form enctype="multipart/form-data" action="/admin/fanPagePosts"
+      id="postsForm" method="POST">
+    <% } %> 
+  <% } %> 
+    <div class="form-group button-row">
+      <button type="submit" class="btn btn-success custom-save-btn custom-save-common custom-top save-user">Save</button>
+      <% if(!locals.fanPageQuery) { %>
+        <a href="/admin/fanPagePosts" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <% } else { %>
+        <a href="/admin/fanPagePosts?fanPage=<%= fanPageQuery %>" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <% } %>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> Fan Page Post</h1>
+      <h1 class="custom-add-heading-details" id="form-details-icon">How to fill in this form <i class="fa fa-question-circle"></i></h1>
+      <small class="custom-add-text">API ID : fanPagePost</small>
+    </div>
+    <section class="content">
+      <div class="box custom-box">
+        <div class="box-body">
+          <% include ../../layout/partials/alert-section.ejs %>
+          <div class="">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="fan_page_id" class="">Fan Page</label>
+                  <select <%= (typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %> class="form-control type-select-box" id="fan_page_id" name="fan_page_id" required
+                    value="<%= typeof responseData==='object'?responseData.fan_page_id:'' %>">
+                    <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Add an item...</option>
+                    <% for (var i=0; i < fanPages.length; i++ ) { %>
+                      <option <%=typeof responseData==='object' ?fanPages[i].id===responseData.fan_page_id
+                        ? 'selected' : '' : '' %> <%= locals.fanPageQuery && fanPageQuery !== 'undefined' ? fanPages[i].id===fanPageQuery
+                        ? 'selected' : '' : '' %> id="<%- fanPages[i].id %>" value="<%- fanPages[i].id %>">
+                        <%= fanPages[i].title %>
+                      </option>
+                    <% } %>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="status" class="">Status</label>
+                  <select class="form-control type-select-box" id="status" name="status" required
+                    value="<%= typeof responseData==='object'?responseData.status:'' %>">
+                    <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Choose here</option>
+                    <% for (var i=0; i < postStatusData.length; i++ ) { %>
+                      <option <%=typeof responseData==='object' ?postStatusData[i]===responseData.status
+                        ? 'selected' : '' : '' %>>
+                        <%= postStatusData[i] %>
+                      </option>
+                    <% } %>
+                  </select>
+                </div>
+              </div>
+              <% if(locals.mime) { %>
+                <% if(mime.includes("image") === false) { %>
+                  <div class="col-sm-6">
+                    <label for="postMediaFile" class="">Media  (Preferred resolution - 400 x 400) &nbsp; <span class="select-alert"><i class="fa fa-upload">&nbsp; Click to upload</i></span></label>
+                    <div class="profile_img">
+                      <video
+                        src="<%= responseData.PostMedia.UploadFile.url ? responseData.PostMedia.UploadFile.url : '/images/vet-practice-edit.png' %>"
+                        poster='https://vetpass-1.s3.eu-west-2.amazonaws.com/uploads/IMG_20210101_WA_0006_f68252d59d.jpg' height="180" width="100%" id="post-img" autoplay controls></video>
+                    </div>
+                    <div class="position-relative">
+                      <div class="choose-profile-post">
+                        <input <%= (typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %> type="file" accept="image/*,video/*" id="postMediaFile" name="postMediaFile" >
+                      </div>
+                    </div>
+                  </div>
+                <% } else { %>
+                  <div class="col-sm-6">
+                    <label for="postMediaFile" class="">Media  (Preferred resolution - 400 x 400) &nbsp; <span class="select-alert"><i class="fa fa-upload">&nbsp; Click to upload</i></span></label>
+                    <div class="profile_img">
+                      <img
+                        src="<%= responseData.PostMedia.UploadFile.url ? responseData.PostMedia.UploadFile.url : '/images/vet-practice-edit.png' %>"
+                        height="180" width="100%" id="post-img">
+                    </div>
+                    <div class="position-relative">
+                      <div class="choose-profile-post">
+                        <input <%= (typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %> type="file" accept="image/*,video/*" id="postMediaFile" name="postMediaFile" >
+                      </div>    
+                    </div>
+                  </div>
+                <% } %>
+              <% } else { %>
+                <div class="col-sm-6">
+                  <label for="postMediaFile" class="">Media  (Preferred resolution - 400 x 400) &nbsp; <span class="select-alert"><i class="fa fa-upload">&nbsp; Click to upload</i></span></label>
+                  <div class="profile_img">
+                    <img
+                      src='/images/vet-practice-edit.png'
+                      height="180" width="100%" id="post-img">
+                  </div>
+                  <div class="position-relative">
+                    <div class="choose-profile-post">
+                      <input <%= (typeof responseData==='object' && userData.id != responseData.user_id) ? 'disabled' : '' %> type="file" accept="image/*,video/*" id="postMediaFile" name="postMediaFile" >
+                    </div>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+            
+            <div class="form-group">
+              <label for="description" class="">Description</label>
+              <input type="hidden" name="id" id="id" required value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <textarea <%= (typeof responseData==='object' && userData.id != responseData.user_id) ? 'readonly' : '' %> class="form-control" rows="10" name="description" id="description"
+                placeholder="Description"><%= typeof responseData==='object'?responseData.description:'' %></textarea>
+            </div>  
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content" id="form-details">
+      <div class="box custom-user-box">
+        <h4 class="text-center">How to fill in this form ?
+          <a data-toggle="collapse" id="collapse-show-details" href="#collapse-details" aria-expanded="false" style="color: black">
+            <i class="fa fa-plus"></i>
+            <i class="fa fa-minus"></i>
+          </a>
+        </h4></br>
+        <div class="collapse" id="collapse-details">
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Fan Page ( fan_page_id ) * : </label> Fan page of the post
+            </div>
+            <div class="col-md-6">
+              <label>Media ( postMediaFile ) * : </label> Media file (Image/Video) of the post
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label>Status ( status ) * : </label> Activation status of the post
+            </div>
+            <div class="col-md-6">
+              <label>Description ( description ) * : </label> Description of the post
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </form>
+</div>
+<% include ../../layout/footer.ejs %>
+<script type="module" src="/js/fanpage-post.js"></script>
+<script>
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__fanpages").addClass("active");
+  $(".menu__fanpages_fanpages_posts").addClass("active");
+  $(document).ready(function() {
+    $("#form-details-icon").on("click", function(e) {
+      e.preventDefault();
+      $("body, html").animate({ 
+        scrollTop: $("#form-details").offset().top - 150
+      }, 600);
+      $('#collapse-details').collapse('show');
+    });
+  });
+</script>
+</body>
+
+</html>

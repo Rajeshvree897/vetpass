@@ -1,0 +1,126 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+  <%- include ./../layout/partials/page-header-section.ejs -%>
+
+  <!-- Main content -->
+  <form action="/admin/create-invoice-checkout"
+    id="sendInvoiceForm" method="POST">
+    <div class="form-group button-row">
+      <button type="submit" class="btn btn-success custom-save-btn custom-save-common custom-top">Save</button>
+      <% if (typeof userData == "object" && userData.stripe_account_id) { %>
+        <a href="/admin/create-stripe-account" class="btn btn-success float-right custom-add-btn">
+          <i class="fa fa-sign-in" aria-hidden="true"></i> &nbsp; Login to Stripe Account
+        </a>
+      <% } else { %>
+        <a href="/admin/create-stripe-account" class="btn btn-success float-right custom-add-btn">
+          <i class="fa fa-plus" aria-hidden="true"></i> &nbsp; Cerate Stripe Account
+        </a>
+      <% } %>
+      <a href="/admin/animalCategories" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <h1 class="custom-add-heading">Send Invoice</h1>
+      <!-- <small class="custom-add-text">Send Invoice</small> -->
+  </div>
+  <section class="content">
+
+    <!-- Default box -->
+    <div class="box custom-box">
+      <!-- <div class="box-header with-border">
+      </div> -->
+      <div class="box-body">
+        <%- include ./../layout/partials/alert-section.ejs -%>
+
+        <div class="form-group row">
+          <div class="col-md-12">
+            <label for="email" class="">Search Owner By Email</label>
+              <input type="text" name="email" id="email" class="form-control" placeholder="Search Owner By Email or Int Code" />
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <label for="userId" class="">Owner</label>
+            <select class="form-control type-select-box" id="userId" name="userId"
+              value="<%= typeof responseData==='object'?responseData.name:'' %>">
+              <option <%=(typeof responseData!=='object' || !responseData.state)? 'selected' : '' %>>Select Owner</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-sm-6">
+            <label for="currency_type" class="">Currency Type</label>
+            <select class="form-control type-select-box" id="currency_type" name="currency_type"
+              value="<%= typeof vetProfileData==='object'?vetProfileData.name:'' %>">
+              <option selected disabled>Add an item..</option>
+              <% for (var i=0; i < currencyTypeData.length; i++ ) { %>
+                <option <%=typeof vetProfileData==='object'
+                  ?currencyTypeData[i]===vetProfileData.currency_type ? 'selected' : '' : '' %>>
+                  <%= currencyTypeData[i] %>
+                </option>
+                <% } %>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="amount" class="">Amount</label>
+                <input type="number" name="amount" id="amount" class="form-control" placeholder="Invoice Amount" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-md-12">
+            <label for="description" class="">Invoice Description</label>
+              <input type="text" name="description" id="description" class="form-control" placeholder="Invoice Description" />
+          </div>
+        </div>
+
+        </form>
+      </div>
+
+    </div>
+
+  </section>
+</div>
+<%- include ./../layout/footer.ejs -%>
+<script type="module" src="/js/send-invoice.js"></script>
+<script>
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__animal_classification").addClass("active");
+  $(".menu__animalCategories").addClass("active");
+
+  $("#email").on( "keyup", function(event) {
+    event.preventDefault();
+    $("#email").val(this.value);
+    $(".loader").show();
+    $.ajax({
+      url: "/admin/userSearch",
+      type: "post",
+      data: {
+        search: $("#email").val(),
+      },
+      // processData: false,
+      // contentType: false,
+      success: function (data) {
+        $("#userId").html('');
+        $("#userId").append("<option selected disabled>Add an item..</option>")
+        var len = data.length;
+        console.log(data, data.length)
+        // $("#userId").append("<option selected disabled>Add an item..</option>")
+        const result = [...data.data];
+        for (var i = 0; i < result.length; i++) {
+          var id = result[i]['id'];
+          var first_name = result[i]['first_name'];
+          var last_name = result[i]['last_name'];
+          var email = result[i]['email'];
+          $("#userId").append("<option id='" + id + "' value='" + id + "' >" + first_name + " " + last_name + " | " + email + "</option>");
+        }
+        $(".loader").hide();
+      },
+    });
+  });
+</script>
+</body>
+
+</html>

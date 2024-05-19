@@ -1,0 +1,90 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+
+  <!-- Main content -->
+  <form action="<%= typeof responseData==='object'?'/admin/country/update':'/admin/country' %>" id="countryForm"
+    method="POST">
+    <div class="form-group button-row">
+      <a href="/admin/countries" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <button type="submit" class="btn btn-success custom-save-btn custom-top-user">Save</button>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> Country</h1>
+      <small class="custom-add-text">API ID : country</small>
+    </div>
+
+    <section class="content">
+      <!-- Default box -->
+      <div class="box custom-box">
+        <!-- <div class="box-header with-border">
+        </div> -->
+        <div class="box-body">
+            <%- include ./../layout/partials/alert-section.ejs -%>
+            <div class="form-group row">
+              <div class="col-sm-6">
+                <label for="country" class="">Country Name * </label>
+                <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Name of the country (country)"></i>
+                <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                <input type="text" name="country" id="country" class="form-control" placeholder="Name"
+                  value="<%= typeof responseData==='object'?responseData.country:'' %>">
+              </div>
+              <div class="col-sm-6">
+                <label for="iso_code" class="">ISO Code * </label>
+                <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="ISO code of the country (iso_code)"></i>
+                <input type="text" name="iso_code" id="iso_code" class="form-control" placeholder="ISO Code"
+                  value="<%= typeof responseData==='object'?responseData.iso_code:'' %>">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <% if(typeof responseData==='object') { %>
+              <div class="col-sm-6">
+                <label for="sort_id" class="">Sort ID * </label>
+                <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Sort ID of the country (sort_id)"></i>
+                <input type="number" min='1' name="sort_id" id="sort_id" class="form-control" placeholder="Sort ID"
+                  value="<%= responseData.sort_id ? responseData.sort_id : '' %>">
+              </div>
+              <% } %>
+              <div class="col-sm-6">
+                <label for="country_code" class="">Country Code * </label>
+                <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Code of the country (country_code)"></i>
+                <input type="text" name="country_code" id="country_code" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" class="form-control" placeholder="Country Code"
+                  value="<%= typeof responseData==='object'?responseData.country_code:'' %>">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-sm-6">
+                <input type="hidden" name="base64_url" id="base64_url" value="<%= typeof responseData==='object'?responseData.base64_url:'' %>">
+                <label for="icon" class="">Image * </label>
+                <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Image of country flag"></i>
+                <div class="position-relative">
+                  <div class="choose-profile-country">
+                    <input type="file" id="countryImage" name="countryImage" accept="image/png, image/jpeg">
+                  </div>
+                  <div class="d-none profile_img">
+                    <img
+                      src="<%= typeof responseData==='object' && responseData.base64_url ? responseData.base64_url : '/images/vet-practice-edit.png' %>"
+                      alt="Flag" height="200" width="100%" id="country-img">
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+      <!-- /.box -->
+    </section>
+  </form>
+  <!-- /.content -->
+</div>
+<%- include ./../layout/footer.ejs -%>
+<script type="module" src="/js/country.js"></script>
+</body>
+<script>
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__master_modules").addClass("active");
+  $(".menu__countries").addClass("active");
+</script>
+
+</html>

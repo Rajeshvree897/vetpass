@@ -1,0 +1,129 @@
+<% include ./../../layout/header.ejs %>
+<% include ./../../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+    <!-- Content Header (Page header) -->
+    <%- include ./../../layout/partials/page-header-section.ejs -%>
+
+    <!-- Main content -->
+    <div class="form-group button-row">
+      <a href="/admin/report-posts" class="btn btn-primary ml-10 custom-cancel-btn"></a>
+
+      <% if(responseData.post.id) { %>
+        <a id="delete-reported-post" data-id="<%= responseData.post.id %>" data-toggle="modal" data-target="#deleteConfirmModal" class="btn btn-success float-right custom-add-btn pd-ex-sam" style="margin-right: 20px;">
+          <i class="fa fa-trash" style="color:#fff !important;" aria-hidden="true"></i> Delete post & report
+        </a>
+        <% if(responseData.post.statusVal === 1) { %>
+          <a href="#" id="post-status-update" data-id="<%= responseData.post.id %>" class="btn btn-success float-right mr-10 custom-add-btn ex-imp" style="margin-right: 10px;">
+            <i class="fa fa-ban" aria-hidden="true"></i> Inactive post
+          </a>
+          <form id="post-update-form" method="POST" action="/admin/posts/<%= responseData.post.id %>/updateStatus">
+            <input name="status" value="Inactive" type="hidden" />
+          </form>
+        <% } %>
+      <% } else { %>
+        <div class="callout callout-warning">
+          <h4>Post deleted!</h4>
+        </div>
+      <% } %>
+
+      <h1 class="custom-add-heading">Reported post</h1>
+    </div>
+
+    <section class="content">
+        <div class="box custom-box">
+            <div class="box-body">
+            <%- include ./../../layout/partials/alert-section.ejs -%>
+            <form class="form-horizontal">
+                <div class="box-body">
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Post title:</label>
+                    <div class="col-sm-10">
+                      <div class="form-control border-none"><%= (responseData.post.title) ? responseData.post.title : '-' %></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Report user:</label>
+                    <div class="col-sm-10">
+                      <div class="form-control border-none"><%= responseData.userName %></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Reason:</label>
+                    <div class="col-sm-10">
+                        <% for (var i=0; i < responseData.reasons.length; i++ ) { %>
+                            <div class="form-control border-none"> <%= responseData.reasons[i] %> </div>
+                        <% } %>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Reported at:</label>
+                    <div class="col-sm-10">
+                      <div class="form-control border-none"><%= responseData.created_at %></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">Post status:</label>
+                    <div class="col-sm-10">
+                      <div class="form-control border-none"><%= responseData.post.status %></div>
+                    </div>
+                  </div>
+              </form>
+            </div>
+        </div>
+    </section>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog dialog-custm" role="document">
+    <div class="modal-content modal-content-custm">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h5 class="modal-title text-center font-weight-bold">Please confirm</h5>
+      </div>
+      <div class="modal-body">
+        <div class="custom-modal-body">
+          <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTEuMzYzIDEyLjcyN3YxLjU0NWMwIC4xMi0uMDQ0LjIyMy0uMTMxLjMxYS40MjQuNDI0IDAgMDEtLjMxLjEzMkg5LjE1NWEuNDI0LjQyNCAwIDAxLS4zMS0uMTMxLjQyNC40MjQgMCAwMS0uMTMxLS4zMXYtMS41NDZjMC0uMTIuMDQ0LS4yMjMuMTMtLjMxYS40MjQuNDI0IDAgMDEuMzExLS4xMzJoMS43NjdjLjEyIDAgLjIyMy4wNDQuMzEuMTMxLjA4Ny4wODguMTMxLjE5MS4xMzEuMzF6bS4yMDctNy4yODVsLS4xOTMgNS4yOThhLjQ0NC40NDQgMCAwMS0uMTQyLjMxLjQzNi40MzYgMCAwMS0uMzEzLjEzMUg5LjE1NWEuNDM2LjQzNiAwIDAxLS4zMTQtLjEzLjQ0NC40NDQgMCAwMS0uMTQtLjMxMWwtLjE5NC01LjI5OGEuNDA2LjQwNiAwIDAxLjEyLS4zMUEuNDEzLjQxMyAwIDAxOC45MzYgNWgyLjIwN2MuMTIgMCAuMjIyLjA0NC4zMDcuMTMxLjA4NS4wODcuMTI2LjE5MS4xMjEuMzF6IiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGw9IiNGRjVEMDAiLz48cmVjdCBzdHJva2U9IiNGRjVEMDAiIHg9Ii41IiB5PSIuNSIgd2lkdGg9IjE5IiBoZWlnaHQ9IjE5IiByeD0iOS41Ii8+PC9nPjwvc3ZnPg==" alt="icon" class="sc-eWnSVe cSfwyt">
+          <p color="lightOrange" font-size="md" font-weight="regular" class="sc-cTJmaU sc-eXuzZk iibFUT dSTtmP">
+            <span>Are you sure you want to delete the reported post?</span>
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary pull-left" data-dismiss="modal">No, cancel</button>
+        <a href="/admin/posts/<%= responseData.post.id %>/deletePostAndReportedPost" class="btn btn-primary delete-item">Yes, confirm</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include ./../../layout/footer.ejs -%>
+<script>
+  $(document).ready(function(){
+    $("#post-status-update").click(function(event){
+      event.preventDefault();
+      $("#post-update-form").submit();
+      /* var postId = $(this).data('id');
+      var newForm = $('<form>', {
+          'action': '/admin/posts/'+postId+'/updateStatus',
+          'target': '_top'
+      }).append($('<input>', {
+          'name': 'status',
+          'value': 0,
+          'type': 'hidden'
+      }));
+      newForm.appendTo('body'); */
+     // newForm.submit();
+    });
+  });
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__posts").addClass("active");
+  $(".menu__posts_report_posts").addClass("active");
+</script>
+</body>
+
+</html>

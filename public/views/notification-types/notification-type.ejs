@@ -1,0 +1,65 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+  <%- include ./../layout/partials/page-header-section.ejs -%>
+
+  <!-- Main content -->
+  <form action="<%= typeof responseData==='object'?'/admin/notificationTypes/update':'/admin/notificationTypes' %>"
+    id="notificationTypeForm" method="POST">
+    <div class="form-group button-row">
+      <button type="submit" class="btn btn-success custom-save-btn custom-top">Save</button>
+      <a href="/admin/notificationTypes" class="btn btn-primary ml-10 custom-cancel-btn"></a>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> an entry</h1>
+      <small class="custom-add-text">API ID : notification-type</small>
+    </div>
+  <section class="content">
+
+    <!-- Default box -->
+    <div class="box custom-box">
+      <!-- <div class="box-header with-border">
+      </div> -->
+      <div class="box-body">
+        <%- include ./../layout/partials/alert-section.ejs -%>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+            <label for="type" class="">Type</label>
+              <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <input type="text" name="type" id="type" class="form-control" placeholder="Type" value="<%= typeof responseData==='object'?responseData.type:'' %>">
+              <p class="custom-desc">Allow only characters and underscore.</p>
+            </div>
+            <div class="col-sm-6">
+              <label for="answer" class="">Type Description</label>
+              <textarea class="form-control" rows="10" name="type_description" id="type_description"
+                placeholder="Type description"><%= typeof responseData==='object'?responseData.type_description:'' %></textarea>
+            </div>
+          </div>
+
+          <!-- <div class="form-group row">
+            <div class="row submit-row">
+              <button type="submit" class="btn btn-success custom-save-btn custom-top">Save</button>
+              <a href="/admin/notificationTypes" class="btn btn-primary ml-10 custom-cancel-btn"></a>
+            </div>
+          </div> -->
+        </form>
+      </div>
+
+      <!-- <div class="box-footer text-center">
+      </div> -->
+      <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+  </section>
+  <!-- /.content -->
+</div>
+<%- include ./../layout/footer.ejs -%>
+<script type="module" src="/js/notification-type.js"></script>
+</body>
+<script>
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__notificationTypes").addClass("active");
+</script>
+</html>

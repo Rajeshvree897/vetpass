@@ -1,0 +1,68 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper custom-bg">
+    <!-- Content Header (Page header) -->
+    <%- include ./../layout/partials/page-header-section.ejs -%>
+
+      <!-- Main content -->
+      <form action="<%= '/admin/cookiePolicy/update' %>" id="cookiePolicyForm" method="POST">
+        <div class="form-group button-row">
+          <button type="submit" class="btn btn-success custom-save-btn custom-top">Save</button>
+          <a href="/admin/dashboard" class="btn btn-primary ml-10 custom-cancel-btn"></a>    
+          <h1 class="custom-add-heading">Cookies Policy</h1>
+          <small class="custom-add-text">API ID : cookies-policy</small>
+        </div>
+      <section class="content">
+
+        <!-- Default box -->
+        <div class="box custom-box">
+          <!-- <div class="box-header with-border">
+          </div> -->
+          <div class="box-body">
+            <%- include ./../layout/partials/alert-section.ejs -%>
+
+                <div class="form-group row">
+                  <div class="col-sm-12">
+                    <label for="cookies_policy_contents" class="">Cookies Policy</label>
+                    <input type="hidden" name="id" id="id"
+                      value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                    <input type="hidden" name="cookies_policy_contents" id="cookies_policy_contents"
+                      value="<%= typeof responseData==='object'?responseData.cookies_policy_contents:'' %>">
+                      <div id="cookiePolicy">
+                        <%- typeof responseData==='object' ?responseData.cookies_policy_contents:'' %>
+                      </div>
+
+                  </div>
+                </div>
+
+          <!-- <div class="form-group row">
+            <div class="row submit-row">
+              <button type="submit" class="btn btn-success custom-save-btn custom-top">Save</button>
+              <a href="/admin/dashboard" class="btn btn-primary ml-10 custom-cancel-btn"></a>
+            </div>
+          </div> -->
+          </form>
+        </div>
+      </div>
+      </section>
+  </div>
+  <!-- /.box -->
+
+  <!-- /.content -->
+  <%- include ./../layout/footer.ejs -%>
+    <script src="/plugins/ckeditor/ckeditor.js"></script>
+    </body>
+    <script>
+      CKEDITOR.replace('cookiePolicy', {
+        height: 400
+      });
+
+      CKEDITOR.instances.cookiePolicy.on('change', function () {
+        $("#cookies_policy_contents").val(CKEDITOR.instances.cookiePolicy.getData());
+      })
+      $(".sidebar-menu li").removeClass("active");
+      $(".menu__cookiesPolicy").addClass("active");
+    </script>
+
+    </html>

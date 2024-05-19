@@ -1,0 +1,2639 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper custom-bg">
+    <!-- Content Header (Page header) -->
+    <%- include ./../layout/partials/page-header-section.ejs -%>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+
+      <!-- Main content -->
+      <form action="<%= typeof responseData==='object'?'/admin/practice-users/update':'/admin/practice-users' %>" id="usersForm"
+        method="POST" enctype="multipart/form-data">
+        <div class="form-group button-row">
+          <button type="submit" class="btn btn-success custom-save-btn custom-save-btn custom-top-user save-user">Save</button>
+          <a href="/admin/practice-users" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+          <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> User
+          </h1>
+          <h1 class="custom-add-heading-details" id="form-details-icon">How to fill in this form <i class="fa fa-question-circle"></i></h1>
+          <small class="custom-add-text">API ID : user</small>
+        </div>
+      <section class="content">
+
+        <!-- Default box -->
+        <div class="box custom-user-box">
+          <!-- <div class="box-header with-border">
+          </div> -->
+          <div class="box-body">
+            <%- include ./../layout/partials/alert-section.ejs -%>
+
+                <div class="form-group row">
+                  <div class="col-md-6">
+                    <label for="email" class="">Email</label>
+                    <input type="hidden" name="id" id="id"
+                      value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                      <input type="text" name="email" id="email" class="form-control" placeholder="Email"
+                      value="<%= typeof responseData==='object'?responseData.email:'' %>">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="first_name" class="">First Name</label>
+                    <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First name"
+                      value="<%= typeof responseData==='object'?responseData.first_name:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-md-6">
+                    <label for="last_name" class="">Last Name</label>
+                    <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last name"
+                      value="<%= typeof responseData==='object'?responseData.last_name:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="roleId" class="">Role</label>
+                    <select name="role" class="form-control type-select-box" id="roleId"
+                      value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                      <option <%=(typeof responseData!=='object' || !responseData.role)? 'selected' : '' %> disabled>Add
+                        an item..</option>
+                        <% for (var i=0; i < roleData.length; i++ ) { %>
+                          <% if(userData && userData.roleName && userData.option && userData.roleName === userData.practiceAdminName && userData.option == 'practice' && (roleData[i].name === userData.vetRoleName || roleData[i].name === userData.technicianNurseRoleName || roleData[i].name === userData.practiceAdminName)) { %>
+                          <option <%=typeof responseData==='object' ?roleData[i].id===responseData.role ? 'selected' : ''
+                            : '' %>
+                            value="<%= roleData[i].id %>"
+                            id="<%= roleData[i].id %>"
+                            <%= roleData[i].name === userData.publicRoleName ? 'hidden' : '' %>>
+                              <%= roleData[i].name %>
+                          </option>
+                          <% } %>
+                          <% if(userData && userData.roleName && userData.option && userData.roleName === userData.practiceAdminName && userData.option == 'store' && (roleData[i].name === userData.practiceAdminName || roleData[i].name === userData.serviceProviderRoleName)) { %>
+                            <option <%=typeof responseData==='object' ?roleData[i].id===responseData.role ? 'selected' : ''
+                              : '' %>
+                              value="<%= roleData[i].id %>"
+                              id="<%= roleData[i].id %>"
+                              <%= roleData[i].name === userData.publicRoleName ? 'hidden' : '' %>>
+                                <%= roleData[i].name %>
+                            </option>
+                            <% } %>
+                          <% if(userData && userData.roleName !== userData.practiceAdminName) { %>
+                            <option <%=typeof responseData==='object' ?roleData[i].id===responseData.role ? 'selected' : ''
+                              : '' %>
+                              value="<%= roleData[i].id %>"
+                              id="<%= roleData[i].id %>"
+                              <%= roleData[i].name === userData.publicRoleName ? 'hidden' : '' %>>
+                                <%= roleData[i].name %>
+                            </option>
+                            <% }} %>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-md-2">
+                    <label for="confirmed" class="">Confirmed</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label class="switch_custom">
+                      <input type="checkbox" class="input-with-switch custom-switch" name="confirmed" id="confirmed"
+                        value="1" <%=typeof responseData==='object' && responseData.confirmed===1 ?'checked' : ''
+                        %>>
+                      <span class="slider_custom"></span>
+                    </label>
+
+                  </div>
+                  <div class="col-md-2">
+                    <label for="blocked" class="">Blocked</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label class="switch_custom">
+                      <input type="checkbox" class="input-with-switch custom-switch" name="blocked" id="blocked"
+                        value="1" <%=typeof responseData==='object' && responseData.blocked===1 ?'checked' : '' %>>
+                      <span class="slider_custom"></span>
+                    </label>
+
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-md-6">
+                    <label for="dob" class="">DOB</label>
+                    <input type="date" id="dob" name="dob" class="form-control" placeholder="Dob"
+                      value="<%= typeof responseData==='object'?responseData.dob:'' %>">
+                  </div>
+                  <div class="col-md-6">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-md-6">
+                    <label for="address1" class="">Address1</label>
+                    <input type="text" name="address1" id="address1" class="form-control" placeholder="Address1"
+                      value="<%= typeof responseData==='object'?responseData.address1:'' %>">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="address2" class="">Address2</label>
+                    <input type="text" name="address2" id="address2" class="form-control" placeholder="Address2"
+                      value="<%= typeof responseData==='object'?responseData.address2:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-md-6">
+                    <label for="city" class="">City/Town</label>
+                    <input type="text" name="city" id="city" class="form-control" placeholder="City/Town"
+                      value="<%= typeof responseData==='object'?responseData.city:'' %>">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="zipCode" class="">Zip Code/Post Code</label>
+                    <input type="Text" name="zip_code" id="zipCode" class="form-control" placeholder="Zip Code/Post Code"
+                      value="<%= typeof responseData==='object'?responseData.zip_code:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="intCode" class="">Int Code</label>
+                    <select class="form-control type-select-box" id="int_code" name="int_code">
+                    <option <%= typeof responseData!=='object' || !responseData.int_code ? 'selected' : '' %>
+                      disabled>Add an item..</option>
+                      <% for (var i=0; i < countryData.length; i++ ) { %>
+                        <% if(countryData[i].id){ %>
+                        <option <%=typeof responseData==='object' ?countryData[i].id==responseData.int_code ? 'selected'
+                          : '' : '' %>
+                          id="<%= countryData[i].id %>" value="<%= countryData[i].id %>">
+                          <%= countryData[i].country_code ? `${countryData[i].country} (+${countryData[i].country_code})` : countryData[i].country %>
+                        </option>
+                        <% }} %>
+                  </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="mobile" class="">Contact No</label>
+                    <input type="text" name="mobile" id="mobile" class="form-control"
+                      placeholder="Allow only number and space"
+                      value="<%= typeof responseData==='object'?responseData.mobile:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="countryId" class="">Country</label>
+                    <input type="hidden" name="country" id="country"
+                      value="<%= typeof responseData==='object'?responseData.country:'' %>">
+                      <select class="form-control type-select-box" id="countryId"
+                        value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                        <option <%=(typeof responseData!=='object' || !responseData.country)? 'selected' : '' %>
+                          disabled>Add an item..</option>
+                        <% for (var i=0; i < countryData.length; i++ ) { %>
+                          <option <%=typeof responseData==='object' ?countryData[i].id===responseData.country ? 'selected'
+                            : '' : '' %>
+                            id="<%= countryData[i].id %>">
+                              <%= countryData[i].country %>
+                          </option>
+                          <% } %>
+                      </select>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="stateId" class="">State/Postal/County</label>
+                    <input type="hidden" name="state" id="state"
+                      value="<%= typeof responseData==='object'?responseData.state:'' %>">
+                    <select class="form-control type-select-box" id="stateId"
+                      value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                      <option <%=(typeof responseData!=='object' || !responseData.state)? 'selected' : '' %>>Add an
+                        item..</option>
+                      <% if(typeof states==='object' ) { for (var i=0; i < states.length; i++ ) { %>
+                        <option <%=typeof responseData==='object' ?states[i].id===responseData.state ? 'selected' : ''
+                          : '' %>
+                          id="<%= states[i].id %>">
+                            <%= states[i].state %>
+                        </option>
+                        <% } } %>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="userImage" class="">Image</label>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-5">
+                    <div class="position-relative">
+                      <div
+                        class="<%= typeof responseData==='object' && responseData.img_path ? 'choose-profile': '' %>">
+                        <input type="file" id="userImage" name="userImage" accept="image/png, image/jpeg">
+                      </div>
+                      <div class="d-none profile_img">
+                        <img
+                          src="<%= typeof responseData==='object' && responseData.img_path ? responseData.img_path: '' %>"
+                          alt="User Image" height="200" width="100%">
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="userImage" class="">Image  (Preferred resolution - 400 x 400)</label>
+                      <div class="position-relative">
+                        <div class="choose-profile">
+                          <input type="file" id="userImage" name="userImage" accept="image/png, image/jpeg">
+                        </div>
+                        <div class="d-none profile_img">
+                          <img
+                            src="<%= typeof responseData==='object' && responseData.img_path ? responseData.img_path : '/images/person-default.png' %>"
+                            alt="Vet Practice" height="200" width="100%" id="user-profile-img">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="app-user-edit">
+                <h4 class="text-center app-user-edit app-user-hide">User Preference</h4><br/>
+                <div class="row app-user-edit">
+                  <div class="col-sm-6 app-user-hide">
+                    <div class="form-group">
+                      <label for="dataAnimalTypeId" class="">Animal Types (<span id="dataAnimalTypeCount"><%= typeof responseData==='object' ? responseData.dataAnimalTypes.length: 0 %></span>)</label>
+                      <input type="hidden" name="dataAnimalType" id="dataAnimalType"
+                        value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                      <select class="form-control type-select-box" id="dataAnimalTypeId" name="dataAnimalTypeId"
+                        value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                        <option <%= typeof responseData!=='object'? 'selected' : ''%> value="">Add an item..</option>
+                        <% if(typeof dataAnimalTypes === 'object') { for (var i=0; i < dataAnimalTypes.length;  i++ ) { %>
+                        <option
+                          <%= typeof responseData==='object'?dataAnimalTypes[i].id === responseData.animal_type ? 'selected' : '': '' %>
+                          id="<%= dataAnimalTypes[i].id %>">
+                          <%= dataAnimalTypes[i].type %></option>
+                        <% } } %>
+                      </select>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-1"></div>
+                      <div class="col-sm-3">
+                        <ul class="dataAnimalTypeList pl-0" id="dataAnimalTypeList">
+                          <%  if(typeof responseData==='object') { for (var i=0; i < responseData.dataAnimalTypes.length;  i++ ) { %>
+                            <% if(responseData.dataAnimalTypes[i] && responseData.dataAnimalTypes[i].id){ %>
+                            <li data-id="<%= responseData.dataAnimalTypes[i].id %>" class="li-flex"><div><%= responseData.dataAnimalTypes[i].type %></div><i id="<%= responseData.dataAnimalTypes[i].id %>" class="fa fa-minus dataAnimalTypeList-delete-icon"></i></li>
+                          <% }} }%>
+                        </ul>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="col-sm-6 app-user-hide">
+                    <div class="form-group">
+                      <label for="breedId" class="">Breeds (<span id="breedCount"><%= typeof responseData==='object' ? responseData.breeds.length: 0 %></span>)</label>
+                      <input type="hidden" name="breed" id="breed"
+                        value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                      <select class="form-control type-select-box" id="breedId" name="breedId"
+                        value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                        <option <%= typeof responseData!=='object'? 'selected' : ''%> value="">Add an item..</option>
+                        <% if(typeof breeds ==='object') { for (var i=0; i < breeds.length;  i++ ) { %>
+                        <option
+                          <%= typeof responseData==='object'?breeds[i].id === responseData.animal_type ? 'selected' : '': '' %>
+                          id="<%= breeds[i].id %>">
+                          <%= breeds[i].name %></option>
+                        <% } } %>
+                      </select>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-1"></div>
+                      <div class="col-sm-3">
+                        <ul class="breedList pl-0" id='breedList'>
+                            <%  if(typeof responseData==='object') { for (var i=0; i < responseData.breeds.length;  i++ ) { %>
+                              <% if(responseData.breeds[i] && responseData.breeds[i].id){ %>
+                              <li data-id="<%= responseData.breeds[i].id %>" class="li-flex"><div><%= responseData.breeds[i].name %></div><i id="<%= responseData.breeds[i].id %>" class="fa fa-minus breedList-delete-icon"></i></li>
+                         <% }} } %>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="groomers_role">
+                <div class="vet-profile-edit <%= (typeof responseData==='object' && responseData.roleName && (responseData.roleName == userData.vetRoleName || responseData.roleName == userData.technicianNurseRoleName) )?'':'vet-profile' %>">
+                  <h4 class="text-center vet-profile-hide groomers_role">Registration</h4><br/>
+                  <div class="form-group row vet-profile-hide groomers_role">
+                    <div class="col-sm-6">
+                      <% var tempSpeciality = typeof responseData==='object' && responseData.speciality ? responseData.speciality.map(i => i.id) : []; %>
+                      <label for="specialityId" class="">Veterinary Registrations (<span id="specialityCount">
+                          <%= (typeof responseData==='object' && typeof responseData.speciality==='object' ) ?
+                            responseData.speciality.length: 0 %>
+                        </span>)</label>
+                      <input type="hidden" name="speciality" id="speciality"
+                        value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                      <select class="form-control type-select-box" id="specialityId"
+                        value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                        <option <%=typeof responseData!=='object' ? 'selected' : '' %>>Add an item..</option>
+                        <% for (var i=0; i < speciality.length; i++ ) { %>
+                          <% if(speciality[i] && !tempSpeciality.includes(speciality[i].id)) { %>
+                          <option <%=typeof responseData==='object' ?speciality[i].id===responseData.speciality
+                            ? 'selected' : '' : '' %>
+                            id="<%= speciality[i].id %>">
+                              <%= speciality[i].name %>
+                          </option>
+                          <% }} %>
+                      </select>
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="registration_number" class="">Registration Number</label>
+                      <input type="text" name="registration_number" id="registration_number" class="form-control"
+                        placeholder="Registration Number"
+                        value="<%= typeof vetProfileData==='object'?vetProfileData.registration_number:'' %>">
+                    </div>
+                  </div>
+
+                  <div class="form-group row vet-profile-hide groomers_role">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-3">
+                      <ul class="specialityList pl-0">
+                        <% if(typeof responseData==='object' && typeof responseData.speciality==='object' ) { for (var
+                          i=0; i < responseData.speciality.length; i++ ) { %>
+                          <% if(responseData.speciality[i] && responseData.speciality[i].id){ %>
+                          <li data-id="<%= responseData.speciality[i].id %>" class="li-flex">
+                            <div>
+                              <%= responseData.speciality[i].name %>
+                            </div><i id="<%= responseData.speciality[i].id %>" class="fa fa-minus speciality-delete-icon"></i>
+                          </li>
+                          <% }} } %>
+                      </ul>
+                    </div>
+                    <div class="col-sm-6"></div>
+                  </div>
+
+                  <hr class="vet-profile-hide"/>
+                  <h4 class="text-center vet-profile-hide">Public Details</h4><br/>
+                  <div class="form-group row vet-profile-hide">
+                    <div class="col-sm-6">
+                      <label for="public_email" class="">Public Email</label>
+                      <input type="text" name="public_email" id="public_email" class="form-control" placeholder="Public Email"
+                        value="<%= typeof vetProfileData==='object'?vetProfileData.public_email:'' %>">
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="personal_bio" class="">Personal Summary (500 characters max)</label>
+                      <textarea class="form-control" rows="4" name="personal_bio" id="personal_bio"
+                        placeholder="Personal Summary (500 characters max)"><%= typeof vetProfileData==='object'?vetProfileData.personal_bio:'' %></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group row vet-profile-hide">
+                    <div class="col-sm-6">
+                      <label for="public_contact_no_int_code" class="">Public Contact Number Int Code</label>
+                      <select class="form-control type-select-box" id="public_contact_no_int_code" name="public_contact_no_int_code">
+                        <option <%= typeof vetProfileData!=='object' || !vetProfileData.public_contact_no_int_code ? 'selected' : '' %>
+                          disabled>Add an item..</option>
+                          <% for (var i=0; i < countryData.length; i++ ) { %>
+                            <% if(countryData[i].id){ %>
+                            <option <%=typeof responseData==='object' && typeof vetProfileData==='object' && vetProfileData.public_contact_no_int_code ?countryData[i].id==vetProfileData.public_contact_no_int_code ? 'selected'
+                              : '' : '' %>
+                              id="<%= countryData[i].id %>" value="<%= countryData[i].id %>">
+                              <%= countryData[i].country_code ? `${countryData[i].country} (+${countryData[i].country_code})` : countryData[i].country %>
+                            </option>
+                            <% }} %>
+                      </select>
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="public_contact_no" class="">Public Contact Number</label>
+                      <input type="text" name="public_contact_no" id="public_contact_no" class="form-control"
+                        placeholder="Public Contact Number"
+                        value="<%= typeof vetProfileData==='object'?vetProfileData.public_contact_no:'' %>">
+                    </div>
+                  </div>
+                  <div class="form-group row vet-profile-hide">
+                    <div class="col-sm-6">
+                      <label for="public_out_of_hr_phone_int_code" class="">Public Out of Hours Int Code</label>
+                      <select class="form-control type-select-box" id="public_out_of_hr_phone_int_code" name="public_out_of_hr_phone_int_code">
+                        <option <%= typeof vetProfileData!=='object' || !vetProfileData.public_out_of_hr_phone_int_code ? 'selected' : '' %>
+                          disabled>Add an item..</option>
+                          <% for (var i=0; i < countryData.length; i++ ) { %>
+                            <% if(countryData[i].id){ %>
+                            <option <%=typeof responseData==='object' && typeof vetProfileData==='object' && vetProfileData.public_out_of_hr_phone_int_code?countryData[i].id==vetProfileData.public_out_of_hr_phone_int_code ? 'selected'
+                              : '' : '' %>
+                              id="<%= countryData[i].id %>" value="<%= countryData[i].id %>">
+                              <%= countryData[i].country_code ? `${countryData[i].country} (+${countryData[i].country_code})` : countryData[i].country %>
+                            </option>
+                            <% }} %>
+                      </select>
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="public_out_of_hr_phone" class="">Public Out of Hours Number</label>
+                      <input type="text" name="public_out_of_hr_phone" id="public_out_of_hr_phone" class="form-control" placeholder="Public Out of Hours Number"
+                        value="<%= typeof vetProfileData==='object'?vetProfileData.public_out_of_hr_phone:'' %>">
+                    </div>
+                  </div>
+
+                  <hr class="vet-profile-hide"/>
+                  <div class="form-group row vet-profile-hide online_appo_section">
+                    <div class="col-sm-6 row groomers_role">
+                      <div class="col-md-4">
+                        <label for="is_online_consultation" class="">Is Online Appointment</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label class="switch_custom custom-checkbox">
+                          <input type="checkbox" class="input-with-switch custom-switch" name="is_online_consultation" id="is_online_consultation"
+                            value="1" <%=typeof vetProfileData==='object' && vetProfileData.is_online_consultation===1 ?'checked' : '' %>>
+                          <span class="slider_custom"></span>
+                        </label>
+                      </div>
+                      <div class="col-sm-6 groomers_role">
+                        <label for="online_consultation" class="">Online Appointment Price (inc. tax)</label>
+                        <input type="number" min="0" name="online_consultation" id="online_consultation" class="form-control"
+                        placeholder="Online Appointment Price (inc. tax)"
+                        value="<%= typeof vetProfileData==='object'?vetProfileData.online_consultation:0 %>">
+                      </div>
+                    </div>
+                    <div class="col-sm-6 row custom-in_clinic">
+                      <div class="col-md-4 groomers_role">
+                        <label for="is_in_clinic_consultation" class="">Is In Clinic Appointment</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label class="switch_custom custom-checkbox">
+                          <input type="checkbox" class="input-with-switch custom-switch" name="is_in_clinic_consultation" id="is_in_clinic_consultation"
+                            value="1" <%=typeof vetProfileData==='object' && vetProfileData.is_in_clinic_consultation===1 ?'checked' : '' %>>
+                          <span class="slider_custom"></span>
+                        </label>
+                      </div>
+                      <div class="col-sm-6 groomers_role">
+                        <label for="in_clinic_consultation" class="groomers_app_price">In Clinic Appointment Price (inc. tax)</label>
+                        <input type="number" min="0" name="in_clinic_consultation" id="in_clinic_consultation"
+                        class="form-control" placeholder="In Clinic Appointment Price (inc. tax)"
+                        value="<%= typeof vetProfileData==='object'?vetProfileData.in_clinic_consultation:0 %>">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-sm-6 vet-profile-hide">
+                      <label for="currency_type" class="">Currency Type for Appointments</label>
+                      <select class="form-control type-select-box" id="currency_type" name="currency_type"
+                        value="<%= typeof vetProfileData==='object'?vetProfileData.name:'' %>">
+                        <option <%=(typeof vetProfileData!=='object' || !vetProfileData.currency_type)? 'selected' : '' %>
+                          disabled>Add an item..</option>
+                        <% for (var i=0; i < currencyTypeData.length; i++ ) { %>
+                          <option <%=typeof vetProfileData==='object'
+                            ?currencyTypeData[i]===vetProfileData.currency_type ? 'selected' : '' : '' %>>
+                            <%= currencyTypeData[i] %>
+                          </option>
+                          <% } %>
+                        </select>
+                      </div>
+                  </div>
+
+                  <div class="form-group row groomers_role">
+                    <div class="col-sm-12">
+                      <label for="practiceId" class="practice-lbl-cls">Practice (or select a VETPASS group)</label>
+                      <input type="hidden" name="practice" id="practice" value="<%= typeof vetProfileData==='object'?vetProfileData.practice:'' %>">
+                      <select name="practiceId" class="form-control practice-multiple practice-inp-cls" id="practiceId"
+                      value="<%= typeof responseData === 'object' ? responseData.name : '' %>">
+                      <% if(typeof practiceData ==='object' ) { for (var i=0; i < practiceData.length; i++ ) { %>
+                        <% if(userData.roleName === userData.practiceAdminName && practiceData[i].id === userData.vetPractice){  %>
+                        <option <%=typeof vetProfileData==='object' ?practiceData[i].id===vetProfileData.practice
+                          ? 'selected' : '' : '' %>
+                          id="<%= practiceData[i].id %>">
+                           <%= `${practiceData[i].practice_name} ( ${practiceData[i].address1 == null ? '' : practiceData[i].address1} ${practiceData[i].city  == null ? '' : " | "+practiceData[i].city } ${practiceData[i].state  == null ? '' : " | "+practiceData[i]['states.state'] } ${practiceData[i].country  == null ? '' : " | "+practiceData[i]['countries.country'] } ${practiceData[i].zip_code  == null ? '' : " | "+practiceData[i].zip_code } )` %>
+                        </option>
+                        <% } %>
+                        <% if(userData.roleName !== userData.practiceAdminName){ %>
+                          <option <%=typeof vetProfileData==='object' ?practiceData[i].id===vetProfileData.practice
+                            ? 'selected' : '' : '' %>
+                            id="<%= practiceData[i].id %>">
+                              <%= `${practiceData[i].practice_name} ( ${practiceData[i].address1 == null ? '' : practiceData[i].address1} ${practiceData[i].city  == null ? '' : " | "+practiceData[i].city } ${practiceData[i].state  == null ? '' : " | "+practiceData[i]['states.state'] } ${practiceData[i].country  == null ? '' : " | "+practiceData[i]['countries.country'] } ${practiceData[i].zip_code  == null ? '' : " | "+practiceData[i].zip_code } )` %>
+                          </option>
+                          <% }}} %>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group row vet-profile-hide">
+                    <div class="col-sm-6">
+                      <% var tempCategories = typeof responseData==='object' && responseData.animalTypes && responseData.animalTypes.length ? responseData.animalTypes.map(i => i && i.id) : []; %>
+                      <label for="typeId" class="Veterinarian-lbl-cls">Veterinarian Treats Categories (<span id="typeCount">
+                        <%= (typeof responseData==='object' && typeof responseData.animalTypes==='object' ) ?
+                          responseData.animalTypes.length: 0 %>
+                      </span>)</label>
+                      <input type="hidden" name="type" id="type"
+                        value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                      <select class="form-control type-select-box" id="typeId"
+                        value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                        <option <%=typeof responseData!=='object' ? 'selected' : '' %>>Add an item..</option>
+                        <% for (var i=0; i < animalTypes.length; i++ ) { %>
+                          <% if(animalTypes[i] && !tempCategories.includes(animalTypes[i].id)) { %>
+                          <option <%=typeof responseData==='object' ?animalTypes[i].id===responseData.animal_type
+                            ? 'selected' : '' : '' %>
+                            id="<%= animalTypes[i].id %>">
+                              <%= animalTypes[i].category %>
+                          </option>
+                          <% }} %>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group row vet-profile-hide">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-3">
+                      <ul class="typeList pl-0">
+                        <% if(typeof responseData==='object' && typeof responseData.animalTypes==='object' ) { for (var
+                          i=0; i < responseData.animalTypes.length; i++ ) { %>
+                          <% if(responseData.animalTypes[i] && responseData.animalTypes[i].id){ %>
+                          <li data-id="<%= responseData.animalTypes[i].id %>" class="li-flex">
+                            <div>
+                              <%= responseData.animalTypes[i].category %>
+                            </div><i id="<%= responseData.animalTypes[i].id %>" class="fa fa-minus animalTypes-delete-icon"></i>
+                          </li>
+                          <% }} } %>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="form-group row vet-profile-hide groomers_role practitioner_liability">
+                    <div class="col-sm-6">
+                      <label for="practitioner_liability" class="">Practitioner Liabilities</label>
+                      <select class="form-control type-select-box" id="practitioner_liability" name="practitioner_liability"
+                        value="<%= typeof vetProfileData==='object'?vetProfileData.practitioner_liability:'' %>">
+                        <option <%=(typeof vetProfileData!=='object' || !vetProfileData.practitioner_liability)? 'selected' : '' %>
+                          disabled>Add an item..</option>
+                        <% for (var i=0; i < practitionerLiabilities.length; i++ ) { %>
+                          <option <%=typeof vetProfileData==='object'
+                            ?practitionerLiabilities[i].id==vetProfileData.practitioner_liability ? 'selected' : '' : '' %> value="<%= practitionerLiabilities[i].id %>">
+                            <%= practitionerLiabilities[i].name %>
+                          </option>
+                          <% } %>
+                        </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group row vet-profile-hide groomers_role service_provider_liability">
+                    <div class="col-sm-6">
+                      <label for="service_provider_liability" class="">Service Provider Liabilities</label>
+                      <select class="form-control type-select-box" id="service_provider_liability" name="service_provider_liability"
+                        value="<%= typeof vetProfileData==='object'?vetProfileData.service_provider_liability:'' %>">
+                        <option <%=(typeof vetProfileData!=='object' || !vetProfileData.service_provider_liability)? 'selected' : '' %>
+                          disabled>Add an item..</option>
+                        <% for (var i=0; i < serviceProviderLiabilities.length; i++ ) { %>
+                          <option <%=typeof vetProfileData==='object'
+                            ?serviceProviderLiabilities[i].id==vetProfileData.service_provider_liability ? 'selected' : '' : '' %> value="<%= serviceProviderLiabilities[i].id %>">
+                            <%= serviceProviderLiabilities[i].name %>
+                          </option>
+                          <% } %>
+                        </select>
+                    </div>
+                  </div>
+
+                  <div class="service-provider-module vet-profile-hide groomers_role_hide">
+                    <% if(typeof responseData==='object' && typeof responseData.mainServices==='object' && responseData.mainServices.length) {%> 
+                      <% for (var mainService=0; mainService < responseData.mainServices.length; mainService++ ) { %>
+                      <ul class="service-provider-module-1" data-id="1">
+                        <li  data-id="" data-name="" class="">
+                          <div class="form-group row">
+                            <div class="col-sm-10">
+                              <label for="serviceProviderServices" class="">Service Provider Services</label>
+                              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="If you unselect the mainservice, then the subservice will automatically removed."></i>
+                              <%if(mainService == 0){%>
+                              <span><i class="fa fa-plus" onclick="addServiceProviderModule()" ></i></span>
+                              <% }else{%>
+                                <span><i class="fa fa-minus removeServiceProviderModule" ></i></span>
+                              <%}%>
+                              <select id="serviceProviderServicesdefaultMadule<%=responseData.mainServices[mainService]%>" data-id="defaultMadule<%=responseData.mainServices[mainService]%>" class="serviceProviderServices-multiple form-control" name="serviceProviderServices[]"
+                                value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                                <% for (var i=0; i < serviceProviderMainServices.length; i++ ) { %>
+                                  <option <%=typeof responseData==='object' && responseData.mainServices &&
+                                  responseData.mainServices[mainService] === serviceProviderMainServices[i].id ? 'selected' : ''
+                                  %>
+                                    value="<%= serviceProviderMainServices[i].id %>">
+                                      <%= serviceProviderMainServices[i].service %>
+                                  </option>
+                                  <% } %>
+                              </select>
+                            </div>
+                            <div class="col-sm-2" for="mainServicePlus">
+                              <i class="fa fa-plus mainServicePlus" onclick="addSubservice('defaultMadule<%=responseData.mainServices[mainService]%>')"></i>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-sm-12">
+                              <ul class="subServiceList pl-0" id="defaultMadule<%=responseData.mainServices[mainService]%>">
+                                <% if(typeof responseData==='object' && typeof responseData.subServices==='object' ) { 
+                                  for (var i=0; i < responseData.subServices.length; i++ ) { %>
+                                  <% if(responseData.subServices[i] && responseData.subServices[i].id && responseData.subServices[i].main_service_id === responseData.mainServices[mainService]){ %>
+                                  <li data-id="" data-name="" class="li-flex"> 
+                                      <div class="col-sm-3 defaultMadule<%=responseData.mainServices[mainService]%>">
+                                        <label for="serviceProviderSubServices" class="">Sub Service</label>
+                                        <input type="text" name="serviceProviderSubServices[sub<%=responseData.mainServices[mainService]%>][]" placeholder="Sub service" value="<%= responseData.subServices[i].service %>" class="sub-service form-control" required>
+                                      </div>
+                                      <div class="col-sm-5 defaultMadule<%=responseData.mainServices[mainService]%>" >
+                                        <label for="description" class="">Description</label>
+                                        <input type="text" class="form-control service-description" id="" name="description[description<%=responseData.mainServices[mainService]%>][]" value="<%= responseData.subServices[i].description %>" placeholder="Service description" required/>
+                                      </div>
+                                      <div class="col-sm-2 defaultMadule<%=responseData.mainServices[mainService]%>">
+                                        <label for="duration" class=""> Duration</label>
+                                        <select name="duration[duration<%=responseData.mainServices[mainService]%>][]" class="form-control service-duration" required>
+                                          <option selected disabled>Duration</option>
+                                          <% for (var j=0; j < serviceDurations.length; j++ ) { %>
+                                            <option <%=typeof responseData==='object' && responseData.subServices && responseData.subServices[i] &&  responseData.subServices[i].duration  === serviceDurations[j].duration ? 'selected' : '' %>  value="<%= serviceDurations[j].name %>"><%= serviceDurations[j].name %></option>
+                                            <% } %>
+                                        </select>
+                                        <!-- <input type="number" name="duration[duration<%=responseData.mainServices[mainService]%>][]" placeholder="Sub service duration" class="service-duration form-control" value="<%= responseData.subServices[i].duration %>"> -->
+                                      </div>
+                                      <div class="col-sm-2 defaultMadule<%=responseData.mainServices[mainService]%>">
+                                        <label for="price" class="">Price</label>
+                                        <input type="number" name="price[price<%=responseData.mainServices[mainService]%>][]" placeholder="Sub service Price" class="service_price form-control" min ="0" value="<%= responseData.subServices[i].price%>" required>
+                                      </div>
+                                      <div class="col-sm-2 defaultMadule<%=responseData.mainServices[mainService]%>">
+                                        <label for="stack" class="">Appointment</label>
+                                        <select name="appointment[stack<%=responseData.mainServices[mainService]%>][]" class="form-control service-stack" required>
+                                          <option selected disabled>Appointment</option>
+                                          <% for (let j=1; j <= 5; j++ ) { %>
+                                            <option <%=typeof responseData==='object' && responseData.subServices && responseData.subServices[i] && responseData.subServices[i].stack === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                          <% } %>
+                                        </select>
+                                      </div>
+                                      <div class="col-sm-4">
+                                        <i class="fa fa-minus removeSubserviceField"></i>
+                                      </div>
+                                  </li>
+                                  <% }} } %>
+                              </ul>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                      <%}%>
+                    <%}else{%>
+                      <ul class="service-provider-module-1" data-id="1">
+                        <li  data-id="" data-name="" class="">
+                          <div class="form-group row">
+                            <div class="col-sm-10">
+                              <label for="serviceProviderServices" class="">Service Provider Services</label>
+                              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="If you unselect the mainservice, then the subservice will automatically removed."></i>
+                              <span><i class="fa fa-plus" onclick="addServiceProviderModule()" ></i></span>
+                              <select id="serviceProviderServicesdefaultMadule" data-id="defaultMadule" class="serviceProviderServices-multiple form-control" name="serviceProviderServices[]"
+                                value="<%= typeof responseData==='object'?responseData.name:'' %>" required>
+                                <option value="">Select service</option>
+                                <% for (var i=0; i < serviceProviderMainServices.length; i++ ) { %>
+                                  <option
+                                    value="<%= serviceProviderMainServices[i].id %>">
+                                      <%= serviceProviderMainServices[i].service %>
+                                  </option>
+                                  <% } %>
+                              </select>
+                            </div>
+                            <div class="col-sm-2" for="mainServicePlus">
+                              <i class="fa fa-plus mainServicePlus" onclick="addSubservice('defaultMadule')"></i>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-sm-12">
+                              <ul class="subServiceList pl-0" id="defaultMadule">
+                                  <li data-id="" data-name="" class="li-flex"> 
+                                      <div class="col-sm-3 defaultMadule">
+                                        <label for="serviceProviderSubServices" class="">Sub Service</label>
+                                        <input type="text" required name="serviceProviderSubServices[sub][]" placeholder="Sub service" value="" class="form-control sub-service">
+                                      </div>
+                                      <div class="col-sm-5 defaultMadule" >
+                                        <label for="description" class="">Description</label>
+                                        <input type="text" required class="form-control service-description" id="" name="description[description][]" value="" placeholder="Service description"/>
+                                      </div>
+                                      <div class="col-sm-2 defaultMadule">
+                                        <label for="duration" class=""> Duration</label>
+                                        <select name="duration[duration][]" class="form-control type-select-box custom-select service-duration" required>
+                                          <option selected disabled>Interval</option>
+                                          <% for (var i=0; i < serviceDurations.length; i++ ) { %>
+                                            <option value="<%= serviceDurations[i].duration %>"><%= serviceDurations[i].name %></option>
+                                            <% } %>
+                                        </select>
+                                        <!-- <input type="number" required name="duration[duration][]" placeholder="Sub service duration" class="service-duration form-control" value=""> -->
+                                      </div>
+                                      <div class="col-sm-2 defaultMadule">
+                                        <label for="price" class="">Price</label>
+                                        <input type="number" value="0" required name="price[price][]" min ="0" placeholder="Sub service Price" class="service_price form-control" value="" required>
+                                      </div>
+                                      <div class="col-sm-2 defaultMadule">
+                                        <label for="stack" class="">Appointment</label>
+                                        <select name="appointment[stack][]" class="form-control service-stack" required>
+                                          <option selected disabled>Appointment</option>
+                                          <% for (let j=1; j <= 5; j++ ) { %>
+                                            <option value="<%= j %>"><%= j %></option>
+                                          <% } %>
+                                        </select>
+                                      </div>
+                                      <div class="col-sm-4">
+                                        <i class="fa fa-minus removeSubserviceField"></i>
+                                      </div>
+                                  </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                      <%}%>
+                  </div>
+                  <hr class="vet-profile-hide"/>
+                  <h4 class="text-center vet-profile-hide">Availabilities</h4><br/>
+
+                  <div class="form-group vet-profile-hide row weekday-div<%= typeof responseData==='object'?' update-weekday':'' %>">
+
+                    <div class="col-md-1 radio-div">
+                      <label class="mon-lbl">
+                        <input type="radio" name="weekDay" value="mon" class="card-input-element" checked />
+                          <div class="panel panel-default card-input">
+                            <div class="panel-heading">Mon</div>
+                          </div>
+                        </label>
+                        <span id="mon-span" class="custom-error-span day_error">Required</span>
+                    </div>
+                    <div class="col-md-1 radio-div">
+                      <label class="tue-lbl">
+                        <input type="radio" name="weekDay" value="tue" class="card-input-element" />
+                        <div class="panel panel-default card-input">
+                          <div class="panel-heading">Tue</div>
+                        </div>
+                      </label>
+                      <span id="tue-span" class="custom-error-span day_error">Required</span>
+                    </div>
+                    <div class="col-md-1 radio-div">
+                      <label class="wed-lbl">
+                        <input type="radio" name="weekDay" value="wed" class="card-input-element" />
+                          <div class="panel panel-default card-input">
+                            <div class="panel-heading">Wed</div>
+                          </div>
+                      </label>
+                      <span id="wed-span" class="custom-error-span day_error">Required</span>
+                    </div>
+                    <div class="col-md-1 radio-div">
+                      <label class="thu-lbl">
+                        <input type="radio" name="weekDay" value="thu" class="card-input-element" />
+                          <div class="panel panel-default card-input">
+                            <div class="panel-heading">Thu</div>
+                          </div>
+                      </label>
+                      <span id="thu-span" class="custom-error-span day_error">Required</span>
+                    </div>
+                    <div class="col-md-1 radio-div">
+                      <label class="fri-lbl">
+                        <input type="radio" name="weekDay" value="fri" class="card-input-element" />
+                          <div class="panel panel-default card-input">
+                            <div class="panel-heading">Fri</div>
+                          </div>
+                      </label>
+                      <span id="fri-span" class="custom-error-span day_error">Required</span>
+                    </div>
+                    <div class="col-md-1 radio-div">
+                      <label class="sat-lbl">
+                        <input type="radio" name="weekDay" value="sat" class="card-input-element" />
+                          <div class="panel panel-default card-input">
+                            <div class="panel-heading">Sat</div>
+                          </div>
+                      </label>
+                      <span id="sat-span" class="custom-error-span day_error">Required</span>
+                    </div>
+                    <div class="col-md-1 radio-div">
+                      <label class="sun-lbl">
+                        <input type="radio" name="weekDay" value="sun" class="card-input-element" />
+                          <div class="panel panel-default card-input">
+                            <div class="panel-heading">Sun</div>
+                          </div>
+                      </label>
+                      <span id="sun-span" class="custom-error-span day_error">Required</span>
+                    </div>
+                </div>
+                <%
+                  function getMinutes(totime, fromtime) {
+                    var diff =  new Date("1970-1-1 " + totime) - new Date("1970-1-1 " + fromtime);
+                    var seconds = Math.floor(diff/1000); //ignore any left over units smaller than a second
+                    var minutes = Math.floor(seconds/60);
+                    seconds = seconds % 60;
+                    var hours = Math.floor(minutes/60);
+                    minutes = minutes % 60;
+                    if(hours >= 1) {
+                      minutes = 60;
+                    }
+                    return minutes;
+                  }
+                %>
+                <div class="form-group mon-div custom-slot active vet-profile-hide">
+                  <div class="day-buildyourform" id="mon-buildyourform">
+                    <% if(typeof responseData==='object' && typeof responseData.availabilities==='object' ) {
+                      for (let i=0, cnt = 1; i < responseData.availabilities.length; i++ ) {
+                        if(responseData.availabilities[i].day === "monday") { %>
+                        <div class="form-group mon_fieldwrapper" id="field1">
+                          <!-- <label for="monday1" class="">Slot </label>&nbsp;<label class="slot-id mon"><%= cnt %></label>&nbsp;<label class="mon-invalid-time time-error"></label><br> -->
+                          <div class="col-sm-2 form-inline custom-input-padding from-time">
+                              <input type="hidden" name="monday[]" class="form-control" value="<%= responseData.availabilities[i].id %>">
+                              <input type="time" name="monday[]" id="monday1" class="form-control mondayTime typeTime fromtime" value="<%= moment(responseData.availabilities[i].from_time).format('HH:mm') %>">
+                            </div>
+                          <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                              <input type="time" name="monday[]" id="monday2" class="form-control mondayTime typeTime totime" value="<%= moment(responseData.availabilities[i].to_time).format('HH:mm') %>">
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="monday[]" class="form-control type-select-box custom-select mon-buildyourform-selector" id="interval">
+                                  <option selected disabled>Interval</option>
+                                  <%
+                                    var totime = moment(responseData.availabilities[i].to_time).format('HH:mm');
+                                    var fromtime = moment(responseData.availabilities[i].from_time).format('HH:mm');
+                                    var minutes = getMinutes(totime, fromtime) || 60;
+                                  %>
+                                  <% for (let j=5; minutes && j <= minutes; j+=5 ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].interval && responseData.availabilities[i].interval === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="monday[]" class="form-control type-select-box custom-select mon-buildyourform-selector" id="stack">
+                                  <option selected disabled>Appointment</option>
+                                  <% for (let j=1; j <= 5; j++ ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].stack && responseData.availabilities[i].stack === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                          <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                        </div>
+                    <% cnt++ }}} %>
+                  </div>
+                  <div class="form-group row vet-profile-hide">
+                    <div class="col-sm-12">
+                      <input type="button" value="Add a field" class="add" id="mon-add" />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group tue-div custom-slot">
+                  <div class="day-buildyourform" id="tue-buildyourform">
+                    <% if(typeof responseData==='object' && typeof responseData.availabilities==='object' ) {
+                      for (let i=0, cnt = 1; i < responseData.availabilities.length; i++ ) {
+                        if(responseData.availabilities[i].day === "tuesday") { %>
+                          <div class="form-group tue_fieldwrapper" id="field1">
+                            <!-- <label for="tuesday1" class="">Slot </label>&nbsp;<label class="slot-id tue"><%= cnt %></label>&nbsp;<label class="tue-invalid-time time-error"></label><br> -->
+                            <div class="col-sm-2 form-inline custom-input-padding from-time">
+                                <input type="hidden" name="tuesday[]" class="form-control" value="<%= responseData.availabilities[i].id %>">
+                                <input type="time" name="tuesday[]" id="tuesday1" class="form-control tuesdayTime tueTime typeTime fromtime" value="<%= moment(responseData.availabilities[i].from_time).format('HH:mm') %>">
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                                <input type="time" name="tuesday[]" id="tuesday2" class="form-control tuesdayTime tueTime typeTime totime" value="<%= moment(responseData.availabilities[i].to_time).format('HH:mm') %>">
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="tuesday[]" class="form-control type-select-box custom-select tue-buildyourform-selector" id="interval">
+                                  <option selected disabled>Interval</option>
+                                  <%
+                                    var totime = moment(responseData.availabilities[i].to_time).format('HH:mm');
+                                    var fromtime = moment(responseData.availabilities[i].from_time).format('HH:mm');
+                                    var minutes = getMinutes(totime, fromtime) || 60;
+                                  %>
+                                  <% for (let j=5; j <= minutes; j+=5 ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].interval && responseData.availabilities[i].interval === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="tuesday[]" class="form-control type-select-box custom-select tue-buildyourform-selector" id="stack">
+                                  <option selected disabled>Appointment</option>
+                                  <% for (let j=1; j <= 5; j++ ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].stack && responseData.availabilities[i].stack === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                          </div>
+                    <% cnt++ }}} %>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <input type="button" value="Add a field" class="add" id="tue-add" />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group wed-div custom-slot">
+                  <div class="day-buildyourform" id="wed-buildyourform">
+                    <% if(typeof responseData==='object' && typeof responseData.availabilities==='object' ) {
+                      for (let i=0, cnt = 1; i < responseData.availabilities.length; i++ ) {
+                        if(responseData.availabilities[i].day === "wednesday") { %>
+                          <div class="form-group wed_fieldwrapper" id="field1">
+                            <!-- <label for="wednesday1" class="">Slot </label>&nbsp;<label class="slot-id wed"><%= cnt %></label>&nbsp;<label class="wed-invalid-time time-error"></label><br> -->
+                            <div class="col-sm-2 form-inline custom-input-padding from-time">
+                                <input type="hidden" name="wednesday[]" class="form-control" value="<%= responseData.availabilities[i].id %>">
+                                <input type="time" name="wednesday[]" id="wednesday1" class="form-control wednesdayTime wedTime typeTime fromtime" value="<%= moment(responseData.availabilities[i].from_time).format('HH:mm') %>">
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                                <input type="time" name="wednesday[]" id="wednesday2" class="form-control wednesdayTime wedTime typeTime totime" value="<%= moment(responseData.availabilities[i].to_time).format('HH:mm') %>">
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="wednesday[]" class="form-control type-select-box custom-select wed-buildyourform-selector" id="interval">
+                                  <option selected disabled>Interval</option>
+                                  <%
+                                    var totime = moment(responseData.availabilities[i].to_time).format('HH:mm');
+                                    var fromtime = moment(responseData.availabilities[i].from_time).format('HH:mm');
+                                    var minutes = getMinutes(totime, fromtime) || 60;
+                                  %>
+                                  <% for (let j=5; j <= minutes; j+=5 ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].interval && responseData.availabilities[i].interval === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="wednesday[]" class="form-control type-select-box custom-select wed-buildyourform-selector" id="stack">
+                                  <option selected disabled>Appointment</option>
+                                  <% for (let j=1; j <= 5; j++ ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].stack && responseData.availabilities[i].stack === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                          </div>
+                    <% cnt++ }}} %>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <input type="button" value="Add a field" class="add" id="wed-add" />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group thu-div custom-slot">
+                  <div class="day-buildyourform" id="thu-buildyourform">
+                    <% if(typeof responseData==='object' && typeof responseData.availabilities==='object' ) {
+                      for (let i=0, cnt = 1; i < responseData.availabilities.length; i++ ) {
+                        if(responseData.availabilities[i].day === "thursday") { %>
+                          <div class="form-group thu_fieldwrapper" id="field1">
+                            <!-- <label for="thursday1" class="">Slot </label>&nbsp;<label class="slot-id thu"><%= cnt %></label>&nbsp;<label class="thu-invalid-time time-error"></label><br> -->
+                            <div class="col-sm-2 form-inline custom-input-padding from-time">
+                                <input type="hidden" name="thursday[]" class="form-control" value="<%= responseData.availabilities[i].id %>">
+                                <input type="time" name="thursday[]" id="thursday1" class="form-control thursdayTime thuTime typeTime fromtime" value="<%= moment(responseData.availabilities[i].from_time).format('HH:mm') %>">
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                                <input type="time" name="thursday[]" id="thursday2" class="form-control thursdayTime thuTime typeTime totime" value="<%= moment(responseData.availabilities[i].to_time).format('HH:mm') %>">
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="thursday[]" class="form-control type-select-box custom-select thu-buildyourform-selector" id="interval">
+                                  <option selected disabled>Interval</option>
+                                  <%
+                                    var totime = moment(responseData.availabilities[i].to_time).format('HH:mm');
+                                    var fromtime = moment(responseData.availabilities[i].from_time).format('HH:mm');
+                                    var minutes = getMinutes(totime, fromtime) || 60;
+                                  %>
+                                  <% for (let j=5; j <= minutes; j+=5 ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].interval && responseData.availabilities[i].interval === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="thursday[]" class="form-control type-select-box custom-select thu-buildyourform-selector" id="stack">
+                                  <option selected disabled>Appointment</option>
+                                  <% for (let j=1; j <= 5; j++ ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].interval && responseData.availabilities[i].stack === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                          </div>
+                    <% cnt++ }}} %>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <input type="button" value="Add a field" class="add" id="thu-add" />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group fri-div custom-slot">
+                  <div class="day-buildyourform" id="fri-buildyourform">
+                    <% if(typeof responseData==='object' && typeof responseData.availabilities==='object' ) {
+                      for (let i=0, cnt = 1; i < responseData.availabilities.length; i++ ) {
+                        if(responseData.availabilities[i].day === "friday") { %>
+                          <div class="form-group fri_fieldwrapper" id="field1">
+                            <!-- <label for="friday1" class="">Slot </label>&nbsp;<label class="slot-id fri"><%= cnt %></label>&nbsp;<label class="fri-invalid-time time-error"></label><br> -->
+                            <div class="col-sm-2 form-inline custom-input-padding from-time">
+
+                                <input type="hidden" name="friday[]" class="form-control" value="<%= parseInt(responseData.availabilities[i].id) %>">
+                                <input type="time" name="friday[]" id="friday1" class="form-control fridayTime friTime typeTime fromtime" value="<%= moment(responseData.availabilities[i].from_time).format('HH:mm') %>">
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                                <input type="time" name="friday[]" id="friday2" class="form-control fridayTime friTime typeTime totime" value="<%= moment(responseData.availabilities[i].to_time).format('HH:mm') %>">
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="friday[]" class="form-control type-select-box custom-select fri-buildyourform-selector" id="interval">
+                                  <option selected disabled>Interval</option>
+                                  <%
+                                    var totime = moment(responseData.availabilities[i].to_time).format('HH:mm');
+                                    var fromtime = moment(responseData.availabilities[i].from_time).format('HH:mm');
+                                    var minutes = getMinutes(totime, fromtime) || 60;
+                                  %>
+                                  <% for (let j=5; j <= minutes; j+=5 ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].interval && responseData.availabilities[i].interval === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="friday[]" class="form-control type-select-box custom-select fri-buildyourform-selector" id="stack">
+                                  <option selected disabled>Appointment</option>
+                                  <% for (let j=1; j <= 5; j++ ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].stack && responseData.availabilities[i].stack === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                          </div>
+                    <% cnt++ }}} %>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <input type="button" value="Add a field" class="add" id="fri-add" />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group sat-div custom-slot">
+                  <div class="day-buildyourform" id="sat-buildyourform">
+                    <% if(typeof responseData==='object' && typeof responseData.availabilities==='object' ) {
+                      for (let i=0, cnt = 1; i < responseData.availabilities.length; i++ ) {
+                        if(responseData.availabilities[i].day === "saturday") { %>
+                          <div class="form-group sat_fieldwrapper" id="field1">
+                            <!-- <label for="saturday1" class="">Slot </label>&nbsp;<label class="slot-id sat"><%= cnt %></label>&nbsp;<label class="sat-invalid-time time-error"></label><br> -->
+                            <div class="col-sm-2 form-inline custom-input-padding from-time">
+                                <input type="hidden" name="saturday[]" class="form-control" value="<%= responseData.availabilities[i].id %>">
+                                <input type="time" name="saturday[]" id="saturday1" class="form-control saturdayTime satTime typeTime fromtime" value="<%= moment(responseData.availabilities[i].from_time).format('HH:mm') %>">
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                                <input type="time" name="saturday[]" id="saturday2" class="form-control saturdayTime satTime typeTime totime" value="<%= moment(responseData.availabilities[i].to_time).format('HH:mm') %>">
+                            </div>
+                             <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="saturday[]" class="form-control type-select-box custom-select sat-buildyourform-selector" id="interval">
+                                  <option selected disabled>Interval</option>
+                                  <%
+                                    var totime = moment(responseData.availabilities[i].to_time).format('HH:mm');
+                                    var fromtime = moment(responseData.availabilities[i].from_time).format('HH:mm');
+                                    var minutes = getMinutes(totime, fromtime) || 60;
+                                  %>
+                                  <% for (let j=5; j <= minutes; j+=5 ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].interval && responseData.availabilities[i].interval === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="saturday[]" class="form-control type-select-box custom-select sat-buildyourform-selector" id="stack">
+                                  <option selected disabled>Appointment</option>
+                                  <% for (let j=1; j <= 5; j++ ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].stack && responseData.availabilities[i].stack === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                          </div>
+                    <% cnt++ }}} %>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <input type="button" value="Add a field" class="add" id="sat-add" />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group sun-div custom-slot">
+                  <div class="day-buildyourform" id="sun-buildyourform">
+                    <% if(typeof responseData==='object' && typeof responseData.availabilities==='object' ) {
+                      for (let i=0, cnt = 1; i < responseData.availabilities.length; i++ ) {
+                        if(responseData.availabilities[i].day === "sunday") { %>
+                          <div class="form-group sun_fieldwrapper" id="field1">
+                            <!-- <label for="sunday1" class="">Slot </label>&nbsp;<label class="slot-id sun"><%= cnt %></label>&nbsp;<label class="sun-invalid-time time-error"></label><br> -->
+                            <div class="col-sm-2 form-inline custom-input-padding from-time">
+                                <input type="hidden" name="sunday[]" class="form-control" value="<%= parseInt(responseData.availabilities[i].id) %>">
+                                <input type="time" name="sunday[]" id="sunday1" class="form-control sundayTime sunTime typeTime fromtime" value="<%= moment(responseData.availabilities[i].from_time).format('HH:mm') %>">
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to" data-idx="<%= cnt %>">
+                                <input type="time" name="sunday[]" id="sunday2" class="form-control sundayTime sunTime typeTime totime" value="<%= moment(responseData.availabilities[i].to_time).format('HH:mm') %>">
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="sunday[]" class="form-control type-select-box custom-select sun-buildyourform-selector" id="interval">
+                                  <option selected disabled>Interval</option>
+                                  <%
+                                    var totime = moment(responseData.availabilities[i].to_time).format('HH:mm');
+                                    var fromtime = moment(responseData.availabilities[i].from_time).format('HH:mm');
+                                    var minutes = getMinutes(totime, fromtime) || 60;
+                                  %>
+                                  <% for (let j=5; j <= minutes; j+=5 ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].interval && responseData.availabilities[i].interval === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <div class="col-sm-2 form-inline to-time custom-to availabilitie-selector" data-idx="<%= cnt %>">
+                              <select name="sunday[]" class="form-control type-select-box custom-select sun-buildyourform-selector" id="stack">
+                                  <option selected disabled>Appointment</option>
+                                  <% for (let j=1; j <= 5; j++ ) { %>
+                                    <option <%=typeof responseData==='object' && responseData.availabilities && responseData.availabilities[i].stack && responseData.availabilities[i].stack === j ? 'selected' : '' %> value="<%= j %>"><%= j %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                          </div>
+                    <% cnt++ }}} %>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <input type="button" value="Add a field" class="add" id="sun-add" />
+                    </div>
+                  </div>
+                </div>
+
+                <% if(typeof vetProfileData === 'object' && vetProfileData.id){ %>
+                <hr class="vet-profile-hide"/>
+                <section class="content vet-profile-hide">
+                  <!-- Default box -->
+                  <div class="box">
+                    <!-- Main content -->
+                    <div class="form-group button-row">
+                      <a data-toggle="modal" data-target="#UnavailabilityModal" class="btn btn-success float-right custom-un-avail-btn">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Add Unavailability
+                      </a>
+                      <h1 class="custome-un-avail-title text-center">Unavailability</h1>
+                    </div>
+                      <div class="box-body">
+                        <table id="unavailabilitiesList" class="table table-bordered table-striped">
+                          <thead>
+                            <tr>
+                              <th>ID</th>
+                              <th>Holiday Name</th>
+                              <th>Date</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                        </table>
+
+                      </div>
+
+                      <!-- /.box-body -->
+                      <div class="box-footer text-center">
+                      </div>
+                  </div>
+                  <!-- /.box -->
+                </section>
+                <% } %>
+
+                <hr class="vet-profile-hide groomers_role hideForServiceProvider"/>
+                <h4 class="text-center vet-profile-hide groomers_role hideForServiceProvider">Education and Qualifications</h4><br/>
+                <div class="form-group row vet-profile-hide groomers_role hideForServiceProvider">
+                  <div class="col-sm-6">
+                    <% var tempSpecializations = typeof responseData==='object' && responseData.specializations ? responseData.specializations.map(i => i.id) : []; %>
+                    <label for="specializationId" class="">Specialization, Advanced Practitioner (<span id="specializationCount">
+                        <%= (typeof responseData==='object' && typeof responseData.specializations==='object' ) ?
+                          responseData.specializations.length: 0 %>
+                      </span>)</label>
+                    <input type="hidden" name="specialization" id="specialization"
+                      value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                    <select class="form-control type-select-box" id="specializationId"
+                      value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                      <option <%=typeof responseData!=='object' ? 'selected' : '' %>>Add an item..</option>
+                      <% for (var i=0; i < specializations.length; i++ ) { %>
+                        <% if(specializations[i] && !tempSpecializations.includes(specializations[i].id)) { %>
+                        <option <%=typeof responseData==='object' ?specializations[i].id===responseData.specializations
+                          ? 'selected' : '' : '' %>
+                          id="<%= specializations[i].id %>">
+                            <%= specializations[i].name %>
+                        </option>
+                        <% }} %>
+                    </select>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="education" class="">Education and Qualifications</label>
+                    <input type="text" name="education" id="education" class="form-control" placeholder="Education and Qualifications"
+                      value="<%= typeof vetProfileData==='object'?vetProfileData.education:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row vet-profile-hide groomers_role hideForServiceProvider">
+                  <div class="col-sm-1"></div>
+                  <div class="col-sm-3">
+                    <ul class="specializationList pl-0">
+                      <% if(typeof responseData==='object' && typeof responseData.specializations==='object' ) { for (var
+                        i=0; i < responseData.specializations.length; i++ ) { %>
+                        <% if(responseData.specializations[i] && responseData.specializations[i].id){ %>
+                        <li data-id="<%= responseData.specializations[i].id %>" class="li-flex">
+                          <div>
+                            <%= responseData.specializations[i].name %>
+                          </div><i id="<%= responseData.specializations[i].id %>" class="fa fa-minus specialization-delete-icon"></i>
+                        </li>
+                        <% }} } %>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="form-group row vet-profile-hide groomers_role hideForServiceProvider">
+                  <div class="col-sm-6">
+                    <label for="passout_date" class="">Specialization, Advanced Practitioner Date (MM/YYYY or YYYY)</label>
+                    <input type="text" id="passout_date" name="passout_date" class="form-control" placeholder="Specialization, Advanced Practitioner Date"
+                    value="<%= typeof vetProfileData==='object'?vetProfileData.passout_date:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="educationDuration" class="">Qualification Date (MM/YYYY or YYYY)</label>
+                    <input type="text" name="educationDuration" id="educationDuration" class="form-control"
+                      placeholder="Qualification Date (MM/YYYY or YYYY)"
+                      value="<%= typeof vetProfileData==='object'?vetProfileData.educationDuration:'' %>">
+                  </div>
+                </div>
+
+                <hr class="vet-profile-hide groomers_role hideForServiceProvider"/>
+                <h4 class="text-center vet-profile-hide groomers_role hideForServiceProvider">Area of Interest</h4><br/>
+
+                <div class="form-group row vet-profile-hide groomers_role hideForServiceProvider">
+                  <div class="col-sm-6">
+                    <% var tempSpecializations = typeof responseData==='object' && responseData.interestedSpecialization ? responseData.interestedSpecialization.map(i => i.id) : []; %>
+                      <label for="interestedSpecializationId" class="">Specialization, Advanced Practitioner 
+                        (<span id="interestedSpecializationCount">
+                          <%= (typeof responseData==='object' && typeof responseData.interestedSpecialization==='object' ) ?
+                            responseData.interestedSpecialization.length: 0 %>
+                        </span>)
+                      <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Specializations, Advanced Practitioner, Interests to see Targeted Messages and Posts from Other Vets."></i>
+                      </label>
+                      <input type="hidden" name="interestedSpecialization" id="interestedSpecialization"
+                        value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                      <select class="form-control type-select-box" id="interestedSpecializationId"
+                        value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                        <option <%=typeof responseData!=='object' ? 'selected' : '' %> value="">Add an item..</option>
+                        <% for (var i=0; i < interestedSpecializations.length; i++ ) { %>
+                          <% if(interestedSpecializations[i] && !tempSpecializations.includes(interestedSpecializations[i].id)) { %>
+                          <option <%=typeof responseData==='object' ?interestedSpecializations[i].id===responseData.interestedSpecialization
+                            ? 'selected' : '' : '' %>
+                            id="<%= interestedSpecializations[i].id %>">
+                              <%= interestedSpecializations[i].name %>
+                          </option>
+                        <% }} %>
+                      </select>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="interestedAnimalTypeId" class="">Animal Types 
+                      (<span id="interestedAnimalTypeCount">
+                          <%= (typeof responseData==='object' && typeof responseData.interestedAnimalTypes==='object' ) ?
+                            responseData.interestedAnimalTypes.length: 0 %>
+                        </span>)
+                      <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="To see Animal Type Targeted Messages from Owners and other Vets in Forums"></i>
+                    </label>
+                    <input type="hidden" name="interestedAnimalType" id="interestedAnimalType"
+                      value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                    <select class="form-control type-select-box" id="interestedAnimalTypeId"
+                      value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                      <option <%= typeof responseData!=='object'? 'selected' : ''%>>Add an item..</option>
+                      <% if(typeof interestedAnimalTypes === 'object') { for (var i=0; i < interestedAnimalTypes.length;  i++ ) { %>
+                      <option
+                        <%= typeof responseData==='object'?interestedAnimalTypes[i].id === responseData.interestedAnimalTypes ? 'selected' : '': '' %>
+                        id="<%= interestedAnimalTypes[i].id %>">
+                        <%= interestedAnimalTypes[i].type %></option>
+                      <% } } %>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="form-group row vet-profile-hide groomers_role">
+                  <div class="col-sm-1"></div>
+                  <div class="col-sm-3">
+                    <ul class="interestedSpecializationList pl-0" id="interestedSpecializationList">
+                      <%  if(typeof responseData==='object') { for (var i=0; i < responseData.interestedSpecialization.length;  i++ ) { %>
+                        <% if(responseData.interestedSpecialization[i] && responseData.interestedSpecialization[i].id){ %>
+                        <li data-id="<%= responseData.interestedSpecialization[i].id %>" class="li-flex"><div><%= responseData.interestedSpecialization[i].name %></div><i id="<%= responseData.interestedSpecialization[i].id %>" class="fa fa-minus interestedSpecialization-delete-icon"></i></li>
+                    <% }} }%>
+                    </ul>
+                  </div>
+                  <div class="col-sm-1"></div>
+                  <div class="col-sm-1"></div>
+                  <div class="col-sm-1"></div>
+                  <div class="col-sm-3">
+                    <ul class="interestedAnimalTypeList pl-0" id="interestedAnimalTypeList">
+                      <%  if(typeof responseData==='object') { for (var i=0; i < responseData.interestedAnimalTypes.length;  i++ ) { %>
+                        <% if(responseData.interestedAnimalTypes[i] && responseData.interestedAnimalTypes[i].id){ %>
+                        <li data-id="<%= responseData.interestedAnimalTypes[i].id %>" class="li-flex"><div><%= responseData.interestedAnimalTypes[i].type %></div><i id="<%= responseData.interestedAnimalTypes[i].id %>" class="fa fa-minus interestedAnimalType-delete-icon"></i></li>
+                      <% }} }%>
+                    </ul>
+                  </div>
+                </div>
+
+                <hr class="vet-profile-hide"/>
+                <h4 class="text-center vet-profile-hide">
+                  Bank Details
+                  <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Bank Details (if VETPASS collects and pays you or your practice. Clear unnecessary fields.)"></i>
+                </h4><br/>
+                <div class="form-group row vet-profile-hide">
+                  <div class="col-sm-6">
+                    <label for="b_user_name" class="">Legal Name or First Name & Last Name</label>
+                    <input type="text" name="b_user_name" id="b_user_name" class="form-control"
+                      placeholder="Legal Name or First Name & Last Name"
+                      value="<%= typeof vetProfileData==='object'?vetProfileData.b_user_name:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="b_user_email" class="">Email</label>
+                    <input type="text" name="b_user_email" id="b_user_email"
+                    class="form-control" placeholder="Email"
+                    value="<%= typeof vetProfileData==='object'?vetProfileData.b_user_email:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row vet-profile-hide">
+                  <div class="col-sm-6">
+                    <label for="b_country" class="">Country</label>
+                      <select class="form-control type-select-box" id="b_country" name="b_country"
+                        value="<%= typeof vetProfileData==='object'?vetProfileData.b_country:'' %>">
+                        <option <%=(typeof vetProfileData!=='object' || !vetProfileData.b_country)? 'selected' : '' %>
+                          disabled>Add an item..</option>
+                        <% for (var i=0; i < countryData.length; i++ ) { %>
+                          <option <%=typeof vetProfileData==='object' ?countryData[i].id===vetProfileData.b_country ? 'selected'
+                            : '' : '' %>
+                            value="<%= countryData[i].id %>">
+                              <%= countryData[i].country %>
+                          </option>
+                          <% } %>
+                      </select>
+                  </div>
+                  <div class="col-sm-6 vet-profile-hide">
+                    <label for="b_currency" class="">Currency</label>
+                    <select class="form-control type-select-box" id="b_currency" name="b_currency"
+                      value="<%= typeof vetProfileData==='object'?vetProfileData.name:'' %>">
+                      <option <%=(typeof vetProfileData!=='object' || !vetProfileData.b_currency)? 'selected' : '' %>
+                        disabled>Add an item..</option>
+                      <% for (var i=0; i < currencyTypeData.length; i++ ) { %>
+                        <option <%=typeof vetProfileData==='object'
+                          ?currencyTypeData[i]===vetProfileData.b_currency ? 'selected' : '' : '' %>>
+                          <%= currencyTypeData[i] %>
+                        </option>
+                        <% } %>
+                      </select>
+                    </div>
+                </div>
+
+                <div class="form-group row vet-profile-hide">
+                  <div class="col-sm-6">
+                    <label for="b_account_number" class="">Account Number</label>
+                    <input type="text" name="b_account_number" id="b_account_number" class="form-control"
+                      placeholder="Account Number" maxlength="15"
+                      value="<%= typeof vetProfileData==='object'?vetProfileData.b_account_number:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="bank_name" class="">Bank Name</label>
+                    <input type="text" name="bank_name" id="bank_name"
+                    class="form-control" placeholder="Bank Name"
+                    value="<%= typeof vetProfileData==='object'?vetProfileData.bank_name:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row vet-profile-hide">
+                  <div class="col-sm-6">
+                    <label for="b_address" class="">Bank Address</label>
+                    <input type="text" name="b_address" id="b_address" class="form-control"
+                      placeholder="Bank Address"
+                      value="<%= typeof vetProfileData==='object'?vetProfileData.b_address:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="b_sort_code" class="">Sort Code</label>
+                    <input type="text" name="b_sort_code" id="b_sort_code"
+                    class="form-control" placeholder="Sort Code"
+                    value="<%= typeof vetProfileData==='object'?vetProfileData.b_sort_code:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row vet-profile-hide">
+                  <div class="col-sm-6">
+                    <label for="b_iban" class="">IBAN</label>
+                    <input type="text" name="b_iban" id="b_iban" class="form-control"
+                      placeholder="IBAN"
+                      value="<%= typeof vetProfileData==='object'?vetProfileData.b_iban:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="b_ncc" class="">NCC</label>
+                    <input type="text" name="b_ncc" id="b_ncc"
+                    class="form-control" placeholder="NCC"
+                    value="<%= typeof vetProfileData==='object'?vetProfileData.b_ncc:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row vet-profile-hide">
+                  <div class="col-sm-6">
+                    <label for="b_swiftbic" class="">SWIFTBIC</label>
+                    <input type="text" name="b_swiftbic" id="b_swiftbic" class="form-control"
+                      placeholder="SWIFTBIC"
+                      value="<%= typeof vetProfileData==='object'?vetProfileData.b_swiftbic:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row vet-profile-hide">
+                  <label class="col-sm-2"></label>
+                  <div class="col-sm-5">
+                    <input type="hidden" name="latitude" id="latitude" value="<%= typeof responseData==='object'?responseData.latitude:'' %>">
+                    <input type="hidden" name="longitude" id="longitude" value="<%= typeof responseData==='object'?responseData.longitude:'' %>">
+                    <div id="vetMap"></div>
+                  </div>
+                </div>
+              </form>
+ 
+                <!-- Add/update Unavailability Modal -->
+                <div class="modal fade" id="UnavailabilityModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                aria-hidden="true">
+                <div class="modal-dialog dialog-custm" role="document">
+                <div class="modal-content modal-content-custm unavailability-modal">
+                    <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h5 class="modal-title text-center font-weight-bold">Unavailability</h5>
+                    </div>
+                    <div class="modal-body">
+                    <div class="custom-modal-body">
+                      <form id="unavailabilities-form">
+                        <div class="form-group vet-profile-hide">
+                          <div class="radio">
+                            <label>
+                              <input type="radio" name="unavailOptions" id="optionsRadios1" value="unavailability" checked>
+                              Add Unavailability
+                            </label>
+                            &nbsp;&nbsp;&nbsp;
+                            <label>
+                              <input type="radio" name="unavailOptions" id="optionsRadios2" value="holiday">
+                              Add Holiday
+                            </label>
+                          </div>
+                        </div>
+                        <div class="form-group row vet-profile-hide">
+                          <div class="col-sm-6 hide-desc">
+                            <label for="description" class="holiday-desc">Holiday Description</label>
+                            <input type="hidden" name="unAvilId" id="unAvilId" class="form-control"/>
+                            <input type="text" name="description" id="description" class="form-control"
+                              placeholder="Holiday Description"
+                              value="<%= typeof vetProfileData==='object' && vetProfileData.description ? vetProfileData.description:'' %>">
+                          </div>
+                          <div class="col-sm-6 ">
+                            <label for="date" class="holiday-date">Date</label>
+                            <input type="date" name="date" id="date" class="form-control"
+                              placeholder="Holiday Date" onkeydown="return false"
+                              value="<%= typeof vetProfileData==='object' && vetProfileData.date ? vetProfileData.date:'' %>">
+                          </div>
+                        </div>
+                        <div class="form-group row vet-profile-hide vet-unavai-block">
+                          <div class="col-sm-6" id="unavailability-slot">
+                            <label for="holiday" class="holiday-slot">Slots: </label>
+                            <p class="no-slot">No slots available.</p>
+                          </div>
+                        </div>
+                        <div class="form-group row vet-profile-hide service-provider-unavai-block">
+                          <div class="col-sm-6" id="serviceprovider-unavailability-slot">
+                            <div class=""><p>Service Provider Slots: </p></div>
+                            <span id="unavai-inavalid-time-span" class=""></span>
+                            <span id="unavai-time-span" class="custom-error-span day_error">Required</span>
+                            <div class="row serviceProvider-slot">
+                              <!-- <div class="form-group times_fieldwrapper" id="field1">
+                                <div class="col-sm-6 form-inline custom-input-padding">
+                                  <input type="time"  name="unavai_time[]" id="" class="form-control unavai_time unAvaiTime fromtime" value="">
+                                </div>
+                                <div class="col-sm-6 form-inline">
+                                  <input type="time"  name="unavai_time[]" id="" class="form-control unavai_time unAvaiTime totime" value="">
+                                </div>
+                                <input type="button" class="remove" value="-" style="position: absolute;margin-left: -2%;padding-top: 4px;padding-bottom: 4px;"><br><br>
+                              </div> -->
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group row vet-profile-hide service-provider-unavai-block">
+                          <div class="col-sm-6">
+                            <input type="button" value="Add a field" class="add d-none" id="service-unavaibility-times">
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary pull-left" data-dismiss="modal">Cancel</button>
+                    <a href="" class="btn btn-primary submit-unavil">Submit</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <!-- Delete Confirmation Modal -->
+            <div class="modal fade" id="deleteUnavailConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                aria-hidden="true">
+                <div class="modal-dialog dialog-custm" role="document">
+                <div class="modal-content modal-content-custm">
+                    <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h5 class="modal-title text-center font-weight-bold">Please confirm</h5>
+                    </div>
+                    <div class="modal-body">
+                    <div class="custom-modal-body">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMTEuMzYzIDEyLjcyN3YxLjU0NWMwIC4xMi0uMDQ0LjIyMy0uMTMxLjMxYS40MjQuNDI0IDAgMDEtLjMxLjEzMkg5LjE1NWEuNDI0LjQyNCAwIDAxLS4zMS0uMTMxLjQyNC40MjQgMCAwMS0uMTMxLS4zMXYtMS41NDZjMC0uMTIuMDQ0LS4yMjMuMTMtLjMxYS40MjQuNDI0IDAgMDEuMzExLS4xMzJoMS43NjdjLjEyIDAgLjIyMy4wNDQuMzEuMTMxLjA4Ny4wODguMTMxLjE5MS4xMzEuMzF6bS4yMDctNy4yODVsLS4xOTMgNS4yOThhLjQ0NC40NDQgMCAwMS0uMTQyLjMxLjQzNi40MzYgMCAwMS0uMzEzLjEzMUg5LjE1NWEuNDM2LjQzNiAwIDAxLS4zMTQtLjEzLjQ0NC40NDQgMCAwMS0uMTQtLjMxMWwtLjE5NC01LjI5OGEuNDA2LjQwNiAwIDAxLjEyLS4zMUEuNDEzLjQxMyAwIDAxOC45MzYgNWgyLjIwN2MuMTIgMCAuMjIyLjA0NC4zMDcuMTMxLjA4NS4wODcuMTI2LjE5MS4xMjEuMzF6IiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGw9IiNGRjVEMDAiLz48cmVjdCBzdHJva2U9IiNGRjVEMDAiIHg9Ii41IiB5PSIuNSIgd2lkdGg9IjE5IiBoZWlnaHQ9IjE5IiByeD0iOS41Ii8+PC9nPjwvc3ZnPg==" alt="icon" class="sc-eWnSVe cSfwyt">
+                        <p color="lightOrange" font-size="md" font-weight="regular" class="sc-cTJmaU sc-eXuzZk iibFUT dSTtmP">
+                        <span>Are you sure you want to delete this entry?</span>
+                        </p>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary pull-left" data-dismiss="modal">No, cancel</button>
+                    <a href="" class="btn btn-primary delete-item">Yes, confirm</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+              </div>
+          </div>
+
+          <!-- <div class="box-footer text-center">
+          </div> -->
+          <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+
+      </section>
+      
+      <section class="content" id="form-details">
+        <div class="box custom-user-box">
+          <h4 class="text-center">How to fill in this form ?
+            <a data-toggle="collapse" id="collapse-show-details" href="#collapse-details" aria-expanded="false" style="color: black">
+              <i class="fa fa-plus"></i>
+              <i class="fa fa-minus"></i>
+            </a>
+          </h4></br>
+          <div class="collapse" id="collapse-details">
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Email ( email ) * : </label> Email of the user
+              </div>
+              <div class="col-md-6">
+                <label>First Name ( first_name ) * : </label> First name of the user (user/vet/vet technician_nurse/VETPASS staff/administrator)
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Last Name ( last_name ) * : </label> Last name of the user (user/vet/vet technician_nurse/VETPASS staff/administrator)
+              </div>
+              <div class="col-md-6">
+                <label>Contact No ( mobile ) * : </label> Contact number of the user (user/vet/vet technician_nurse/VETPASS staff/administrator)
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Confirmed ( confirmed ) : </label> To check if user is active/confirmed or not (user/vet/vet technician_nurse/VETPASS staff/administrator)
+              </div>
+              <div class="col-md-6">
+                <label>Blocked ( blocked ) : </label> To check if user is blocked or not (user/vet/vet technician_nurse/VETPASS staff/administrator)
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>DOB ( dob ) : </label> Date of birth of the user (user/vet/vet technician_nurse/VETPASS staff/administrator)
+              </div>
+              <div class="col-md-6">
+                <label>Image : </label> Image of user profile 
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Address1 ( address1 ) : </label> Address of the user ( Line 1 )
+              </div>
+              <div class="col-md-6">
+                <label>Address2 ( address2 ) : </label> Address of the user ( Line 2 )
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>City/Town ( city ) : </label> City/Town name of the user (user/vet/vet technician_nurse/VETPASS staff/administrator)
+              </div>
+              <div class="col-md-6">
+                <label>Zip Code/Post Code ( zip_code ) : </label> Zip Code/Post Code of the user (user/vet/vet technician_nurse/VETPASS staff/administrator)
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Int Code ( int_code ) : </label> Country name of the user (user/vet/vet technician_nurse/VETPASS staff/administrator)
+              </div>
+              <div class="col-md-6">
+                <label>Role ( role ) * : </label> Role of the user (user/vet/vet technician_nurse/VETPASS staff/administrator)
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Country ( country ) : </label> Country of the user (user/vet/vet technician_nurse/VETPASS staff/administrator)
+              </div>
+              <div class="col-md-6">
+                <label>State/Postal/County ( state ) : </label> State/Postal/County of the user (user/vet/vet technician_nurse/VETPASS staff/administrator)
+              </div>
+            </div>
+
+            <hr>
+            <h4 class="text-center">User Preference</h4>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Animal Types : </label> Animal types for user preference
+              </div>
+              <div class="col-md-6">
+                <label>Breeds : </label> Breeds of selected animal types for user preference
+              </div>
+            </div>
+
+            <hr>
+            <h4 class="text-center">Registration</h4>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Veterinary Registrations ( veterinary_registrations ) : </label> Veterinary registrations for vet user (vet/vet technician_nurse)
+              </div>
+              <div class="col-md-6">
+                <label>Registration Number ( registration_number ) : </label> Registration number of vet user (vet/vet technician_nurse)
+              </div>
+            </div>
+
+            <hr>
+            <h4 class="text-center">Public Details</h4>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Public Email ( public_email ) : </label> Public email of vet user (vet/vet technician_nurse)
+              </div>
+              <div class="col-md-6">
+                <label>Personal Summary ( personal_bio ) : </label> Personal summary for vet profile (vet/vet technician_nurse)
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Public Contact Number Int Code ( public_contact_no_int_code ) : </label> Country name for public contact number int code of vet user (vet/vet technician_nurse)
+              </div>
+              <div class="col-md-6">
+                <label>Public Contact Number ( public_contact_no ) : </label> Public contact number of vet user (vet/vet technician_nurse)
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Public Out of Hours Int Code ( public_out_of_hr_phone_int_code ) : </label> Country name for public out of hours int code of vet user (vet/vet technician_nurse)
+              </div>
+              <div class="col-md-6">
+                <label>Public Out of Hours Number ( public_out_of_hr_phone ) : </label> Public out of hours number of vet user (vet/vet technician_nurse)
+              </div>
+            </div>
+
+            <hr>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Is Online Appointment ( is_online_consultation ) : </label> To check if appointment is online or not
+              </div>
+              <div class="col-md-6">
+                <label>Online Appointment Price (inc. tax)  ( online_consultation ) : </label> Price of online appointment including tax (required if appointment is online)
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Is In Clinic Appointment ( is_in_clinic_consultation ) : </label> To check if appointment is in clinic or not
+              </div>
+              <div class="col-md-6">
+                <label>In Clinic Appointment Price (inc. tax) ( in_clinic_consultation ) : </label> Price of in clinic appointment including tax (required if appointment is in clinic)
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Currency Type for Appointments ( currency_type ) : </label> Currency type of appointment's price (required if appointment is in clinic or online)
+              </div>
+              <div class="col-md-6">
+                <label>Practice (or select a VETPASS group) ( practice_Email ) * : </label> Practice or VETPASS group for vet profile (vet/vet technician_nurse)
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Veterinarian Treats Categories ( treats_type_animal ) : </label> Treats categories for vet profile (vet/vet technician_nurse)
+              </div>
+              <div class="col-md-6">
+                <label>Practitioner Liabilities ( practitioner_liability ) : </label> Practitioner liabilities for vet profile (vet/vet technician_nurse)
+              </div>
+            </div>
+
+            <hr>
+            <h4 class="text-center">Availabilities</h4>
+            <div class="form-group row">
+              <div class="col-md-12 text-center">
+                <label>Available time blocks for appointments from monday to sunday</label>
+              </div>
+            </div>
+
+            <hr>
+            <h4 class="text-center">Education and Qualifications</h4>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Specialization, Advanced Practitioner ( specialization ) : </label> Specialization, Advanced Practitioner for vet profile
+              </div>
+              <div class="col-md-6">
+                <label>Education and Qualifications ( education ) : </label> Education and Qualifications for vet
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Specialization, Advanced Practitioner Date ( passout_date ) : </label> Specialization, Advanced Practitioner Date for vet profile in MM/YYYY or YYYY format
+              </div>
+              <div class="col-md-6">
+                <label>Qualification Date ( educationDuration ) : </label> Qualification Date of vet in MM/YYYY or YYYY format
+              </div>
+            </div>
+
+            <hr>
+            <h4 class="text-center">Area of Interest</h4>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Specialization, Advanced Practitioner ( specialization ) : </label> Interested advanced practitioner of user which is used in forums for invites vets filter
+              </div>
+              <div class="col-md-6">
+                <label>Animal Types : </label> Interested animal types of user which is used in forums filter
+              </div>
+            </div>
+
+            <hr>
+            <h4 class="text-center">Bank Details</h4>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Legal Name or First Name & Last Name ( b_user_name ) : </label> Legal Name or First Name & Last Name of the vet user
+              </div>
+              <div class="col-md-6">
+                <label>Email ( b_user_email ) : </label> Email of the vet user's bank
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Country ( b_country ) : </label> Country of the vet user
+              </div>
+              <div class="col-md-6">
+                <label>Currency ( b_currency ) : </label> Currency of the vet user
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Account Number ( b_account_number ) : </label> Account Number of the vet user
+              </div>
+              <div class="col-md-6">
+                <label>Bank Name ( bank_name ) : </label> Vet user's bank name
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Bank Address ( b_address ) : </label> Vet user's bank address
+              </div>
+              <div class="col-md-6">
+                <label>Sort Code ( b_sort_code ) : </label> Vet user's bank sort code
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>IBAN ( b_iban ) : </label> Vet user's bank IBAN code
+              </div>
+              <div class="col-md-6">
+                <label>NCC ( b_ncc ) : </label> Vet user bank's NCC code
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>SWIFTBIC ( b_swiftbic ) : </label> Vet user's bank SWIFTBIC code
+              </div>
+            </div>
+            <hr>
+          </div>
+        </div>
+      </section>
+      <!-- /.content -->
+  </div>
+  <%- include ./../layout/footer.ejs -%>
+  <script src="/plugins/datatables/jquery.dataTables.js"></script>
+  <script src="/plugins/datatables/dataTables.bootstrap.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script type="module" src="/js/user.js"></script>
+    <script
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBa-69OiLPSTIaj3_7JE0Svx2GUnV6anpM&callback=initMap&libraries=&v=weekly"
+defer></script>
+    </body>
+    <script>
+      // SHOW MAP
+      function mapshow(lat, lng) {
+        const location = { lat: lat, lng: lng };
+
+        window.map = new google.maps.Map(document.getElementById("vetMap"), {
+          zoom: 18,
+          center: location,
+        });
+
+        window.marker = new google.maps.Marker({
+          position: location,
+          draggable: true,
+          map: map,
+        });
+
+        window.marker.addListener("dragend", e => {
+          $("#latitude").val(marker.getPosition().lat());
+          $("#longitude").val(marker.getPosition().lng());
+        });
+      }
+
+      function initMap() {
+        var lat = $("#latitude").val();
+        var lng = $("#longitude").val();
+
+        if(!lat && !lng){
+          navigator.geolocation.getCurrentPosition((position) => {
+            lat = position.coords.latitude;
+            lng = position.coords.longitude;
+            console.log("here>>>", lat, lng)
+            $("#latitude").val(lat);
+            $("#longitude").val(lng);
+            this.mapshow(lat, lng);
+          }, (error) => {
+            this.mapshow(51.5149037, -0.1235842);
+          });
+        } else {
+          lat = parseFloat(lat);
+          lng = parseFloat(lng);
+          this.mapshow(lat, lng);
+        }
+      }
+
+      function getAddress() {
+        // if(window.lng ==0 && window.lat == 0) {
+          var address1 = document.getElementById('address1').value;
+          var address2 = document.getElementById('address2').value;
+          var city = document.getElementById('city').value;
+          var zip_code = document.getElementById('zip_code').value
+          let addressToSearch = '';
+          if (address1) {
+            addressToSearch = address1;
+          }
+          if (address2) {
+            addressToSearch += ' '+address2;
+          }
+          if(city) {
+            addressToSearch += ' '+city;
+          }
+          if(zip_code) {
+            addressToSearch += ',' + zip_code
+          }
+
+          if(addressToSearch) {
+            fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${addressToSearch}&key=AIzaSyBa-69OiLPSTIaj3_7JE0Svx2GUnV6anpM`).then(x => x.text()).then(x => {
+              const data = JSON.parse(x);
+              if (data
+                && data.results
+                && data.results[0]
+                && data.results[0].geometry
+                && data.results[0].geometry.location) {
+                  var location = data.results[0].geometry.location;
+
+                  $("#latitude").val(location.lat);
+                  $("#longitude").val(location.lng);
+
+                  marker.setPosition({lat: location.lat, lng: location.lng});
+                  const center = new google.maps.LatLng(location.lat, location.lng);
+                  window.map.panTo(center);
+              }
+            });
+          }
+      }
+    </script>
+    <% if (userData && userData.serviceProviderRoleName && userData.adminRoleName && userData.practiceAdminName && userData.vetRoleName && userData.technicianNurseRoleName && userData.appUserRoleName) { %>
+      <script>
+          var adminRoleName = '<%= userData.adminRoleName %>';
+          var appUserRoleName = '<%= userData.appUserRoleName %>';
+          var vetRoleName = '<%= userData.vetRoleName %>';
+          var technicianNurseRoleName = '<%= userData.technicianNurseRoleName %>';
+          var serviceProviderRoleName = '<%= userData.serviceProviderRoleName %>';
+          var practiceAdminName = '<%= userData.practiceAdminName %>';
+      </script>
+    <% } %>
+    <script>
+      var loggedInAdministratorOption = '';
+    </script>
+      <% if (userData && userData.practiceAdminName && userData.roleName == userData.practiceAdminName ) { %>
+        <script>
+          loggedInAdministratorOption = '<%= userData.option %>';
+        </script>
+      <% } %> 
+
+    <script>
+      $(document).ready(function() {
+        $('.practice-multiple').select2({
+            maximumSelectionSize: 1,
+            // tags: false,
+            placeholder: "Select a Practice",
+            ajax: {
+              url: `/admin/practices`,
+              method: 'get',
+              dataType: 'json',
+              data: function (parameters) {
+                var vetpracticeOption = "";
+                var selectedRoleName = $('#roleId option:selected').text().trim();
+                if (loggedInAdministratorOption) {
+                  vetpracticeOption = {};
+                } else {
+                  if (selectedRoleName == practiceAdminName) {
+                    vetpracticeOption = "";
+                  } else if (selectedRoleName == vetRoleName || selectedRoleName == technicianNurseRoleName) {
+                    vetpracticeOption = "practice";
+                  } else if (selectedRoleName == serviceProviderRoleName) {
+                    vetpracticeOption = "store";
+                  }
+                }
+                var selectedPractice = !isNaN($('#practiceId').val()) ? $('#practiceId').val() : !isNaN($('#practiceId option:selected').attr('id')) ? $('#practiceId option:selected').attr('id') : "";
+                parameters.id = selectedPractice ? selectedPractice : {};
+                parameters.option = vetpracticeOption ? vetpracticeOption : {};
+                if(!parameters.term || parameters.term == "") {
+                  delete parameters.term;
+                }
+                return parameters;
+              },
+              processResults: function (data, parameters) {
+                  var results = data.results.map(function (practice) {
+                  var practiceName = practice.practice_name;
+                  var address = practice.address1 == null ? '' : practice.address1;
+                  var city = practice.city == null ? '' : practice.city;
+                  var state = practice.state == null ? '' : practice['states.state'];
+                  var country = practice.country == null ? '' : practice["countries.country"];
+                  var zipCode = practice.zip_code == null ? '' : practice.zip_code;
+                  practice.id = practice.id;
+                  practice.text = practiceName + " ( " + address + " | " + city + " | " + state + " | " + country + " | " + zipCode + " )";
+                  return practice;
+                });
+                return {
+                  results: results,
+                  pagination: {
+                    more: data.results.length 
+                  }
+                }
+              },
+            }
+        })
+        .on('select2-opening', function(e) {
+            if ($(this).select2('val').length > 0) {
+                e.preventDefault();
+            }
+        });
+        $("#form-details-icon").on("click", function(e) {
+          e.preventDefault();
+          $("body, html").animate({ 
+            scrollTop: $("#form-details").offset().top - 150
+          }, 600);
+          $('#collapse-details').collapse('show');
+        });
+      });
+      var selectedRole = $('#roleId option:selected').text().trim();
+      // setTimeout(updateDomeByRole, 2000);
+      function updateDomeByRole (selectedRole, serviceProviderRoleName) {
+        if (selectedRole == serviceProviderRoleName) {
+          $("#in_clinic_consultation").prop('disabled', false);
+          // $(".custom-in_clinic").css({"margin-left": "-1%", "width": "102%"});
+          // $(".groomers_app_price").text("Appointment Price (inc. tax)");
+          $(".groomers_role").show();
+          if(selectedRole == serviceProviderRoleName) {
+            $(".groomers_role_hide").show();
+            $('.service_provider_liability').show();
+            $('.practitioner_liability').hide();
+            $('.availabilitie-selector').hide();
+            $('.hideForServiceProvider').hide();
+            $('.service-provider-unavai-block').show();
+            $('.online_appo_section').hide();
+            $('.vet-unavai-block').hide();
+            $('.day-buildyourform').each(function(){
+              let dayId = $(this).attr('id');
+              $(`.${dayId}-selector`).append('<option  selected value="0">0</option>');  
+              //$(`.${dayId}-selector`).attr( "disabled", "disabled")
+            });
+            changePracticeLabels('Store (or select a VETPASS group)', 'Treats Categories', 'Select a store' );
+            customValidation();
+          }
+        } else {
+          if (selectedRole === vetRoleName || selectedRole === technicianNurseRoleName) {
+            $("#in_clinic_consultation").prop('disabled', true);
+            // $(".custom-in_clinic").css({"margin-left": "1%", "width": "50%"});
+            // $(".groomers_app_price").text("In Clinic Appointment Price (inc. tax)");
+            $(".groomers_role").show();
+            $(".groomers_role_hide").hide();
+            $('.service_provider_liability').hide();
+            $('.practitioner_liability').show();
+            $('.availabilitie-selector').show();
+            $('.service-provider-unavai-block').hide();
+            $('.hideForServiceProvider').show();
+            $('.vet-unavai-block').show();
+            $('.online_appo_section').show();
+            $('.day-buildyourform').each(function(){
+              let dayId = $(this).attr('id');
+              $(`.${dayId}-selector option[value='0']`).remove();
+              //$(`.${dayId}-selector`).removeAttr( "disabled")
+            });
+            changePracticeLabels('Practice (or select a VETPASS group)', 'Veterinarian Treats Categories', 'Select a Practice' );
+          }
+        }
+        if(selectedRole === "Administrator"){
+          changePracticeLabels('Store OR Practice (or select a VETPASS group)', '', 'Select a Practice or Store' );
+        }
+      }
+      function changePracticeLabels(label_1, label_2, plcText){  
+        $('.practice-lbl-cls').text(label_1);
+        let typeCountval = $('#typeCountCopied').text() ? `(${$('#typeCountCopied').text()})` : '';
+        if(label_2 != ""){
+          $('.Veterinarian-lbl-cls').text(`${label_2}${typeCountval}`)
+        }
+        $('.select2-selection__placeholder').text(plcText);
+      }
+      if (selectedRole == appUserRoleName) {
+        $(".app-user-edit").css("display", "block");
+      } else {
+        $(".app-user-edit").css("display", "none");
+      }
+      if (selectedRole == vetRoleName || selectedRole == technicianNurseRoleName || selectedRole == serviceProviderRoleName) {
+        $(".vet-profile-edit").slideDown();
+        $(".vet-profile-hide").show();
+      }
+      else if (selectedRole == practiceAdminName) {
+        $(".vet-profile-edit").slideDown();
+        $(".vet-profile-hide").hide();
+      } else {
+        $(".vet-profile-edit").slideUp();
+      }
+      if(selectedRole == serviceProviderRoleName) {
+        $(".groomers_role").hide();
+        if(selectedRole == serviceProviderRoleName) {
+          $(".groomers_role_hide").show();
+        }
+      } else {
+        if (selectedRole === vetRoleName || selectedRole === technicianNurseRoleName) {
+          $(".groomers_role").show();
+          $(".groomers_role_hide").hide();
+        }
+      }
+      $('#date').prop('min', function(){
+        return new Date().toJSON().split('T')[0];
+      });
+      $('#dob').prop('max', function(){
+        return new Date().toJSON().split('T')[0];
+      });
+      // $('#passout_date').prop('max', function(){
+      //   return new Date().toJSON().split('T')[0];
+      // });
+      // $('#passout_date').prop('min', function(){
+      //   return $('#dob').val();
+      // });
+      // $('#dob').change(function(){
+      //   $('#passout_date').prop('max', function(){
+      //     return new Date().toJSON().split('T')[0];
+      //   });
+      //   $('#passout_date').prop('min', function(){
+      //     return $('#dob').val();
+      //   });
+      // });
+      $(".sidebar-menu li").removeClass("active");
+      $(".menu__users").addClass("active");
+      
+      // Set breed dropdown values
+      setBreeds();
+
+      $('.dataAnimalTypeList li').each(function () {
+        const selectedTypeId = $(this).attr('data-id');
+        $(`#dataAnimalTypeId option[id=${selectedTypeId}]`).remove();
+      });
+      $('#practiceId').change(function () {
+        var selectedPractice = $('#practiceId option:selected').attr('id');
+        $('#practice').val(selectedPractice);
+      })
+      $("#countryId").change(function (event) {
+        var selectedCountry = $('#countryId option:selected').attr('id');
+        $("#country").val(selectedCountry);
+        var selectedCountryVal = $('#countryId').val();
+        $("#stateId").html('');
+        $.ajax({
+          url: "/admin/user",
+          type: "get",
+          data: {
+            country: selectedCountry,
+          },
+          success: function (data) {
+            var len = data.length;
+            $("#stateId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%>>Add an item..</option>")
+            for (var i = 0; i < len; i++) {
+              var value1 = data[i]['state'];
+              var value2 = data[i]['id'];
+              $("#stateId").append("<option id='" + value2 + "' >" + value1 + "</option>");
+            }
+          },
+        });
+        event.preventDefault();
+      });
+      $("#roleId").change(function (event) {
+        var selectedRole = $('#roleId option:selected').attr('id');
+        var selectedRoleValue = $('#roleId option:selected').text().trim();
+        if(selectedRoleValue === serviceProviderRoleName){
+          $(".save-user").prop('disabled', true);
+          customValidation();
+        }else{
+          $(".save-user").prop('disabled', false);
+        }
+        if (selectedRoleValue == appUserRoleName) {
+          $(".app-user-edit").css("display", "block");
+        } else {
+          $(".app-user-edit").css("display", "none");
+        }
+        $("#role").val(selectedRole);
+        var selectedRole = $('#roleId option:selected').text().trim();
+        if (selectedRole === vetRoleName || selectedRole === technicianNurseRoleName || selectedRole === serviceProviderRoleName) {
+          $(".vet-profile-edit").slideDown();
+          $(".vet-profile-hide").show();
+        }
+        //  else {
+        //   $(".vet-profile-edit").slideUp();
+        // }
+        else if (selectedRole == practiceAdminName) {
+          $(".vet-profile-edit").slideDown();
+          $(".vet-profile-hide").hide();
+        } else {
+          $(".vet-profile-edit").slideUp();
+        }
+        if(selectedRole == serviceProviderRoleName) {
+          $(".groomers_role").hide();
+          if(selectedRole == serviceProviderRoleName) {
+            $(".groomers_role_hide").show();
+          }
+        } else {
+          if (selectedRole === vetRoleName || selectedRole === technicianNurseRoleName) {
+            $(".groomers_role").show();
+            $(".groomers_role_hide").hide();
+          }
+        }
+        updateDomeByRole(selectedRoleValue, serviceProviderRoleName);
+        event.preventDefault();
+      });
+      var selectedRoleValue = $('#roleId option:selected').text().trim();
+      updateDomeByRole(selectedRoleValue, serviceProviderRoleName);
+      $("#stateId").change(function (event) {
+        var selectedState = $('#stateId option:selected').attr('id');
+        $("#state").val(selectedState);
+        event.preventDefault();
+      });
+
+      $(document).on("click", ".dataAnimalTypeList-delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#dataAnimalTypeCount").html($('.dataAnimalTypeList li').length);
+        $("#dataAnimalTypeId").append(`<option id=${id}>${values.html()}</option>`);
+        setBreeds();
+        resetBreeds(id);
+      });
+      $("#dataAnimalTypeId").change(function (event) {
+        var selectedType = $('#dataAnimalTypeId option:selected').attr('id');
+        var selectedTypeVal = $('#dataAnimalTypeId').val();
+        $("#dataAnimalTypeCount").html($('.dataAnimalTypeList li').length + 1);
+        $(".dataAnimalTypeList").append(`<li data-id=${selectedType} class="li-flex"><div>${selectedTypeVal}</div><i id= ${selectedType} class="fa fa-minus dataAnimalTypeList-delete-icon"></i></li>`)
+        $("#dataAnimalTypeId option:selected").remove();
+        setBreeds();
+        event.preventDefault();
+      });
+      $(document).on("click", ".breedList-delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#breedCount").html($('.breedList li').length);
+        $("#breedId").append(`<option id=${id}>${values.html()}</option>`);
+        // setBreeds();
+      });
+      $("#breedId").change(function () {
+        var selectedBreed = $('#breedId option:selected').attr('id');
+        var selectedBreedVal = $('#breedId').val();
+        $("#breedCount").html($('.breedList li').length + 1);
+        $(".breedList").append(`<li data-id=${selectedBreed} class="li-flex"><div>${selectedBreedVal}</div><i id= ${selectedBreed} class="fa fa-minus breedList-delete-icon"></i></li>`)
+        $("#breedId option:selected").remove();
+      });
+      $(document).on("click", ".animalTypes-delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#typeCount").html($('.typeList li').length);
+        $("#typeId").append(`<option id=${id}>${values.html()}</option>`);
+      });
+      $("#typeId").change(function () {
+        var selectedType = $('#typeId option:selected').attr('id');
+        var selectedTypeVal = $('#typeId').val();
+        $("#typeCount").html($('.typeList li').length + 1);
+        $(".typeList").append(`<li data-id=${selectedType} class="li-flex"><div>${selectedTypeVal}</div><i id= ${selectedType} class="fa fa-minus animalTypes-delete-icon"></i></li>`)
+        $("#typeId option:selected").remove();
+      });
+      // ----------- SERVICE PROVIDER SERVICES ----------------
+      $('.serviceProviderServices-multiple').each(function(){
+        let selectorId = $(this).attr('id');
+        console.log("selefff", selectorId);
+        $(`#${selectorId}`).select2({
+        tags: true,
+        placeholder: "Select a Service Provider Services"
+      });
+      })
+   
+    
+      
+      let counter = 1; 
+      //Add Sub service fields.
+      function addSubservice(uniqueModuleId){
+        let mainServiceRefrence = $(`select[data-id="${uniqueModuleId}"]`).val();
+          $(`#${uniqueModuleId}`).append(`<div id=dynamic${counter} class="custom"><li data-id="" data-name="" class="li-flex">
+                            <div class="col-sm-3  ${uniqueModuleId}">
+                              <label for="serviceProviderSubServices" class="">Sub Service</label>
+                              <input type="text"  name="serviceProviderSubServices[sub${mainServiceRefrence}][]" placeholder="Sub service" class="sub-service custominput form-control"/>
+                            </div>
+                            <div class="col-sm-5  ${uniqueModuleId}">
+                              <label for="description" class="">Description</label>
+                              <input type="text"  name="description[description${mainServiceRefrence}][]" placeholder="Sub service description" class="form-control custominput service-description"/>
+                            </div>
+                            <div class="col-sm-2  ${uniqueModuleId}">
+                              <label for="duration" class=""> Duration</label>
+                                <select name="duration[duration${mainServiceRefrence}][]" class="form-control service-duration custominput">
+                                  <option selected disabled>duration</option>
+                                  <% for (var i=0; i < serviceDurations.length; i++ ) { %>
+                                      <option value="<%= serviceDurations[i].duration %>"><%= serviceDurations[i].name %></option>
+                                  <% } %>
+                                </select>
+                            </div>
+                            <div class="col-sm-2  ${uniqueModuleId}">
+                              <label for="price" class="">Price</label>
+                              <input type="number" value=0 name="price[price${mainServiceRefrence}][]" placeholder="Sub service Price" class="form-control service_price custominput" min ="0">
+                            </div>
+                            <div class="col-sm-2 ${uniqueModuleId}">
+                              <label for="stack" class="">Appointment</label>
+                              <select name="appointment[stack${mainServiceRefrence}][]" class="form-control  service-stack custominput">
+                                <option selected disabled>Appointment</option>
+                                <% for (let j=1; j <= 5; j++ ) { %>
+                                  <option  value="<%= j %>"><%= j %></option>
+                                <% } %>
+                              </select>
+                            </div>
+                            <div class="col-sm-4">
+                              <i class="fa fa-minus removeSubserviceField"></i>
+                            </div>
+                          </li></div>`);
+                          $(`#dynamic${counter} :input`).each(function(ele){
+                            if($(this).val() == ""){
+                              $(".save-user").prop('disabled', true);
+                            }
+                           //$(this).prop('required',true);
+                           $(this).attr("spanid",`customid${counter}${ele}`);
+                           $(this).after(`<span id = "customid${counter}${ele}" class="error">This field is required</span>`);
+                          });
+                          counter++;
+        }
+        $(document).on("change keyup",".custominput",function(){
+          customValidation();
+        });
+        function customValidation(){
+          let check = true;
+          $(".custominput").each(function(e){
+            let value = $(this).val();
+            if($(this).val() && $.trim(value)){
+              let val1 = $(this).attr("spanid");
+              $(`#${val1}`).hide();
+            }else{
+              let val1 = $(this).attr("spanid");
+              $(`#${val1}`).show();
+              check = false;
+            }
+          })
+          console.log("check",check)
+          if(check){
+            $(".save-user").prop('disabled', false);
+          }else{
+            $(".save-user").prop('disabled', true);
+          }
+        } 
+      function addServiceProviderModule(){
+        let uniqueModuleId = Math.floor(Math.random() * 26) + Date.now();
+        let mainServiceRefrence = ""; //1;
+        $(".service-provider-module").append(`<div id=dynamic${counter} class="custom"><ul class="" style="list-style-type: none; background: #f3f3f3;padding-top: 15px;padding-bottom: 10px;">
+                      <li  data-id="" data-name="" class="">
+                        <div class="form-group row">
+                          <div class="col-sm-10">
+                            <label for="serviceProviderServices" class="">Service Provider Services</label>
+                            <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="If you unselect the mainservice, then the subservice will automatically removed."></i>
+                            <span><i class="fa fa-minus removeServiceProviderModule" ></i></span>
+                            <select id="serviceProviderServices${uniqueModuleId}" class="serviceProviderServices-multiple form-control custominput" name="serviceProviderServices[]" data-id="${uniqueModuleId}" 
+                              value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                              <option value="">Select service</option>
+                              <% for (var i=0; i < serviceProviderMainServices.length; i++ ) { %>
+                                <option
+                                  value="<%= serviceProviderMainServices[i].id %>">
+                                    <%= serviceProviderMainServices[i].service %>
+                                </option>
+                                <% } %>
+                            </select>
+                          </div>
+                          <div class="col-sm-2" for="mainServicePlus">
+                            <i class="fa fa-plus mainServicePlus" onclick="addSubservice(${uniqueModuleId})"></i>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-sm-12">
+                            <ul class="subServiceList pl-0" id="${uniqueModuleId}">
+                                <li data-id="" data-name="" class="li-flex"> 
+                                    <div class="col-sm-3 ${uniqueModuleId}">
+                                      <label for="serviceProviderSubServices" class="">Sub Service</label>
+                                      <input type="text" class="sub-service form-control custominput" name="serviceProviderSubServices[sub${mainServiceRefrence}][]" placeholder="Sub service" required>
+                                    </div>
+                                    <div class="col-sm-5 ${uniqueModuleId}">
+                                      <label for="description" class="">Description</label>
+                                      <input type="text" class="form-control service-description custominput" id="" name="description[description${mainServiceRefrence}][]" placeholder="Service description"/>
+                                    </div>
+                                    <div class="col-sm-2 ${uniqueModuleId}">
+                                      <label for="duration" class=""> Duration</label>
+                                      <select name="duration[duration${mainServiceRefrence}][]" class="form-control service-duration custominput" required>
+                                        <option selected disabled>duration</option>
+                                        <% for (var i=0; i < serviceDurations.length; i++ ) { %>
+                                          <option value="<%= serviceDurations[i].duration %>"><%= serviceDurations[i].name %></option>
+                                         <% } %>
+                                      </select>
+                                    </div>
+                                    <div class="col-sm-2 ${uniqueModuleId}">
+                                      <label for="price" class="">Price</label>
+                                      <input type="number" value="0" name="price[price${mainServiceRefrence}][]" placeholder="Sub service Price" min ="0" class="service_price form-control custominput" value="" required>
+                                    </div>
+                                    <div class="col-sm-2 ${uniqueModuleId}">
+                                    <label for="stack" class="">Appointment</label>
+                                    <select name="appointment[stack${mainServiceRefrence}][]" class="form-control service-stack custominput" required>
+                                      <option selected disabled>Appointment</option>
+                                      <% for (let j=1; j <= 5; j++ ) { %>
+                                        <option  value="<%= j %>"><%= j %></option>
+                                      <% } %>
+                                    </select>
+                                  </div>
+                                    <div class="col-sm-4">
+                                      <i class="fa fa-minus removeSubserviceField"></i>
+                                    </div>
+                                </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </li>
+                    </ul></div>`);
+                    $(`#dynamic${counter} :input`).each(function(ele){
+                            if($(this).val() == ""){
+                              $(".save-user").prop('disabled', true);
+                            }
+                           //$(this).prop('required',true);
+                           $(this).attr("spanid",`customid${counter}${ele}`);
+                           $(this).after(`<span id = "customid${counter}${ele}" class="error">This field is required</span>`);
+                          });
+                          counter++;
+                  $(`#serviceProviderServices${uniqueModuleId}`).select2({
+                    tags: true,
+                    placeholder: "Select a Service Provider Services"
+                  });
+              customValidation();
+      }
+      var uniqueModuleId = "";
+      var previous = "";
+      var disableIds = [];
+      $(document).on('select2:open','.serviceProviderServices-multiple,.serviceProviderServices-single', function (e) {
+        // Store the current value on focus and on change
+        $('.serviceProviderServices-multiple').each(function(){
+          disableIds.push($(this).val());
+          $(`.serviceProviderServices-multiple option[value='${$(this).val()}']`).attr("disabled", "disabled");
+        })
+        previous = this.value;
+        console.log("fvff", previous)
+        uniqueModuleId = $(this).attr('data-id');
+    }).change(function(){
+        if(uniqueModuleId){
+          let selectedMainService = $(`select[data-id=${uniqueModuleId}]`).val();
+          $(`.${uniqueModuleId}`).each(function () {
+            $(`.${uniqueModuleId} input[name="serviceProviderSubServices[sub${previous}][]"]`).attr('name', `serviceProviderSubServices[sub${selectedMainService}][]`);
+            $(`.${uniqueModuleId} input[name="description[description${previous}][]"]`).attr('name', `description[description${selectedMainService}][]`);
+            $(`.${uniqueModuleId} select[name="duration[duration${previous}][]"]`).attr('name', `duration[duration${selectedMainService}][]`);
+            $(`.${uniqueModuleId} select[name="appointment[stack${previous}][]"]`).attr('name', `appointment[stack${selectedMainService}][]`);
+            $(`.${uniqueModuleId} input[name="price[price${previous}][]"]`).attr('name', `price[price${selectedMainService}][]`);
+          });
+            $.each(disableIds, function(key, value) {
+              $(`.serviceProviderServices-multiple option[value='${value}']`).removeAttr("disabled");
+            })
+          previous = selectedMainService;
+        }
+      });
+      $(".userSubmitBtn").click(async function(){
+        if(disableIds && disableIds.length){
+          $.each(disableIds, function(key, value) {
+              console.log("hereee", value)
+              $(`.serviceProviderServices-multiple option[value='${value}']`).removeAttr("disabled");
+            })
+        }
+      });
+      $(document).on("click",'.removeSubserviceField', function(){
+        $(this).closest('li').remove();
+        $(this).closest('div').remove();
+      });
+      $(document).on("click",'.removeServiceProviderModule', function(){
+        $(this).closest('ul').remove();
+      });
+      $(document).on("click",".removeServiceProviderModule,.removeSubserviceField",function(){
+          customValidation();
+      })
+      //End service provider module new changes
+
+      $(document).on("click", ".specialization-delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#specializationCount").html($('.specializationList li').length);
+        $("#specializationId").append(`<option id=${id}>${values.html()}</option>`);
+      });
+      $("#specializationId").change(function () {
+        var selectedType = $('#specializationId option:selected').attr('id');
+        var selectedTypeVal = $('#specializationId').val();
+        $("#specializationCount").html($('.specializationList li').length + 1);
+        $(".specializationList").append(`<li data-id=${selectedType} class="li-flex"><div>${selectedTypeVal}</div><i id= ${selectedType} class="fa fa-minus specialization-delete-icon"></i></li>`)
+        $("#specializationId option:selected").remove();
+      });
+      $(document).on("click", ".speciality-delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#specialityCount").html($('.specialityList li').length);
+        $("#specialityId").append(`<option id=${id}>${values.html()}</option>`);
+      });
+      $("#specialityId").change(function () {
+        var selectedType = $('#specialityId option:selected').attr('id');
+        var selectedTypeVal = $('#specialityId').val();
+        $("#specialityCount").html($('.specialityList li').length + 1);
+        $(".specialityList").append(`<li data-id=${selectedType} class="li-flex"><div>${selectedTypeVal}</div><i id= ${selectedType} class="fa fa-minus speciality-delete-icon"></i></li>`)
+        $("#specialityId option:selected").remove();
+      });
+      $(document).on("click", ".interestedSpecialization-delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#interestedSpecializationCount").html($('.interestedSpecializationList li').length);
+        $("#interestedSpecializationId").append(`<option id=${id}>${values.html()}</option>`);
+      });
+      $("#interestedSpecializationId").change(function () {
+        var selectedType = $('#interestedSpecializationId option:selected').attr('id');
+        var selectedTypeVal = $('#interestedSpecializationId').val();
+        $("#interestedSpecializationCount").html($('.interestedSpecializationList li').length + 1);
+        $(".interestedSpecializationList").append(`<li data-id=${selectedType} class="li-flex"><div>${selectedTypeVal}</div><i id= ${selectedType} class="fa fa-minus interestedSpecialization-delete-icon"></i></li>`)
+        $("#interestedSpecializationId option:selected").remove();
+      });
+      $(document).on("click", ".interestedAnimalType-delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#interestedAnimalTypeCount").html($('.interestedAnimalTypeList li').length);
+        $("#interestedAnimalTypeId").append(`<option id=${id}>${values.html()}</option>`);
+      });
+      $("#interestedAnimalTypeId").change(function () {
+        var selectedType = $('#interestedAnimalTypeId option:selected').attr('id');
+        var selectedTypeVal = $('#interestedAnimalTypeId').val();
+        $("#interestedAnimalTypeCount").html($('.interestedAnimalTypeList li').length + 1);
+        $(".interestedAnimalTypeList").append(`<li data-id=${selectedType} class="li-flex"><div>${selectedTypeVal}</div><i id= ${selectedType} class="fa fa-minus interestedAnimalType-delete-icon"></i></li>`)
+        $("#interestedAnimalTypeId option:selected").remove();
+      });
+      $("form").submit(function (event) {
+        var selectedDataAnimalTypes = $('.dataAnimalTypeList li');
+        var selectedDataAnimalTypesIds = [];
+
+        for (let i = 0; i < selectedDataAnimalTypes.length; i++) {
+          selectedDataAnimalTypesIds.push(selectedDataAnimalTypes[i].getAttribute('data-id'))
+        }
+        $("#dataAnimalType").val(selectedDataAnimalTypesIds);
+
+        var selectedBreeds = $('.breedList li');
+        var selectedBreedsIds = [];
+
+        for (let i = 0; i < selectedBreeds.length; i++) {
+          selectedBreedsIds.push(selectedBreeds[i].getAttribute('data-id'))
+        }
+        $("#breed").val(selectedBreedsIds);
+        
+        var selectedanimalTypes = $('.typeList li');
+        var selectedanimalTypesIds = [];
+
+        for (let i = 0; i < selectedanimalTypes.length; i++) {
+          selectedanimalTypesIds.push(selectedanimalTypes[i].getAttribute('data-id'))
+        }
+        $("#type").val(selectedanimalTypesIds);
+        var selectedPractice = !isNaN($('#practiceId').val()) ? $('#practiceId').val() : !isNaN($('#practiceId option:selected').attr('id')) ? $('#practiceId option:selected').attr('id') : "";
+        $('#practice').val(selectedPractice);
+        // GOOMERS
+        var selectedGoomersServices = $('.groomersServiceList li');
+        var selectedGroomersServiceIds = [];
+
+        for (let i = 0; i < selectedGoomersServices.length; i++) {
+          selectedGroomersServiceIds.push(selectedGoomersServices[i].getAttribute('data-id'))
+        }
+        $("#groomerService").val(selectedGroomersServiceIds);
+        // ----------------------------- 
+
+        // WALKERS
+        var selectedGoomersServices = $('.walkersServiceList li');
+        var selectedWalkersServiceIds = [];
+
+        for (let i = 0; i < selectedGoomersServices.length; i++) {
+          selectedWalkersServiceIds.push(selectedGoomersServices[i].getAttribute('data-id'))
+        }
+        $("#walkerService").val(selectedWalkersServiceIds);
+        // ----------------------------- 
+
+        // THERAPISTS
+        var selectedGoomersServices = $('.therapistsServiceList li');
+        var selectedTherapistsServiceIds = [];
+
+        for (let i = 0; i < selectedGoomersServices.length; i++) {
+          selectedTherapistsServiceIds.push(selectedGoomersServices[i].getAttribute('data-id'))
+        }
+        $("#therapistService").val(selectedTherapistsServiceIds);
+        // ----------------------------- 
+
+        // NUTRIOTIONISTS
+        var selectedNutritionistsServices = $('.nutritionistsServiceList li');
+        var selectedNutritionistsServiceIds = [];
+
+        for (let i = 0; i < selectedNutritionistsServices.length; i++) {
+          selectedNutritionistsServiceIds.push(selectedNutritionistsServices[i].getAttribute('data-id'))
+        }
+        $("#nutritionistService").val(selectedNutritionistsServiceIds);
+        // -----------------------------
+        
+        // BREEDERS
+        var selectedBreedersServices = $('.breedersServiceList li');
+        var selectedBreedersServiceIds = [];
+
+        for (let i = 0; i < selectedBreedersServices.length; i++) {
+          selectedBreedersServiceIds.push(selectedBreedersServices[i].getAttribute('data-id'))
+        }
+        $("#breederService").val(selectedBreedersServiceIds);
+        // -----------------------------
+
+        var selectedSpecialization = $('.specializationList li');
+        var selectedSpecializationIds = [];
+
+        for (let i = 0; i < selectedSpecialization.length; i++) {
+          selectedSpecializationIds.push(selectedSpecialization[i].getAttribute('data-id'))
+        }
+        $("#specialization").val(selectedSpecializationIds);
+
+        var selectedSpeciality = $('.specialityList li');
+        var selectedSpecialityIds = [];
+
+        for (let i = 0; i < selectedSpeciality.length; i++) {
+          selectedSpecialityIds.push(selectedSpeciality[i].getAttribute('data-id'))
+        }
+        $("#speciality").val(selectedSpecialityIds);
+        
+        var selectedInterestedSpecialization = $('.interestedSpecializationList li');
+        var selectedInterestedSpecializationIds = [];
+
+        for (let i = 0; i < selectedInterestedSpecialization.length; i++) {
+          selectedInterestedSpecializationIds.push(selectedInterestedSpecialization[i].getAttribute('data-id'))
+        }
+        $("#interestedSpecialization").val(selectedInterestedSpecializationIds);
+        
+        var selectedInterestedAnimalTypes = $('.interestedAnimalTypeList li');
+        var selectedInterestedAnimalTypesIds = [];
+
+        for (let i = 0; i < selectedInterestedAnimalTypes.length; i++) {
+          selectedInterestedAnimalTypesIds.push(selectedInterestedAnimalTypes[i].getAttribute('data-id'))
+        }
+        $("#interestedAnimalType").val(selectedInterestedAnimalTypesIds);
+      });
+
+      // Animal type and breed Start
+      function resetBreeds(typeId) {
+        var selectedBreeds = [];
+        let removedBreeds = [];
+        
+        $('.breedList li').each(function () {
+          selectedBreeds.push($(this).attr('data-id'));
+        });
+
+        if (typeId) {
+          $.ajax({
+            url: "/admin/user",
+            type: "get",
+            data: {
+              dataAnimalType: typeId,
+            },
+            success: function (data) {
+                var len = data.length;
+                for (var i = 0; i < len; i++) {
+                  var value1 = data[i]['name'];
+                  var value2 = data[i]['id'];
+                  if (selectedBreeds.includes(value2.toString())) {
+                    removedBreeds.push(value2);
+                  }
+                }
+
+                for(let i in removedBreeds) {
+                  $('.breedList li[data-id="' + removedBreeds[i] + '"]').remove();
+                }
+                $("#breedId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%> value=''>Add an item..</option>")
+                $("#breedCount").html($('.breedList li').length);
+            },
+          });
+        }
+      }
+      function setBreeds() {
+        var selectedAnimals = [];
+        var selectedBreeds = [];
+        $('.breedList li').each(function () {
+          selectedBreeds.push($(this).attr('data-id'));
+        });
+        $('.dataAnimalTypeList li').each(function () {
+          selectedAnimals.push($(this).attr('data-id'));
+        });
+        $("#breedId").html('');
+        if (selectedAnimals.length > 0) {
+          $.ajax({
+            url: "/admin/breeds/getByAnimalType",
+            type: "get",
+            data: {
+              animalType: selectedAnimals,
+            },
+            success: function (data) {
+              var len = data.length;
+              $("#breedId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%> value=''>Add an item..</option>")
+              for (var i = 0; i < len; i++) {
+                var value1 = data[i]['name'];
+                var value2 = data[i]['id'];
+                if(!selectedBreeds.includes(value2.toString())) {
+                  $("#breedId").append("<option id='" + value2 + "' >" + value1 + "</option>");
+                }
+              }
+            },
+          });
+        }
+      }
+    </script>
+
+    </html>

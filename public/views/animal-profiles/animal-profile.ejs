@@ -1,0 +1,593 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper custom-bg">
+    <!-- Content Header (Page header) -->
+    <%- include ./../layout/partials/page-header-section.ejs -%>
+
+      <!-- Main content -->
+      <form
+      action="<%= typeof responseData==='object'?'/admin/animalProfiles/update':'/admin/animalProfiles' %>"
+      id="animalProfileForm" method="POST" enctype="multipart/form-data">
+        <div class="form-group button-row">
+          <button type="submit" class="btn btn-success custom-save-btn custom-save-user custom-top save-user">Save</button>
+          <a href="/admin/animalProfiles" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>      
+          <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> Animal Profile</h1>
+          <h1 class="custom-add-heading-details" id="form-details-icon">How to fill in this form <i class="fa fa-question-circle"></i></h1>
+          <small class="custom-add-text">API ID : animal-profile</small>
+        </div>
+      <section class="content">
+
+        <!-- Default box -->
+        <div class="box custom-box">
+          <!-- <div class="box-header with-border">
+          </div> -->
+          <div class="box-body">
+            <%- include ./../layout/partials/alert-section.ejs -%>
+              
+              <div class="form-group row">
+                  <!-- <div class="col-sm-6">
+                    <label for="profileImage" class="">Image</label>
+                    <input type="file" id="profileImage" name="profileImage" accept="image/png, image/jpeg">
+                    <div class="position-relative">
+                        <div class="<%= typeof responseData==='object' && typeof responseData.UploadFileMorph==='object' && responseData.UploadFileMorph && responseData.UploadFileMorph.UploadFile && responseData.UploadFileMorph.UploadFile.url ? 'choose-profile': '' %>">
+                        </div>
+                        <div class="d-none profile_img">
+                          <img id="animal-profile-img" src="<%= typeof responseData==='object' && typeof responseData.AnimalProfilesIcon==='object' && responseData.AnimalProfilesIcon && responseData.AnimalProfilesIcon.UploadFile && responseData.AnimalProfilesIcon.UploadFile.url ? responseData.AnimalProfilesIcon.UploadFile.url: '/images/vet-practice-edit.png' %>" alt="Animal Profile" height="200" width="100%">
+                        </div>
+                      </div>
+                    </div> -->
+                    <div class="col-sm-6">
+                      <label for="profileImage" class="">Image  (Preferred resolution - 400 x 400)</label>
+                      <div class="position-relative">
+                        <div class="choose-profile">
+                          <input type="file" id="profileImage" name="profileImage" accept="image/png, image/jpeg">
+                        </div>
+                        <div class="d-none profile_img">
+                          <img
+                            src="<%= typeof responseData==='object' && typeof responseData.AnimalProfilesIcon==='object' && responseData.AnimalProfilesIcon && responseData.AnimalProfilesIcon.UploadFile && responseData.AnimalProfilesIcon.UploadFile.url ? responseData.AnimalProfilesIcon.UploadFile.url: '/images/vet-practice-edit.png' %>"
+                            alt="Vet Practice" height="200" width="100%" id="animal-profile-img">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label for="name" class="">Name</label>
+                      <input type="text" name="name" id="name" class="form-control" placeholder="Name"
+                        value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="gender" class="">Gender</label>
+                    <select class="form-control type-select-box" id="gender" name="gender" required
+                      value="<%= typeof responseData==='object'?responseData.gender:'' %>">
+                      <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Choose here</option>
+                      <% for (var i=0; i < genderData.length; i++ ) { %>
+                        <% if(genderData && genderData[i] && genderData[i] === "gender_not_known"){ %>
+                          <option <%=typeof responseData==='object' && genderData[i]===responseData.gender
+                            ? 'selected' : '' %> value="gender_not_known">
+                            Gender Not Known
+                          </option>
+                        <% } else if(genderData && genderData[i] && genderData[i] === "gender_not_applicable"){ %>
+                          <option <%=typeof responseData==='object' && genderData[i]===responseData.gender
+                            ? 'selected' : '' %> value="gender_not_applicable">
+                            Gender N/A
+                          </option>
+                        <% } else { %>
+                          <option <%=typeof responseData==='object' ?genderData[i]===responseData.gender
+                            ? 'selected' : '' : '' %>>
+                            <%= genderData[i] %>
+                          </option>
+                        <% } %>
+                      <% } %>
+                    </select>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="status" class="">Status</label>
+                      <select class="form-control type-select-box" id="status" name="status" required
+                        value="<%= typeof animalProfileData==='object'?animalProfileData.name:'' %>">
+                        <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Choose here</option>
+                        <% for (var i=0; i < statusData.length; i++ ) { %>
+                          <option <%=typeof responseData==='object' ?statusData[i]===responseData.status
+                            ? 'selected' : '' : '' %>>
+                            <%= statusData[i] %>
+                          </option>
+                          <% } %>
+                      </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="colour" class="">Color</label>
+                    <input type="hidden" name="id" id="id"
+                      value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                    <input type="text" name="colour" id="colour" class="form-control" placeholder="Color"
+                      value="<%= typeof responseData==='object'?responseData.colour:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="date_of_birth" class="">Date Of Birth</label>
+                      <input type="date" name="date_of_birth" id="date_of_birth" class="form-control"
+                        placeholder="Date Of Birth"
+                        value="<%= typeof responseData==='object'?responseData.date_of_birth:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="height" class="">Height</label>
+                    <input type="number" min="1" name="height" id="height" step='0.01' class="form-control" placeholder="Height"
+                      value="<%= typeof responseData==='object'?responseData.height:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="height_type" class="">Height Type</label>
+                    <select class="form-control type-select-box" id="height_type" name="height_type"
+                      value="<%= typeof animalProfileData==='object'?animalProfileData.name:'' %>">
+                      <option <%=typeof responseData!=='object' || !responseData.height_type ? 'selected' : '' %> disabled>Choose here</option>
+                      <% for (var i=0; i < heightTypeData.length; i++ ) { %>
+                        <option <%=typeof responseData==='object'
+                          ?heightTypeData[i]===responseData.height_type ? 'selected' : '' : '' %>>
+                          <%= heightTypeData[i] %>
+                        </option>
+                        <% } %>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="weight" class="">Weight</label>
+                      <input type="number" min="1" name="weight" id="weight" step='0.01' class="form-control" placeholder="Weight"
+                        value="<%= typeof responseData==='object'?responseData.weight:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="weight_type" class="">Weight Type</label>
+                    <select class="form-control type-select-box" id="weight_type" name="weight_type"
+                      value="<%= typeof animalProfileData==='object'?animalProfileData.name:'' %>">
+                      <option <%=typeof responseData!=='object' || !responseData.weight_type ? 'selected' : '' %> disabled>Choose here</option>
+                      <% for (var i=0; i < weightTypeData.length; i++ ) { %>
+                        <option <%=typeof responseData==='object'
+                          ?weightTypeData[i]===responseData.weight_type ? 'selected' : '' : '' %>>
+                          <%= weightTypeData[i] %>
+                        </option>
+                        <% } %>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="spayed_neutered" class="">Spayed Neutered</label>
+                    <select class="form-control type-select-box" id="spayed_neutered" name="spayed_neutered" required
+                      value="<%= typeof animalProfileData==='object'?animalProfileData.name:'' %>">
+                      <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Choose here</option>
+                      <% for (var i=0; i < spayedNeuteredData.length; i++ ) { %>
+                        <option <%=typeof responseData==='object'
+                          ?spayedNeuteredData[i]===responseData.spayed_neutered ? 'selected' : '' : '' %>>
+                          <%= spayedNeuteredData[i] %>
+                        </option>
+                        <% } %>
+                    </select>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="chip_details" class="">Chip Details</label>
+                      <input type="text" name="chip_details" id="chip_details" class="form-control"
+                        placeholder="Chip details"
+                        value="<%= typeof responseData==='object'?responseData.chip_details:'' %>">
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="regd_breed_name" class="">Regd Breed Name</label>
+                      <input type="text" name="regd_breed_name" id="regd_breed_name" class="form-control"
+                        placeholder="Regd breed name"
+                        value="<%= typeof responseData==='object'?responseData.regd_breed_name:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="breed_regd_number" class="">Breed Regd Number</label>
+                    <input type="text" name="breed_regd_number" id="breed_regd_number" class="form-control"
+                      placeholder="Breed regd number"
+                      value="<%= typeof responseData==='object'?responseData.breed_regd_number:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="breeder" class="">Breeder</label>
+                      <input type="text" name="breeder" id="breeder" class="form-control" placeholder="Breeder"
+                        value="<%= typeof responseData==='object'?responseData.breeder:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="sire_name" class="">Sire Name</label>
+                    <input type="text" name="sire_name" id="sire_name" class="form-control" placeholder="Sire Name"
+                      value="<%= typeof responseData==='object'?responseData.sire_name:'' %>">
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="sire_breed" class="">Sire Breed</label>
+                      <input type="text" name="sire_breed" id="sire_breed" class="form-control" placeholder="Sire breed"
+                        value="<%= typeof responseData==='object'?responseData.sire_breed:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="dam_name" class="">Dam Name</label>
+                    <input type="text" name="dam_name" id="dam_name" class="form-control" placeholder="Dam Name"
+                      value="<%= typeof responseData==='object'?responseData.dam_name:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="dam_breed" class="">Dam Breed</label>
+                      <input type="text" name="dam_breed" id="dam_breed" class="form-control" placeholder="Dam Breed"
+                        value="<%= typeof responseData==='object'?responseData.dam_breed:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="breed_reference" class="">Breed Reference</label>
+                    <input type="text" name="breed_reference" id="breed_reference" class="form-control"
+                      placeholder="Breed reference"
+                      value="<%= typeof responseData==='object'?responseData.breed_reference:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="other" class="">Other</label>
+                      <textarea class="form-control" rows="5" name="other" id="other"
+                        placeholder="Other"><%= typeof responseData==='object'?responseData.other:'' %></textarea>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="other_information" class="">Other Information</label>
+                    <textarea class="form-control" rows="5" name="other_information" id="other_information"
+                      placeholder="Other Information"><%= typeof responseData==='object'?responseData.other_information:'' %></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="typeId" class="">Animal Type</label>
+                      <select class="form-control type-select-box" id="typeId" name="animal_type" 
+                        value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                        <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Choose here</option>
+                        <% if(typeof animalTypes==='object' ) { for (var i=0; i < animalTypes.length; i++ ) { %>
+                          <option <%=typeof responseData==='object' ?animalTypes[i].id===responseData.animal_type
+                            ? 'selected' : '' : '' %>
+                            value="<%= animalTypes[i].id %>">
+                              <%= animalTypes[i].type %>
+                          </option>
+                          <% } } %>
+                      </select>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="breedId" class="">Breed</label>
+                    <select class="form-control type-select-box" id="breedId" name="breed" 
+                      value="<%= (typeof responseData==='object' && typeof responseData.Breed ==='object' && responseData.Breed) ? responseData.Breed.name:'' %>">
+                      <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Choose here</option>
+                      <% if(typeof breeds==='object' ) { for (var i=0; i < breeds.length; i++ ) { %>
+                        <option <%=typeof responseData==='object' ?breeds[i].id===responseData.breed ? 'selected' : ''
+                          : '' %>
+                          value="<%= breeds[i].id %>">
+                            <%= breeds[i].name %>
+                        </option>
+                        <% } } %>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="userId" class="">Animal Owner</label>
+                    <select class="form-control type-select-box" id="userId" name="user" 
+                      value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                      <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Choose here</option>
+                      <% for (var i=0; i < users.length; i++ ) { %>
+                        <option <%=typeof responseData==='object' ?users[i].id===responseData.user ? 'selected' : ''
+                          : '' %>
+                          value="<%= users[i].id %>">
+                            <%= users[i].first_name %> <%= users[i].last_name %>
+                        </option>
+                        <% } %>
+                    </select>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="chip" class="">Select Chip/Registration/Ear No. Companies</label>
+                    <select class="form-control type-select-box" id="chip" name="chip" 
+                      value="<%= typeof responseData==='object'?responseData.chip:'' %>">
+                      <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Choose here</option>
+                      <% for (var i=0; i < chips.length; i++ ) { %>
+                        <option <%=typeof responseData==='object' ?chips[i].id==responseData.chip ? 'selected' : ''
+                          : '' %>
+                          value="<%= chips[i].id %>">
+                            <%= chips[i].name %>
+                        </option>
+                        <% } %>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="InsuranceRenewalDate" class="">Approximate Insurance Renewal Date</label>
+                    <input type="date" name="InsuranceRenewalDate" id="InsuranceRenewalDate" class="form-control"
+                        placeholder="Date Of Birth"
+                        value="<%= typeof responseData==='object'?responseData.InsuranceRenewalDate:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="wantContact" class="">Would you like annual insurance updates and proposals?</label>
+                    <select class="form-control type-select-box" id="wantContact" name="wantContact" 
+                      value="<%= typeof responseData==='object'?responseData.wantContact:'' %>">
+                      <option disabled>Choose here</option>
+                      <option selected value="Yes">Yes</option>
+                      <option <%= typeof responseData==='object'&&responseData.wantContact&&responseData.wantContact=='No'?'selected':'' %> value="No">No</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="allergies" class="">Allergies</label>
+                    <input type="text" name="allergies" id="allergies" class="form-control" placeholder="Dam Breed"
+                        value="<%= typeof responseData==='object'?responseData.allergies:'' %>">
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="medications" class="">Medications</label>
+                    <input type="text" name="medications" id="medications" class="form-control" placeholder="Dam Breed"
+                        value="<%= typeof responseData==='object'?responseData.medications:'' %>">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="insurance" class="">Insurance</label>
+                    <select class="form-control type-select-box" id="insurance" name="insurance" 
+                      value="<%= typeof responseData==='object'?responseData.insurance:'' %>">
+                      <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Choose here</option>
+                      <option <%= typeof responseData==='object'&&responseData.insurance&&responseData.insurance=='Yes'?'selected':'' %> value="Yes">Yes</option>
+                      <option <%= typeof responseData==='object'&&responseData.insurance&&responseData.insurance=='No'?'selected':'' %> value="No">No</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-6 insurer-edit">
+                    <label for="insurers" class="">Insurer</label>
+                    <select class="form-control type-select-box" id="insurers" name="insurers" 
+                      value="<%= typeof responseData==='object'?responseData.insurers:'' %>">
+                      <option <%=typeof responseData!=='object' ? 'selected' : '' %> disabled>Choose here</option>
+                      <% for (var i=0; i < insurers.length; i++ ) { %>
+                        <option <%=typeof responseData==='object' ?insurers[i].id==responseData.insurers ? 'selected' : ''
+                          : '' %>
+                          value="<%= insurers[i].id %>">
+                            <%= insurers[i].name %>
+                        </option>
+                        <% } %>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- <div class="form-group row">
+                  <div class="row submit-row">
+                    <button type="submit" class="btn btn-success custom-save-btn custom-save-user custom-top">Save</button>
+                    <a href="/admin/animalProfiles" class="btn btn-primary ml-10 custom-cancel-btn"></a>
+                  </div>
+                </div> -->
+              </form>
+          </div>
+
+          <!-- <div class="box-footer text-center">
+          </div> -->
+          <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+
+      </section>
+      
+      <section class="content" id="form-details">
+        <div class="box custom-user-box">
+          <h4 class="text-center">How to fill in this form ?
+            <a data-toggle="collapse" id="collapse-show-details" href="#collapse-details" aria-expanded="false" style="color: black">
+              <i class="fa fa-plus"></i>
+              <i class="fa fa-minus"></i>
+            </a>
+          </h4></br>
+          <div class="collapse" id="collapse-details">
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Image : </label> Image of animal profile 
+              </div>
+              <div class="col-md-6">
+                <label>Name ( name ) * : </label> Name of the animal
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Gender ( gender ) * : </label> Gender of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Status ( status ) * : </label> Status of the animal
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Color ( colour ) : </label> Color of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Date Of Birth ( date_of_birth ) : </label> Date Of Birth of the animal
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Height ( height ) : </label> Height of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Height Type ( height_type ) : </label> Height type of the animal
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Weight ( weight ) : </label> Weight of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Weight Type ( weight_type ) : </label> Weight type of the animal
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Spayed Neutered ( spayed_neutered ) * : </label> Spayed neutered of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Chip Details ( chip_details ) : </label> Chip details of the animal ( Line 2 )
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Regd Breed Name ( regd_breed_name ) : </label> Regd breed name of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Breed Regd Number ( breed_regd_number ) : </label> Breed regd number of the animal
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Breeder ( breeder ) : </label> Breeder of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Sire Name ( sire_name ) : </label> Sire Name of the animal
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Sire Breed ( sire_breed ) : </label> Sire breed of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Dam Name ( dam_name ) : </label> Dam name of the animal
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Dam Breed ( dam_breed ) : </label> Dam breed of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Breed Reference ( breed_reference ) : </label> Breed reference of the animal
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Other ( other ) : </label> Other details of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Other Information ( other_information ) : </label> Other information of the animal
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Animal Type ( animal_type ) * : </label> Animal type of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Breed ( breed ) : </label> Breed of the animal
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Animal Owner ( user ) * : </label> Animal owner of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Select Chip/Registration/Ear No. Companies ( chip ) * : </label> Select Chip/Registration/Ear No. Companies of the animal
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Approximate Insurance Renewal Date ( insurance_renewal_date ) : </label> Approximate insurance renewal date of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Would you like annual insurance updates and proposals? ( annual_insurance_updates ) * : </label> Would you like annual insurance updates and proposals of the animal?
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Allergies ( allergies ) : </label> Allergies of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Medications ( medications ) : </label> Medications of the animal?
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Insurance ( insurance ) * : </label> Insurance of the animal
+              </div>
+              <div class="col-md-6">
+                <label>Insurer ( insurers ) : </label> Insurer of the animal (required if insurance is selected)
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /.content -->
+  </div>
+  <%- include ./../layout/footer.ejs -%>
+    <script type="module" src="/js/animal-profile.js"></script>
+    <script>
+      $(".sidebar-menu li").removeClass("active");
+      $(".menu__animal_classification").addClass("active");
+      $(".menu__animalProfiles").addClass("active");
+      $(document).ready(function() {
+        $("#form-details-icon").on("click", function(e) {
+          e.preventDefault();
+          $("body, html").animate({ 
+            scrollTop: $("#form-details").offset().top - 150
+          }, 600);
+          $('#collapse-details').collapse('show');
+        });
+      });
+      function getBreed() {
+        var selectedType = $('#typeId option:selected').val();
+        var selectedTypeVal = $('#typeId').val();
+        $("#breedId").html('');
+        $.ajax({
+          url: "/admin/animalProfile",
+          type: "get",
+          data: {
+            animalType: selectedType,
+          },
+          success: function (data) {
+            var len = data.length;
+            $("#breedId").append("<option <%= typeof responseData!=='object' || !responseData.breed? 'selected' : ''%> disabled>Add an item..</option>")
+            for (var i = 0; i < len; i++) {
+              var value1 = data[i]['name'];
+              var value2 = data[i]['id'];
+              var selectedBreed = $("#breedId").attr('value');
+              var isSelected = selectedBreed === value1 ? 'selected' : '';
+              $("#breedId").append(`<option value=${value2} ${isSelected}>${value1}</option>`);
+            }
+          },
+        });
+      }
+      $("#typeId").change(function (event) {
+        getBreed();
+      });
+      if ($('#typeId option:selected').val()) {
+        getBreed();
+      }
+      var isInsurance = $('#insurance').val();
+      if(isInsurance && isInsurance === 'Yes') {
+        $(".insurer-edit").show();
+      } else {
+        $(".insurer-edit").hide();
+      }
+      $("#insurance").change(function (event) {
+        var insurance = $('#insurance option:selected').text().trim();
+        if (insurance === 'Yes') {
+          $(".insurer-edit").show();
+        } else {
+          $(".insurer-edit").hide();
+        }
+        event.preventDefault();
+      });
+      $("form").submit(function (event) {
+      });
+    </script>
+    </body>
+
+    </html>

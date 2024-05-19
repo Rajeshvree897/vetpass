@@ -1,0 +1,127 @@
+<%- include ./../../layout/header.ejs -%>
+<% include ./../../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+
+  <!-- Main content -->
+  <form action="<%= typeof responseData==='object'?'/admin/subService/update':'/admin/subService' %>" id="serviceProvidersubService"
+    method="POST">
+    <div class="form-group button-row">
+      <a href="/admin/subService" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <button type="submit" class="btn btn-success custom-save-btn custom-top-user <%= typeof responseData==='object'?'d-none':'' %>">Save</button>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> Sub Service</h1>
+        <small class="custom-add-text">API ID : Sub Service</small>
+    </div>
+
+  <section class="content">
+
+    <!-- Default box -->
+    <div class="box custom-box">
+      <!-- <div class="box-header with-border">
+      </div> -->
+      <div class="box-body">
+          <%- include ./../../layout/partials/alert-section.ejs -%>
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="type" class="">Service * </label>
+              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Service of the Service Provider (Service)"></i>
+              <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <input type="text" name="service" id="service" class="form-control" placeholder="service"
+                value="<%= typeof responseData==='object'?responseData.service:'' %>" <%= typeof responseData==='object'?'readonly':'' %>>
+            </div>
+            <div class="col-sm-6">
+              <label for="main_service_id" class="">Main Service * </label>
+              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Service of the Service Provider ( Main Service)"></i>
+                <input type="hidden" name="main_service_id" id="main_service_id"
+                  value="<%= typeof responseData==='object'?responseData.main_service_id:'' %>">
+                <select class="form-control type-select-box" id="main-service" name=""
+                  value="<%= typeof responseData==='object'?responseData.mainService:'' %>" <%= typeof responseData==='object'?'disabled':'' %>>
+                  <option <%= typeof responseData!=='object'? 'selected' : ''%> disabled>Add an item..</option>
+                  <% for (var i=0; i < mainService.length;  i++ ) { %>
+                  <option
+                    <%= typeof responseData==='object'?mainService[i].id === responseData.main_service_id ? 'selected' : '': '' %>
+                    id="<%= mainService[i].id %>">
+                    <%= mainService[i].service %></option>
+                  <% } %>
+                </select>
+            </div>
+          </div>
+
+          <div class="form-group row">   
+            <div class="col-sm-6">
+              <label for="status" class="">Status * </label>
+              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Activation status of the Service Provider Sub Service(status)"></i>
+              <select name="status" class="form-control type-select-box" id="status" <%= typeof responseData==='object'?'disabled':'' %>>
+                  <option <%=typeof responseData!=='object' || ((typeof responseData.status == "boolean" || typeof responseData.status == "object") && (responseData.status == "" || responseData.status == null) ) ? 'selected' : '' %> disabled>Choose here</option>
+                  <option <%= (typeof responseData==='object' && typeof responseData.status === "boolean" && responseData.status === true)?'selected':'' %> value="true">Active</option>
+                  <option <%= (typeof responseData==='object' && typeof responseData.status === "boolean" && responseData.status === false)?'selected':'' %> value="false">Inactive</option>
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <label for="status" class="">Duration  </label>
+              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Duration of the Service Provider Sub Service(Duration)"></i>
+              <select name="duration" class="form-control service-duration" value="<%= typeof responseData==='object'?responseData.duration:'' %>" <%= typeof responseData==='object'?'disabled':'' %>>
+                <option selected disabled>duration</option>
+                <% for (let j=5; 60 && j <= 60; j+=5 ) { %>
+                <option value="<%= j %>" <%= typeof responseData==='object'?responseData.duration === j ? 'selected' : '': '' %>><%= j %></option>
+                <% } %>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">   
+            <div class="col-sm-6">
+              <label for="description" class="">Description  </label>
+              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Description of the Service Provider Sub Service(description)"></i>
+              <input type="text" name="description"  class="form-control" placeholder="description"
+                value="<%= typeof responseData==='object'?responseData.description:'' %>" <%= typeof responseData==='object'?'readonly':'' %>>
+            </div>
+            <div class="col-sm-6">
+              <label for="status" class="">Appointment  </label>
+              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Appointment of the Service Provider Sub Service(Appointment)"></i>
+              <select name="appointment" class="form-control  service-stack" <%= typeof responseData==='object'?'disabled':'' %>>
+                <option selected disabled>Appointment</option>
+                <% for (let j=1; j <= 5; j++ ) { %>
+                  <option  value="<%= j %>" <%= typeof responseData==='object'?responseData.appointment === responseData.appointment ? 'selected' : '': '' %>><%= j %></option>
+                <% } %>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <label for="price" class="">Price *  </label>
+              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="price of the Service Provider Sub Service(price)"></i>
+              <input type="number" name="price"  class="form-control" placeholder="price"
+                value="<%= typeof responseData==='object'?responseData.price:'' %>" <%= typeof responseData==='object'?'readonly':'' %>>
+            </div>
+          </div>
+          <!-- <div class="form-group row">
+            <div class="row submit-row">
+            </div>
+          </div> -->
+        </form>
+      </div>
+
+      <!-- <div class="box-footer text-center">
+      </div> -->
+      <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+  </section>
+  <!-- /.content -->
+</div>
+<%- include ./../../layout/footer.ejs -%>
+<script type="module" src="/js/service-provider-sub-service.js"></script>
+</body>
+<script>
+  $('.type-select-box').change(function () {
+    var selectedId = $('.type-select-box option:selected').attr('id');
+    $('#main_service_id').val(selectedId);
+  });
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__master_modules").addClass("active");
+  $(".menu__sub_service").addClass("active");
+</script>
+
+</html>

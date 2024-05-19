@@ -1,0 +1,95 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper custom-bg">
+  <!-- Content Header (Page header) -->
+  <%- include ./../layout/partials/page-header-section.ejs -%>
+
+  <!-- Main content -->
+  <form action="<%= typeof responseData==='object'?'/admin/breeds/update':'/admin/breeds' %>" id="breedsForm"
+    method="POST">
+    <div class="form-group button-row">
+      <button type="submit" class="btn btn-success custom-save-btn custom-top">Save</button>
+      <a href="/admin/breeds" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+      <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> Animal Breed</h1>
+      <small class="custom-add-text">API ID : breed</small>
+    </div>
+  <section class="content">
+
+    <!-- Default box -->
+    <div class="box custom-box">
+      <!-- <div class="box-header with-border">
+      </div> -->
+      <div class="box-body">
+        <%- include ./../layout/partials/alert-section.ejs -%>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+            <label for="name" class="">Breed * </label>
+            <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Name of the breed (name)"></i>
+              <input type="hidden" name="id" id="id" value="<%= typeof responseData==='object'?responseData.id:'' %>">
+              <input type="text" name="name" id="name" class="form-control" placeholder="Breed"
+                value="<%= typeof responseData==='object'?responseData.name:'' %>">
+            </div>
+            <div class="col-sm-6">
+              <label for="type" class="">Animal Type * </label>
+              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Type of the animal (type)"></i>
+                <input type="hidden" name="typeId" id="typeId"
+                  value="<%= typeof responseData==='object'?responseData.animal_type:'' %>">
+                <select class="form-control type-select-box" id="type" name="type"
+                  value="<%= typeof responseData==='object'?responseData.animal_type:'' %>">
+                  <option <%= typeof responseData!=='object'? 'selected' : ''%> disabled>Add an item..</option>
+                  <% for (var i=0; i < animalTypes.length;  i++ ) { %>
+                  <option
+                    <%= typeof responseData==='object'?animalTypes[i].id === responseData.animal_type ? 'selected' : '': '' %>
+                    id="<%= animalTypes[i].id %>">
+                    <%= animalTypes[i].type %></option>
+                  <% } %>
+                </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="status" class="">Status * </label>
+              <i class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Activation status of the breed (status)"></i>
+              <select name="status" class="form-control type-select-box" id="status">
+                  <option <%=typeof responseData!=='object' || ((typeof responseData.status == "boolean" || typeof responseData.status == "object") && (responseData.status == "" || responseData.status == null) ) ? 'selected' : '' %> disabled>Choose here</option>
+                  <option <%= (typeof responseData==='object' && typeof responseData.status === "boolean" && responseData.status === true)?'selected':'' %> value="true">Active</option>
+                  <option <%= (typeof responseData==='object' && typeof responseData.status === "boolean" && responseData.status === false)?'selected':'' %> value="false">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- <div class="form-group row">
+            <div class="row submit-row">
+              <button type="submit" class="btn btn-success custom-save-btn custom-top">Save</button>
+              <a href="/admin/breeds" class="btn btn-primary ml-10 custom-cancel-btn"></a>
+            </div>
+          </div> -->
+        </form>
+      </div>
+
+      <!-- <div class="box-footer text-center">
+      </div> -->
+      <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+  </section>
+  <!-- /.content -->
+</div>
+<%- include ./../layout/footer.ejs -%>
+<script type="module" src="/js/breed.js"></script>
+</body>
+<script>
+  $('.type-select-box').change(function () {
+    var selectedId = $('.type-select-box option:selected').attr('id');
+    $('#typeId').val(selectedId);
+  });
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__animal_classification").addClass("active");
+  $(".menu__breeds").addClass("active");
+</script>
+
+</html>

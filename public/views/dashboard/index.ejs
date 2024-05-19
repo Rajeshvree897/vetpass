@@ -1,0 +1,131 @@
+<% include ./../layout/header.ejs %>
+<!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper custom-wrapper">
+    <!-- Content Header (Page header) -->
+    <% include ./../layout/partials/page-header-section.ejs %>
+    <!-- Main content -->
+    <div class="sc-hoPtGK lfYxGS">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="dashboard-body-text custom-text">Welcome! Vet Pass admin panel</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <section class="content"> -->
+
+      <!-- Default box -->
+      <!-- <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title">Welcome! Vet Pass admin panel</h3>
+        </div>
+        <div class="box-body">
+          <% // include ./../layout/partials/alert-section.ejs %>
+        </div> -->
+        <!-- /.box-body -->
+        <!-- <div class="box-footer text-center">
+        </div> -->
+        <!-- /.box-footer-->
+      <!-- </div> -->
+      <!-- /.box -->
+
+    <!-- </section> -->
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+<% include ./../layout/footer.ejs %>
+<!-- <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> -->
+</script>
+</body>
+<script>
+  $(".sidebar-menu li").removeClass("active");
+  $(".menu__dashboard").addClass("active");
+
+  // if (Notification.permission !== 'granted') {
+  //   Notification.requestPermission().then(function(permission) {
+  //     if (permission === 'granted') {
+  //       console.log('Notification permission granted.');
+  //       this.createFCMTOKEN();
+  //     } else {
+  //       console.log('Notification permission denied.');
+  //     }
+  //   });
+  // }
+
+</script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-analytics.js";
+  import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-messaging.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBKknNVoIXJYK81D-r1jEnE4oQlVrd_-rw",
+    authDomain: "vetpass-43e02.firebaseapp.com",
+    databaseURL: "https://vetpass-43e02.firebaseio.com",
+    projectId: "vetpass-43e02",
+    storageBucket: "vetpass-43e02.appspot.com",
+    messagingSenderId: "695778505764",
+    appId: "1:695778505764:web:d56e8bfd10c9d387de14b1",
+    measurementId: "G-4HY0PNXSQY"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const user = "<%= userData && userData.id ? userData.id : '' %>";
+  const deviceTokens = "<%= userData && userData.deviceTokens ? userData.deviceTokens : '' %>".split(",");
+
+  if (Notification.permission !== 'granted') {
+    Notification.requestPermission().then(function(permission) {
+      if (permission === 'granted') {
+        createFCMTOKEN();
+        console.log('Notification permission granted.');
+      } else {
+        console.log('Notification permission denied.');
+      }
+    });
+  } else {
+    createFCMTOKEN();
+  }
+
+  function createFCMTOKEN() {
+    if (Notification.permission === 'granted') {
+      const messaging = getMessaging();
+      getToken(messaging, { vapidKey: "BDYqgN-7ObmkjrDPjANH8MlweVD_W6d3hjgP8mGorWpdvXPpW83fOdZJr1InC_8OkVfngthtHLamCy3tEJO44T8" }).then(async (token) => {
+        console.log(deviceTokens, !deviceTokens.includes(token));
+        console.log("GENERATED FCM token:", token);
+        if (deviceTokens && !deviceTokens.includes(token)) {
+          await createOrUpdateDeviceToken(user, token);
+          console.log("ADDED FCM TOKEN TO DB")
+        }
+      }).catch(error => {
+        console.error(error);
+      });
+    }
+  }
+
+  // console.log("user", user);
+  function createOrUpdateDeviceToken(user, token) {
+    $.ajax({
+      type: 'POST',
+      url: "/admin/createOrUpdateDeviceToken",
+      data: { device_type: "Web", device_token: token, user },
+      dataType: 'json',
+      async: true,
+      success: function (data) {
+        console.log("Added TOKEN in DB");
+      },
+      error: function(err) {
+        reject(err) // Reject the promise and go to catch()
+      }
+    });
+  }
+
+</script>
+</html>

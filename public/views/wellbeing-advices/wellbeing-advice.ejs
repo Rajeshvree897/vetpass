@@ -1,0 +1,358 @@
+<%- include ./../layout/header.ejs -%>
+<% include ./../layout/partials/fake-loader-section.ejs %>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper custom-bg">
+    <!-- Content Header (Page header) -->
+    <%- include ./../layout/partials/page-header-section.ejs -%>
+
+      <!-- Main content -->
+      <form
+        action="<%= typeof responseData==='object'?'/admin/wellbeingAdvices/update':'/admin/wellbeingAdvices' %>"
+        id="wellbeingAdviceForm" method="POST">
+        <div class="form-group button-row">
+          <button type="submit" class="btn btn-success custom-save-btn custom-top save-user">Save</button>
+          <a href="/admin/wellbeingAdvices" class="btn btn-primary ml-10 custom-cancel-btn backButton" data-toggle="modal" data-target="#deleteConfirmModal"></a>
+          <h1 class="custom-add-heading"><%= typeof responseData === 'object' ? 'Edit' : 'Create' %> Wellbeing Advice</h1>
+          <h1 class="custom-add-heading-details" id="form-details-icon">How to fill in this form <i class="fa fa-question-circle"></i></h1>
+          <small class="custom-add-text">API ID : first-aid-advice</small>
+        </div>
+      <section class="content">
+
+        <!-- Default box -->
+        <div class="box custom-box">
+          <!-- <div class="box-header with-border">
+      </div> -->
+          <div class="box-body">
+            <%- include ./../layout/partials/alert-section.ejs -%>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="question" class="">Question</label>
+                    <input type="hidden" name="id" id="id"
+                      value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                    <textarea class="form-control" rows="10" name="question" id="question"
+                      placeholder="Question"><%= typeof responseData==='object'?responseData.question:'' %></textarea>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="answer" class="">Answer</label>
+                    <textarea class="form-control" rows="10" name="answer" id="answer"
+                      placeholder="Answer"><%= typeof responseData==='object'?responseData.answer:'' %></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="typeId" class="">Animal Types (<span id="typeCount">
+                      <%= typeof responseData==='object' ? responseData.types.length: 0 %>
+                    </span>)</label>
+                    <input type="hidden" name="type" id="type"
+                      value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                    <select class="form-control type-select-box" id="typeId"
+                      value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                      <option <%=typeof responseData!=='object' ? 'selected' : '' %> value=''>Add an item..</option>
+                      <% if(typeof animalTypes==='object' ) { for (var i=0; i < animalTypes.length; i++ ) { %>
+                        <option <%=typeof responseData==='object' ?animalTypes[i].id===responseData.animal_type
+                          ? 'selected' : '' : '' %>
+                          id="<%= animalTypes[i].id %>">
+                            <%= animalTypes[i].type %>
+                        </option>
+                        <% } } %>
+                    </select>
+                  </div>
+                  <div class="col-sm-6">
+                    <label for="order" class="">Order</label>
+                    <input type="number" name="order" id="order" class="form-control" placeholder="Order"
+                      value="<%= typeof responseData==='object'?responseData.order:'' %>">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-1"></div>
+                  <div class="col-sm-3">
+                    <ul class="typeList pl-0">
+                      <% if(typeof responseData==='object' ) { for (var i=0; i < responseData.types.length; i++ ) { %>
+                        <% if(responseData.types[i] && responseData.types[i].id){ %>
+                        <li data-id="<%= responseData.types[i].id %>" class="li-flex">
+                          <div>
+                            <%= responseData.types[i].type %>
+                          </div><i id="<%= responseData.types[i].id %>" class="fa fa-minus delete-icon"></i>
+                        </li>
+                        <% }} }%>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="breedId" class="">Breeds (<span id="breedCount">
+                      <%= typeof responseData==='object' ? responseData.breeds.length: 0 %>
+                    </span>)</label>
+                    <input type="hidden" name="breed" id="breed"
+                      value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                    <select class="form-control type-select-box" id="breedId"
+                      value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                      <option <%=typeof responseData!=='object' ? 'selected' : '' %> value=''>Add an item..</option>
+                      <% if(typeof breeds==='object' ) { for (var i=0; i < breeds.length; i++ ) { %>
+                        <option <%=typeof responseData==='object' ?breeds[i].id===responseData.animal_type ? 'selected'
+                          : '' : '' %>
+                          id="<%= breeds[i].id %>">
+                            <%= breeds[i].name %>
+                        </option>
+                        <% } } %>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-1"></div>
+                  <div class="col-sm-3">
+                    <ul class="breedList pl-0">
+                      <% if(typeof responseData==='object' ) { for (var i=0; i < responseData.breeds.length; i++ ) { %>
+                        <% if(responseData.breeds[i] && responseData.breeds[i].id){ %>
+                        <li data-id="<%= responseData.breeds[i].id %>" class="li-flex">
+                          <div>
+                            <%= responseData.breeds[i].name %>
+                          </div><i id="<%= responseData.breeds[i].id %>" class="fa fa-minus breed-delete-icon"></i>
+                        </li>
+                        <% }} } %>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <label for="ageId" class="">Ages</label>
+                    <input type="hidden" name="age" id="age"
+                      value="<%= typeof responseData==='object'?responseData.id:'' %>">
+                    <select class="form-control type-select-box" id="ageId" name="age_drop_downs"
+                      value="<%= typeof responseData==='object'?responseData.name:'' %>">
+                      <option value="" <%=typeof responseData!=='object' ? 'selected' : '' %>>Add an item..</option>
+                      <% for (var i=0; i < ages.length; i++ ) { %>
+                        <option <%=typeof responseData==='object' ?ages[i].id===responseData.age_drop_downs ? 'selected'
+                          : '' : '' %>
+                          value="<%= ages[i].id %>">
+                            <%= ages[i].age %>
+                        </option>
+                        <% } %>
+                    </select>
+                  </div>
+                </div>
+
+
+                <!-- <div class="form-group row">
+                  <div class="row submit-row">
+                    <button type="submit" class="btn btn-success custom-save-btn custom-top">Save</button>
+                    <a href="/admin/wellbeingAdvices" class="btn btn-primary ml-10 custom-cancel-btn"></a>
+                  </div>
+                </div> -->
+              </form>
+          </div>
+
+          <!-- <div class="box-footer text-center">
+      </div> -->
+          <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+
+      </section>
+
+      <section class="content" id="form-details">
+        <div class="box custom-user-box">
+          <h4 class="text-center">How to fill in this form ?
+            <a data-toggle="collapse" id="collapse-show-details" href="#collapse-details" aria-expanded="false" style="color: black">
+              <i class="fa fa-plus"></i>
+              <i class="fa fa-minus"></i>
+            </a>
+          </h4></br>
+          <div class="collapse" id="collapse-details">
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Question ( question ) * : </label> Question for the wellbeing advice
+              </div>
+              <div class="col-md-6">
+                <label>Answer ( answer ) * : </label> Answer for the wellbeing advice question
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Animal Types ( animal ) : </label> Animal types for the wellbeing advice ( animalType#breed )
+              </div>
+              <div class="col-md-6">
+                <label>Order ( order ) * : </label> Order number for the wellbeing advice
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label>Breeds ( animal ) : </label> Breeds for the wellbeing advice ( animalType#breed )
+              </div>
+              <div class="col-md-6">
+                <label>Ages ( age ) : </label> Ages for the wellbeing advice
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /.content -->
+  </div>
+  <%- include ./../layout/footer.ejs -%>
+    <script type="module" src="/js/wellbeing-advice.js"></script>
+    <script>
+      $(".sidebar-menu li").removeClass("active");
+      $(".menu__advices").addClass("active");
+      $(".menu__wellbeingAdvices").addClass("active");
+      $(document).ready(function() {
+        $("#form-details-icon").on("click", function(e) {
+          e.preventDefault();
+          $("body, html").animate({ 
+            scrollTop: $("#form-details").offset().top - 150
+          }, 600);
+          $('#collapse-details').collapse('show');
+        });
+      });
+
+      // Set breed dropdown values
+      setBreeds();
+
+      $('.typeList li').each(function () {
+        const selectedTypeId = $(this).attr('data-id');
+        $(`#typeId option[id=${selectedTypeId}]`).remove();
+      });
+      // $('.ageList li').each(function () {
+      //   const selectedAgeId = $(this).attr('data-id');
+      //   $(`#ageId option[id=${selectedAgeId}]`).remove();
+      // });
+
+      $(document).on("click", ".delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#typeCount").html($('.typeList li').length);
+        $("#typeId").append(`<option id=${id}>${values.html()}</option>`);
+        setBreeds();
+        resetBreeds(id);
+      });
+      $("#typeId").change(function (event) {
+        var selectedType = $('#typeId option:selected').attr('id');
+        var selectedTypeVal = $('#typeId').val();
+        $("#typeCount").html($('.typeList li').length + 1);
+        $(".typeList").append(`<li data-id=${selectedType} class="li-flex"><div>${selectedTypeVal}</div><i id= ${selectedType} class="fa fa-minus delete-icon"></i></li>`)
+        $("#typeId option:selected").remove();
+        setBreeds();
+        event.preventDefault();
+      });
+      $(document).on("click", ".breed-delete-icon", function () {
+        var id = $(this).attr("id");
+        var values = $(this).prev("div");
+        $(this).closest('li').remove();
+        $("#breedCount").html($('.breedList li').length);
+        $("#breedId").append(`<option id=${id}>${values.html()}</option>`);
+        setBreeds();
+      });
+      $("#breedId").change(function () {
+        var selectedBreed = $('#breedId option:selected').attr('id');
+        var selectedBreedVal = $('#breedId').val();
+        $("#breedCount").html($('.breedList li').length + 1);
+        $(".breedList").append(`<li data-id=${selectedBreed} class="li-flex"><div>${selectedBreedVal}</div><i id= ${selectedBreed} class="fa fa-minus delete-icon"></i></li>`)
+        $("#breedId option:selected").remove();
+      });
+      // $(document).on("click", ".age-delete-icon", function () {
+      //   var id = $(this).attr("id");
+      //   var values = $(this).prev("div");
+      //   $(this).closest('li').remove();
+      //   $("#ageCount").html($('.ageList li').length);
+      //   $("#ageId").append(`<option id=${id}>${values.html()}</option>`);
+      // });
+      // $("#ageId").change(function () {
+      //   var selectedAge = $('#ageId option:selected').attr('id');
+      //   var selectedAgeVal = $('#ageId').val();
+      //   $("#ageCount").html($('.ageList li').length + 1);
+      //   $(".ageList").append(`<li data-id=${selectedAge} class="li-flex"><div>${selectedAgeVal}</div><i id= ${selectedAge} class="fa fa-minus age-delete-icon"></i></li>`)
+      //   $("#ageId option:selected").remove();
+      // });
+      $("form").submit(function (event) {
+        var selectedTypes = $('.typeList li');
+        var selectedBreeds = $('.breedList li');
+        var selectedAges = $('.ageList li');
+        var selectedTypesIds = [];
+        var selectedBreedsIds = [];
+        var selectedAgesIds = [];
+
+        for (let i = 0; i < selectedTypes.length; i++) {
+          selectedTypesIds.push(selectedTypes[i].getAttribute('data-id'))
+        }
+        for (let i = 0; i < selectedBreeds.length; i++) {
+          selectedBreedsIds.push(selectedBreeds[i].getAttribute('data-id'))
+        }
+        for (let i = 0; i < selectedAges.length; i++) {
+          selectedAgesIds.push(selectedAges[i].getAttribute('data-id'))
+        }
+        $("#type").val(selectedTypesIds);
+        $("#breed").val(selectedBreedsIds);
+        $("#age").val(selectedAgesIds);
+      });
+      function resetBreeds(typeId) {
+        var selectedBreeds = [];
+        let removedBreeds = [];
+        $('.breedList li').each(function () {
+          selectedBreeds.push($(this).attr('data-id'));
+        });
+        if (typeId) {
+          $.ajax({
+            url: "/admin/wellbeingAdvice",
+            type: "get",
+            data: {
+              animalType: typeId,
+            },
+            success: function (data) {
+                var len = data.length;
+                for (var i = 0; i < len; i++) {
+                  var value1 = data[i]['name'];
+                  var value2 = data[i]['id'];
+                  if (selectedBreeds.includes(value2.toString())) {
+                    removedBreeds.push(value2)
+                  }
+                }
+                for(let i in removedBreeds) {
+                  $('.breedList li[data-id="' + removedBreeds[i] + '"]').remove();
+                }
+                $("#breedId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%> value=''>Add an item..</option>")
+                $("#breedCount").html($('.breedList li').length);
+            },
+          });
+        }
+      }
+      function setBreeds() {
+        var selectedAnimals = [];
+        var selectedBreeds = [];
+        $('.breedList li').each(function () {
+          selectedBreeds.push($(this).attr('data-id'));
+        });
+        $('.typeList li').each(function () {
+          selectedAnimals.push($(this).attr('data-id'));
+        });
+        $("#breedId").html('');
+        if (selectedAnimals.length > 0) {
+          $.ajax({
+            url: "/admin/nutritionAdvice",
+            type: "get",
+            data: {
+              animalType: selectedAnimals,
+            },
+            success: function (data) {
+              var len = data.length;
+              $("#breedId").append("<option <%= typeof responseData!=='object'? 'selected' : ''%> value=''>Add an item..</option>")
+              for (var i = 0; i < len; i++) {
+                var value1 = data[i]['name'];
+                var value2 = data[i]['id'];
+                if (!selectedBreeds.includes(value2.toString())) {
+                  $("#breedId").append("<option id='" + value2 + "' >" + value1 + "</option>");
+                }
+              }
+            },
+          });
+        }
+      }
+    </script>
+    </body>
+
+    </html>

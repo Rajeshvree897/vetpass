@@ -1,0 +1,77 @@
+<% include ./../layout/partials/head-section.ejs %>
+<body class="hold-transition login-page">
+  <div class="login-box">
+      <div class="login-content">
+      <div class="login-logo">
+          <img src="/images/vetpassLogo.png" class="login-logo"/>
+          <!-- <a><b>VetPass</b>CMS</a> -->
+      </div>
+      <div class="login-box-body custom-forgot-pswd">
+
+          <p class="login-box-msg"></p>
+          <% include ./../layout/partials/alert-section.ejs %>
+
+          <form id="loginForm" action="/admin/login" method="post">
+            <div class="form-group login-input">
+                    
+                <label for="email" class="login-label">Email</label>
+                  <input type="email" id="email" name="email" class="form-control" placeholder="Email">
+                  <!-- <span class="glyphicon glyphicon-envelope form-control-feedback"></span> -->
+              </div>
+              <div class="form-group login-input">
+                <label for="password" class="login-label">Password</label>
+                  <input type="password" id="password" name="password" class="form-control" placeholder="Password">
+                  <!-- <span class="glyphicon glyphicon-lock form-control-feedback"></span> -->
+              </div>
+              <div class="form-group">
+                <!-- <label for="password" class="">Password</label> -->
+                <div class="checkbox">
+                    <label class="login-label">
+                      <input type="checkbox"> Remember me
+                    </label>
+                  </div>
+                  <!-- <input type="checkbox" id="rememberMe" name="rememberMe" class="form-control">
+                  <span class="glyphicon glyphicon-lock form-control-feedback"></span> -->
+              </div>
+              <div class="form-group">
+                    <input type="text" id="timeZone_id" name="timeZone" class="form-control" style="display: none">
+                  <!-- <div class="col-xs-12"> -->
+                      <button type="submit" class="btn btn-block btn-flat custom-login-btn">Log In</button>
+                  <!-- </div> -->
+              </div>
+          </form>
+          
+      </div>
+      <div class="form-group">
+          <br/>
+        <div class="col-xs-4"></div>
+          <div class="col-xs-8">
+            <div class="form-group">
+                <a href="forgot-password" class="custom-forgot-link">I forgot my password</a>
+            </div>
+        </div>
+
+      </div>
+      <div class="form-group">
+        <br/>
+      <div class="col-xs-3"></div>
+        <div class="col-xs-8">
+          <div class="form-group">
+              <a href="registration" class="custom-forgot-link">Register as a third-party company</a>
+          </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+<% include ./../layout/partials/footer-script-section.ejs %>
+<script type="text/javascript" src="/js/auth.js"></script>
+<script>
+        setTimeout(() => {
+            var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            localStorage.setItem('timezone', timezone);
+            document.getElementById('timeZone_id').value = Intl.DateTimeFormat().resolvedOptions().timeZone
+        })
+</script>
+</html>
